@@ -90,16 +90,18 @@ Scope {
                     left:   pos === "left"   ? edgeGap : (vertical ? 0 : sideGap)
                     right:  pos === "right"  ? edgeGap : (vertical ? 0 : sideGap)
                 }
-                // A press on empty bar space grows this surface to the whole
+                // A drag on empty bar space grows this surface to the whole
                 // screen until the release. Over an empty workspace Hyprland
                 // otherwise sends the bar a pointer leave the moment a drag
                 // leaves it (Qt reads that as a release) and no surface gets
                 // the motion; kept under the cursor, the bar keeps its grab
                 // and gets the real release. Reserved space and the visible
                 // strip stay the same.
-                // follows the mouse area itself, so a lost release can never
+                // only once a drag has begun (a plain click never resizes the
+                // bar, which showed as a flicker on every click), and tied to the
+                // mouse area's own pressed state, so a lost release can never
                 // leave the bar stuck at full-screen size
-                readonly property bool held: gesture.pressed
+                readonly property bool held: gesture.pressed && bars.moving
                 readonly property int grown: vertical ? screen.width - edgeGap : screen.height - edgeGap
                 implicitHeight: vertical ? 0 : (held ? grown : thickness)
                 implicitWidth: vertical ? (held ? grown : thickness) : 0
@@ -155,7 +157,7 @@ Scope {
                         onPressAndHold: (e) => { if (pressed) begin(e.x, e.y) }
                         onPositionChanged: (e) => {
                             if (!(e.buttons & Qt.LeftButton)) return
-                            if (!bars.moving) { if (Math.abs(e.x - px) + Math.abs(e.y - py) < 8) return; begin(e.x, e.y) }
+                            if (!bars.moving) { if (Math.abs(e.x - px) + Math.abs(e.y - py) < 4) return; begin(e.x, e.y) }
                             else update(e.x, e.y)
                         }
                         onReleased: {
