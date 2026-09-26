@@ -4,7 +4,7 @@ import Quickshell.Hyprland
 import qs.Commons
 
 // pill:    the classic look — numbered buttons in a pill, active one inverted
-// minimal: Omarchy — plain numbers 1..5 (always) + any others, active shown as a filled square
+// minimal: Omarchy — plain numbers 1..5 (always) + any others, active shown as 󱓻
 Pill {
     id: ws
     padH: pillMode ? 3 : 4
@@ -62,17 +62,11 @@ Pill {
             Label {
                 id: t
                 anchors.centerIn: parent
-                text: (!ws.pillMode && btn.active) ? "" : String(btn.modelData.id)
+                text: (!ws.pillMode && btn.active) ? "󱓻" : String(btn.modelData.id)
                 font.weight: btn.active ? Font.Bold : Font.Medium
                 color: ws.pillMode
                        ? (btn.active || btn.urgent ? Theme.c.bg0 : hov ? Theme.c.fg : Theme.c.grey1)
                        : (btn.active ? Theme.c.fg : btn.exists ? Theme.c.accentMid : Theme.c.accentDim)
-            }
-            Icon {
-                visible: !ws.pillMode && btn.active
-                anchors.centerIn: parent
-                icon: "square"; size: Theme.fs(13)
-                color: Theme.c.fg
             }
             MouseArea {
                 id: m

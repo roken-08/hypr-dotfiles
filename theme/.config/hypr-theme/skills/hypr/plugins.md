@@ -80,7 +80,10 @@ Rules of the house:
   fetches every name in `Commons/icons/names.txt` into `Commons/IconPaths.js`.
   A new icon = add its name there (check it on fonts.google.com/icons),
   run build.py, restart the shell; an unknown name logs a warning and draws
-  nothing. Every `icon:` field (PanelRow, PanelButton, menu.jsonc rows) takes
+  nothing. Look at a new icon at bar size (15px) before using it — detailed
+  ones (memory, smart_toy) turn to mush; prefer simple silhouettes (speed,
+  sd_card, auto_awesome). A few old SVGs have no viewBox (0..20 coordinates);
+  build.py stores each icon's box, so never assume 0 -960 960 960. Every `icon:` field (PanelRow, PanelButton, menu.jsonc rows) takes
   a name too. Material has no brand logos: those (agents) stay Nerd Font
   glyphs, which `Icon` draws as text. Show state with colour, not outline.
   In the minimal skin widgets are 4px padded; pair an icon with its number in

@@ -17,7 +17,10 @@ Item {
     property real size: Theme.fs(15)
     property color color: Theme.c.fg
     readonly property bool material: /^[a-z0-9_]+$/.test(icon)
-    readonly property string path: material ? ((size > 28 ? Paths.large[icon] : Paths.small[icon]) || Paths.small[icon] || "") : ""
+    // [path data, viewBox x, y, size]
+    readonly property var entry: material ? ((size > 28 ? Paths.large[icon] : Paths.small[icon]) || Paths.small[icon] || null) : null
+    readonly property string path: entry ? entry[0] : ""
+    readonly property real k: entry ? size / entry[3] : 1
 
     implicitWidth: material ? size : glyph.implicitWidth
     implicitHeight: material ? size : glyph.implicitHeight
@@ -25,15 +28,15 @@ Item {
 
     Shape {
         visible: root.path !== ""
-        // the symbols' viewBox is 0 -960 960 960: scale it down, then move
-        // its top (y = -960) to our top
-        x: (root.width - root.size) / 2
-        y: (root.height - root.size) / 2 + root.size
+        // scale the icon's viewBox to size and move its corner to ours
+        // (most are 0 -960 960 960, so that is a shift down by one size)
+        x: (root.width - root.size) / 2 - (root.entry ? root.entry[1] * root.k : 0)
+        y: (root.height - root.size) / 2 - (root.entry ? root.entry[2] * root.k : 0)
         preferredRendererType: Shape.CurveRenderer
         ShapePath {
             fillColor: root.color
             strokeWidth: -1
-            scale: Qt.size(root.size / 960, root.size / 960)
+            scale: Qt.size(root.k, root.k)
             PathSvg { path: root.path }
         }
     }

@@ -99,6 +99,7 @@ rocket_launch
 rule
 schedule
 school
+sd_card
 select_window
 settings
 settings_applications
@@ -106,6 +107,7 @@ signal_wifi_4_bar
 smart_toy
 smartphone
 speaker
+speed
 square
 stethoscope
 style
@@ -115,6 +117,7 @@ toggle_on
 toolbar
 tune
 vertical_align_top
+videogame_asset
 visibility
 visibility_off
 volume_down
