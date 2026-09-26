@@ -38,14 +38,10 @@ Pill {
     Timer { interval: 3000; running: true; repeat: true; triggeredOnStart: true; onTriggered: rd.running = true }
     readonly property color hot: Theme.hued ? Theme.c.warning : Theme.c.accentBright
     // each icon sits with its number; the pill's gap separates the pairs
-    gap: pillMode ? 13 : 8
-    Row { spacing: 3
-          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "speed"; color: sm.cpu > 85 ? sm.hot : Theme.c.accentLight }
-          Label { anchors.verticalCenter: parent.verticalCenter; visible: !sm.vertical; text: sm.cpu + "%"; color: Theme.c.accentLight } }
-    Row { visible: !sm.vertical; spacing: 3
-          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "sd_card"; color: sm.mem > 85 ? sm.hot : Theme.c.accentLight }
-          Label { anchors.verticalCenter: parent.verticalCenter; text: sm.mem + "%"; color: Theme.c.accentLight } }
-    Row { visible: !sm.vertical && sm.gpu >= 0; spacing: 3
-          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "videogame_asset"; color: sm.gpu > 85 ? sm.hot : Theme.c.accentLight }
-          Label { anchors.verticalCenter: parent.verticalCenter; text: sm.gpu + "%"; color: Theme.c.accentLight } }
+    gap: pillMode ? 13 : 7
+    // each reading keeps the width of "88%" (Reading.qml), so 5% → 12% doesn't
+    // push the bar; in a side bar they stack, number under icon
+    Reading { icon: "speed"; text: sm.cpu + "%"; iconColor: sm.cpu > 85 ? sm.hot : Theme.c.accentLight }
+    Reading { icon: "sd_card"; text: sm.mem + "%"; iconColor: sm.mem > 85 ? sm.hot : Theme.c.accentLight }
+    Reading { visible: sm.gpu >= 0; icon: "videogame_asset"; text: sm.gpu + "%"; iconColor: sm.gpu > 85 ? sm.hot : Theme.c.accentLight }
 }

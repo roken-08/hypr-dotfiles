@@ -159,6 +159,16 @@ Layer-surface and input traps, each cost an evening:
   button is held (exclusive zone fixed) so the cursor never leaves it.
 - `GridView` fits `floor(height / cellHeight)` rows per column — size it in
   whole cells or rows spill into the next column and arrow keys land wrong.
+- A `PopupWindow` hanging off a layer surface that sets a `mask` (the dock)
+  gets no pointer input from Hyprland, even while the mask covers the whole
+  window: draw such menus inside the window and grow it while open (the
+  dock's right-click menu). The bar's panels work because the bar sets no mask.
+- `HyprlandWorkspace.hasFullscreen` is also true for a *maximized* window;
+  check `toplevel.wayland.fullscreen` when only real fullscreen should count.
+- Numbers in the bar keep a fixed width (Bar/Reading.qml, `widest`), or every
+  1 → 2 digit change pushes the widgets beside them.
+- An edge preview (or any layer) that re-anchors between edges passes through
+  a full-screen size for a frame; keep one fixed window per edge instead.
 - Pickers select by keyboard and launch by click; don't select on hover
   (`onEntered`): opening one under a resting mouse moves the selection.
 

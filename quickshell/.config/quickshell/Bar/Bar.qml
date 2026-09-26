@@ -214,7 +214,9 @@ Scope {
                         x: win.vertical ? (parent.width - width) / 2
                                         : Math.max(leftSec.x + leftSec.width + 12,
                                                    Math.min((parent.width - width) / 2, rightSec.x - width - 12))
-                        y: (parent.height - height) / 2
+                        y: !win.vertical ? (parent.height - height) / 2
+                                         : Math.max(leftSec.y + leftSec.height + 12,
+                                                    Math.min((parent.height - height) / 2, rightSec.y - height - 12))
                     }
                     Section {
                         id: rightSec
@@ -225,32 +227,39 @@ Scope {
                 }
             }
 
-            // edge preview while moving: a translucent strip on the candidate edge
-            PanelWindow {
-                id: ghost
-                screen: perScreen.modelData
-                visible: bars.moving && bars.candidate !== "" && bars.candidate !== Config.position
-                readonly property bool v: bars.candidate === "left" || bars.candidate === "right"
-                anchors {
-                    top:    bars.candidate === "top"    || v
-                    bottom: bars.candidate === "bottom" || v
-                    left:   bars.candidate === "left"   || !v
-                    right:  bars.candidate === "right"  || !v
-                }
-                implicitHeight: v ? 0 : win.thickness
-                implicitWidth: v ? win.thickness : 0
-                color: "transparent"
-                exclusionMode: ExclusionMode.Ignore
-                WlrLayershell.layer: WlrLayer.Overlay
-                WlrLayershell.namespace: "hypr-bar-ghost"
-                mask: Region {}
-                Rectangle {
-                    anchors.fill: parent
-                    anchors.margins: 4
-                    radius: Theme.radius
-                    color: Theme.alpha(Theme.c.fg, 0.18)
-                    border.width: 1
-                    border.color: Theme.c.borderStrong
+            // edge preview while moving: a translucent strip on the candidate
+            // edge. One fixed window per edge, only shown, never re-anchored:
+            // a single window moving between edges passed through a full-screen
+            // size for a frame and flashed over everything.
+            Repeater {
+                model: ["top", "bottom", "left", "right"]
+                PanelWindow {
+                    id: ghost
+                    required property string modelData
+                    readonly property bool v: modelData === "left" || modelData === "right"
+                    screen: perScreen.modelData
+                    visible: bars.moving && bars.candidate === modelData && modelData !== Config.position
+                    anchors {
+                        top:    modelData === "top"    || v
+                        bottom: modelData === "bottom" || v
+                        left:   modelData === "left"   || !v
+                        right:  modelData === "right"  || !v
+                    }
+                    implicitHeight: v ? 0 : win.thickness
+                    implicitWidth: v ? win.thickness : 0
+                    color: "transparent"
+                    exclusionMode: ExclusionMode.Ignore
+                    WlrLayershell.layer: WlrLayer.Overlay
+                    WlrLayershell.namespace: "hypr-bar-ghost"
+                    mask: Region {}
+                    Rectangle {
+                        anchors.fill: parent
+                        anchors.margins: 4
+                        radius: Theme.radius
+                        color: Theme.alpha(Theme.c.fg, 0.18)
+                        border.width: 1
+                        border.color: Theme.c.borderStrong
+                    }
                 }
             }
         }

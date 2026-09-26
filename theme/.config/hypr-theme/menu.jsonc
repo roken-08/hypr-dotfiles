@@ -22,7 +22,7 @@
   "style":   {"icon":"style","label":"Style"},
   "toggle":  {"icon":"toggle_on","label":"Toggle"},
   "setup":   {"icon":"settings","label":"Setup","description":"settings config"},
-  "agents":  {"icon":"auto_awesome","label":"Agents","description":"ai claude codex"},
+  "agents":  {"icon":"smart_toy","label":"Agents","description":"ai claude codex"},
   "learn":   {"icon":"school","label":"Learn","description":"help docs keys"},
   "remind":  {"icon":"alarm","label":"Reminder"},
   "system":  {"icon":"power_settings_new","label":"System","description":"power"},
@@ -93,7 +93,7 @@
   "setup.restart":     {"icon":"restart_alt","label":"Restart shell","description":"bar reload refresh","action":"~/.config/hypr/scripts/shell.sh restart"},
   "setup.doctor":      {"icon":"stethoscope","label":"Diagnostics","description":"doctor logs health","action":"hypr-float 'hypr-doctor --print | less -R'"},
   "setup.defaults":    {"icon":"check_circle","label":"Defaults"},
-  "setup.defaults.agent":    {"icon":"auto_awesome","label":"Coding agent","value":"agent","provider":"agents.default"},
+  "setup.defaults.agent":    {"icon":"smart_toy","label":"Coding agent","value":"agent","provider":"agents.default"},
   "setup.defaults.terminal": {"icon":"terminal","label":"Terminal","value":"terminal"},
   "setup.defaults.terminal.kitty":     {"icon":"terminal","label":"kitty","checked":"terminal:kitty","action":"hypr-default terminal kitty","keep":true},
   "setup.defaults.terminal.alacritty": {"icon":"terminal","label":"alacritty","checked":"terminal:alacritty","action":"hypr-default terminal alacritty","keep":true},
@@ -104,7 +104,7 @@
 
   // Agents
   "agents.launch":  {"icon":"rocket_launch","label":"Launch default agent","value":"agent","action":"hypr-agent launch"},
-  "agents.list":    {"icon":"auto_awesome","label":"Launch…","provider":"agents"},
+  "agents.list":    {"icon":"smart_toy","label":"Launch…","provider":"agents"},
   "agents.usage":   {"icon":"data_usage","label":"Usage & limits","action":"qs ipc call panels open agents"},
   "agents.default": {"icon":"check_circle","label":"Default agent","value":"agent","provider":"agents.default"},
   "agents.skills":  {"icon":"extension","label":"Link /hypr skill into agents","action":"hypr-float hypr-agent skills install"},

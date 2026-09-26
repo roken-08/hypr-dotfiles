@@ -25,10 +25,16 @@ Singleton {
 
     function set(key, value) { Config.set("dock." + key, value) }
 
-    // desktop entry for a pinned id or a window's app id
+    // desktop entry for a pinned id or a window's app id: the id itself, then
+    // the app's StartupWMClass (com.anthropic.Claude), then Quickshell's guess
     function entryFor(id) {
         if (!id) return null
-        return DesktopEntries.byId(id) || DesktopEntries.heuristicLookup(id) || null
+        const e = DesktopEntries.byId(id)
+        if (e) return e
+        const low = id.toLowerCase()
+        for (const a of DesktopEntries.applications.values)
+            if ((a.startupClass || "").toLowerCase() === low || a.id.toLowerCase() === low) return a
+        return DesktopEntries.heuristicLookup(id) || null
     }
     function keyFor(entry, appId) { return entry ? entry.id : (appId || "") }
 
@@ -39,6 +45,7 @@ Singleton {
 
     // [{ key, entry, windows: [Toplevel] }] — pinned first, then running
     readonly property var items: {
+        void DesktopEntries.applications.values   // rebuild once the app list (re)loads
         const out = [], at = {}
         for (const id of pinned) {
             const e = entryFor(id)

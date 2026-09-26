@@ -36,8 +36,10 @@ Variants {
             left:   pos === "left"   || !vertical
             right:  pos === "right"  || !vertical
         }
-        implicitHeight: vertical ? 0 : depth
-        implicitWidth: vertical ? depth : 0
+        // taller (wider) while the right-click menu is open: it lives in here
+        readonly property real menuRoom: menu.open ? (vertical ? menu.width : menu.height) + menu.gap * 2 : 0
+        implicitHeight: vertical ? 0 : depth + menuRoom
+        implicitWidth: vertical ? depth + menuRoom : 0
         // always: windows keep clear of it. Otherwise 0, which still keeps it
         // beside a bar on the same edge instead of on top of it.
         exclusionMode: ExclusionMode.Normal
@@ -49,17 +51,28 @@ Variants {
         // ---- shown or hidden ------------------------------------------------
         readonly property var monitor: Hyprland.monitorFor(screen)
         readonly property var ws: monitor ? monitor.activeWorkspace : null
-        readonly property bool fullscreen: !!(ws && ws.hasFullscreen)
+        // a real fullscreen window only: Hyprland's hasFullscreen is also true
+        // for a maximized one (kitty maximized kept the dock away)
+        readonly property bool fullscreen: !!(ws && ws.hasFullscreen
+                                              && ws.toplevels.values.some(t => t.wayland && t.wayland.fullscreen))
         property bool hovered: false
         property bool overlapped: false
-        readonly property bool menuOpen: menu.visible
+        readonly property bool menuOpen: menu.open
         readonly property bool shown: !fullscreen && (menuOpen || hovered || Dock.mode === "always"
                                                      || (Dock.mode === "intellihide" && !overlapped))
+        // moved to another edge: vanish at once, then slide in from the new one
+        property bool settling: false
+        onPosChanged: { settling = true; settle2.restart() }
+        Timer { id: settle2; interval: 160; onTriggered: win.settling = false }
+
         // 0 = in place, 1 = slid past the edge
-        property real away: shown ? 0 : 1
+        property real away: shown && !settling ? 0 : 1
         Behavior on away { NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
 
-        mask: Region { item: win.away < 1 ? card : edge }
+        // input: the card (or the edge strip while hidden); everything while the
+        // right-click menu is open, or Hyprland drops the menu's clicks too
+        Item { id: whole; anchors.fill: parent }
+        mask: Region { item: win.menuOpen ? whole : win.away < 1 ? card : edge }
 
         // intellihide: does any window on this screen's workspace cover the card?
         function checkOverlap() {
@@ -80,7 +93,10 @@ Variants {
                 if (t.workspace !== ws) continue
                 const o = t.lastIpcObject
                 if (!o || !o.at || !o.size || o.hidden) continue
-                if (o.at[0] < x1 && o.at[0] + o.size[0] > x0 && o.at[1] < y1 && o.at[1] + o.size[1] > y0) { hit = true; break }
+                // a few pixels don't count: a centred float that grazes the card
+                // (hypr-float is 82% tall) shouldn't hide it
+                const slack = 10
+                if (o.at[0] < x1 - slack && o.at[0] + o.size[0] > x0 + slack && o.at[1] < y1 - slack && o.at[1] + o.size[1] > y0 + slack) { hit = true; break }
             }
             overlapped = hit
         }
@@ -130,7 +146,7 @@ Variants {
             y: win.vertical ? (parent.height - height) / 2
                             : (win.pos === "top" ? win.edgeGap - slide : parent.height - height - win.edgeGap + slide)
             opacity: 1 - win.away * 0.6
-            visible: win.away < 1 && Dock.items.length > 0
+            visible: win.away < 1 && !win.settling && Dock.items.length > 0
             radius: Theme.radius
             color: Dock.transparent ? "transparent" : Theme.alpha(Theme.c.bg0, 0.85)
             border.width: Dock.transparent ? 0 : 1
@@ -172,11 +188,12 @@ Variants {
                 Rectangle {
                     anchors.fill: parent
                     radius: Theme.radiusSm
-                    color: hit.containsMouse || (menu.visible && menu.app === app) ? Theme.c.bg2
+                    color: hit.containsMouse || (menu.open && menu.app === app) ? Theme.c.bg2
                          : app.focused ? Theme.alpha(Theme.c.bg2, 0.6) : "transparent"
                     Behavior on color { ColorAnimation { duration: 100 } }
                 }
                 IconImage {
+                    id: img
                     anchors.centerIn: parent
                     implicitSize: Dock.iconSize
                     source: app.entry && app.entry.icon ? Quickshell.iconPath(app.entry.icon, true)
@@ -184,7 +201,7 @@ Variants {
                     scale: hit.pressed ? 0.9 : 1
                     Behavior on scale { NumberAnimation { duration: 80 } }
                     Text {   // no icon anywhere: the name's first letter
-                        visible: parent.source === ""
+                        visible: img.source === "" || img.status === Image.Error
                         anchors.centerIn: parent
                         text: app.name.charAt(0).toUpperCase()
                         font.family: Theme.font; font.pixelSize: Dock.iconSize * 0.55; font.weight: Font.DemiBold
@@ -212,12 +229,12 @@ Variants {
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
                     cursorShape: Qt.PointingHandCursor
                     onContainsMouseChanged: {
-                        if (containsMouse && !menu.visible) { tip.app = app; tipDelay.restart() }
+                        if (containsMouse && !menu.open) { tip.app = app; tipDelay.restart() }
                         else if (tip.app === app) { tipDelay.stop(); tip.app = null }
                     }
                     onClicked: (e) => {
                         tipDelay.stop(); tip.app = null
-                        if (e.button === Qt.RightButton) { menu.app = app; menu.visible = true }
+                        if (e.button === Qt.RightButton) menu.show(app)
                         else if (e.button === Qt.MiddleButton) Dock.launch(app.modelData)
                         else Dock.activate(app.modelData)
                     }
@@ -231,7 +248,7 @@ Variants {
             id: tip
             property Item app: null
             property Item shownFor: null
-            visible: shownFor !== null && shownFor === app && !menu.visible && win.away === 0
+            visible: shownFor !== null && shownFor === app && !menu.open && win.away === 0
             anchor.item: shownFor
             anchor.edges: win.pos === "bottom" ? Edges.Top : win.pos === "top" ? Edges.Bottom : win.pos === "left" ? Edges.Right : Edges.Left
             anchor.gravity: anchor.edges
@@ -259,27 +276,44 @@ Variants {
         }
 
         // ---- right-click menu ---------------------------------------------
-        PopupWindow {
+        // Drawn inside the dock's own window, which grows to make room while
+        // it is open: a separate popup surface above the dock got no input
+        // from Hyprland at all (no hover, no clicks).
+        MouseArea {   // a click on the dock's empty space closes it
+            anchors.fill: parent
+            visible: menu.open
+            acceptedButtons: Qt.AllButtons
+            onPressed: menu.open = false
+        }
+        HyprlandFocusGrab {   // …and so does a click anywhere else
+            windows: [win]
+            active: menu.open
+            onCleared: menu.open = false
+        }
+        Rectangle {
             id: menu
+            property bool open: false
             property Item app: null
-            visible: false
-            anchor.item: app
-            anchor.edges: tip.anchor.edges
-            anchor.gravity: tip.anchor.edges
-            anchor.margins.top: tip.anchor.margins.top
-            anchor.margins.bottom: tip.anchor.margins.bottom
-            anchor.margins.left: tip.anchor.margins.left
-            anchor.margins.right: tip.anchor.margins.right
-            color: "transparent"
-            implicitWidth: 200
-            implicitHeight: rows.implicitHeight + 12
-            onVisibleChanged: if (!visible && !cardHover.hovered) hideLater.restart()
-
-            HyprlandFocusGrab {
-                windows: [menu, win]
-                active: menu.visible
-                onCleared: menu.visible = false
+            // where the app sits on the card, measured when the menu opens
+            property real along: 0
+            function show(a) {
+                app = a
+                const p = a.mapToItem(card, a.width / 2, a.height / 2)
+                along = win.vertical ? p.y : p.x
+                open = true
             }
+            visible: open && app !== null
+            width: 200
+            height: rows.implicitHeight + 12
+            readonly property real gap: 8
+            x: win.vertical ? (win.pos === "left" ? card.x + card.width + gap : card.x - width - gap)
+                            : Math.max(4, Math.min(win.width - width - 4, card.x + along - width / 2))
+            y: !win.vertical ? (win.pos === "top" ? card.y + card.height + gap : card.y - height - gap)
+                             : Math.max(4, Math.min(win.height - height - 4, card.y + along - height / 2))
+            radius: Theme.radius
+            color: Theme.c.bg0
+            border.width: 1; border.color: Theme.c.border
+            onOpenChanged: if (!open && !cardHover.hovered) hideLater.restart()
 
             readonly property var actions: {
                 const a = app
@@ -292,44 +326,38 @@ Variants {
                 return out
             }
 
-            Rectangle {
-                anchors.fill: parent
-                radius: Theme.radius
-                color: Theme.c.bg0
-                border.width: 1; border.color: Theme.c.border
-                Column {
-                    id: rows
-                    x: 6; y: 6
-                    width: parent.width - 12
-                    Text {
-                        width: parent.width; height: 28
-                        leftPadding: 8
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                        text: menu.app ? menu.app.name : ""
-                        font.family: Theme.font; font.pixelSize: Theme.fs(12); font.weight: Font.DemiBold
-                        color: Theme.c.accentMid
-                    }
-                    Repeater {
-                        model: menu.actions
-                        delegate: Rectangle {
-                            required property var modelData
-                            width: rows.width; height: 30
-                            radius: Theme.radiusSm
-                            color: ma.containsMouse ? Theme.c.bg2 : "transparent"
-                            Text {
-                                x: 8; anchors.verticalCenter: parent.verticalCenter
-                                text: parent.modelData.label
-                                font.family: Theme.font; font.pixelSize: Theme.fs(12)
-                                color: Theme.c.fg
-                            }
-                            MouseArea {
-                                id: ma
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: { menu.visible = false; parent.modelData.run() }
-                            }
+            Column {
+                id: rows
+                x: 6; y: 6
+                width: parent.width - 12
+                Text {
+                    width: parent.width; height: 28
+                    leftPadding: 8
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    text: menu.app ? menu.app.name : ""
+                    font.family: Theme.font; font.pixelSize: Theme.fs(12); font.weight: Font.DemiBold
+                    color: Theme.c.accentMid
+                }
+                Repeater {
+                    model: menu.actions
+                    delegate: Rectangle {
+                        required property var modelData
+                        width: rows.width; height: 30
+                        radius: Theme.radiusSm
+                        color: ma.containsMouse ? Theme.c.bg2 : "transparent"
+                        Text {
+                            x: 8; anchors.verticalCenter: parent.verticalCenter
+                            text: parent.modelData.label
+                            font.family: Theme.font; font.pixelSize: Theme.fs(12)
+                            color: Theme.c.fg
+                        }
+                        MouseArea {
+                            id: ma
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: { const run = parent.modelData.run; menu.open = false; run() }
                         }
                     }
                 }

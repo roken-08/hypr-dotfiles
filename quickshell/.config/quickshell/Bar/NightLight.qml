@@ -12,7 +12,8 @@ Pill {
         else Quickshell.execDetached(["notify-send", "-a", "night light", "hyprsunset is not installed", "sudo pacman -S hyprsunset"])
     }
     Icon {
-        icon: "nightlight"
-        color: !Night.available ? Theme.c.accentDim : Night.on ? Theme.c.accentBright : Theme.c.accentLight
+        // on: the moon, bright; off: the crossed-out moon, dimmed
+        icon: Night.on ? "nightlight" : "bedtime_off"
+        color: Night.on && Night.available ? Theme.c.accentBright : Theme.c.accentDim
     }
 }

@@ -29,6 +29,7 @@ battery_charging_90
 battery_charging_full
 battery_full
 bedtime
+bedtime_off
 bluetooth
 bluetooth_connected
 bluetooth_disabled

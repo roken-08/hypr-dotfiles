@@ -52,11 +52,7 @@ Pill {
         onTriggered: { dev.reload(); ns.sample(dev.text()) }
     }
 
-    gap: pillMode ? 13 : 8
-    Row { spacing: 2
-          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "arrow_downward"; color: ns.busy ? Theme.c.accentBright : Theme.c.accentLight }
-          Label { anchors.verticalCenter: parent.verticalCenter; visible: !ns.vertical; text: ns.fmt(ns.down); color: Theme.c.accentLight } }
-    Row { visible: !ns.vertical; spacing: 2
-          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "arrow_upward"; color: Theme.c.accentLight }
-          Label { anchors.verticalCenter: parent.verticalCenter; text: ns.fmt(ns.up); color: Theme.c.accentLight } }
+    gap: pillMode ? 13 : 7
+    Reading { icon: "arrow_downward"; text: ns.fmt(ns.down); widest: "888K"; iconColor: ns.busy ? Theme.c.accentBright : Theme.c.accentLight }
+    Reading { icon: "arrow_upward"; text: ns.fmt(ns.up); widest: "888K" }
 }
