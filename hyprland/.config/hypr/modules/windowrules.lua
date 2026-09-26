@@ -29,8 +29,8 @@ hl.layer_rule({ match = { namespace = "^hypr-picker$" },         blur = true, ig
 hl.layer_rule({ match = { namespace = "^hypr-launcher$" },       blur = true, ignore_alpha = 0.5, animation = "popin 65%" })
 hl.layer_rule({ match = { namespace = "^hypr-clipboard$" },      blur = true, ignore_alpha = 0.5, animation = "popin 65%" })
 hl.layer_rule({ match = { namespace = "^hypr-menu$" },           blur = true, ignore_alpha = 0.5, animation = "popin 65%" })
--- the bar's surface grows to the screen while a button is held on it (Bar.qml,
--- to keep drags over empty workspaces); animated, that resize stretched the bar
+-- the bar re-anchors when it moves to another edge; animated, that resize
+-- stretched it across the screen for a few frames
 hl.layer_rule({ match = { namespace = "^hypr-bar$" },            no_anim = true })
 hl.layer_rule({ match = { namespace = "^hypr-bar-ghost$" },      no_anim = true })
 hl.layer_rule({ match = { namespace = "^hypr-dock$" },           no_anim = true })   -- the dock slides itself

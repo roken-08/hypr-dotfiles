@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import Quickshell.Hyprland
 import qs.Commons
 
 // One bar per screen, on any edge. Three skins (Theme.barStyle):
@@ -90,21 +91,19 @@ Scope {
                     left:   pos === "left"   ? edgeGap : (vertical ? 0 : sideGap)
                     right:  pos === "right"  ? edgeGap : (vertical ? 0 : sideGap)
                 }
-                // A drag on empty bar space grows this surface to the whole
-                // screen until the release. Over an empty workspace Hyprland
-                // otherwise sends the bar a pointer leave the moment a drag
-                // leaves it (Qt reads that as a release) and no surface gets
-                // the motion; kept under the cursor, the bar keeps its grab
-                // and gets the real release. Reserved space and the visible
-                // strip stay the same.
-                // only once a drag has begun (a plain click never resizes the
-                // bar, which showed as a flicker on every click), and tied to the
-                // mouse area's own pressed state, so a lost release can never
-                // leave the bar stuck at full-screen size
-                readonly property bool held: gesture.pressed && bars.moving
-                readonly property int grown: vertical ? screen.width - edgeGap : screen.height - edgeGap
-                implicitHeight: vertical ? 0 : (held ? grown : thickness)
-                implicitWidth: vertical ? (held ? grown : thickness) : 0
+                // Dragging the bar over an empty workspace: Hyprland keeps a
+                // pressed button's pointer focus on the pressed surface only
+                // while *some* surface has keyboard focus (InputManager.cpp).
+                // With a window that is the window; with none, the bar lost the
+                // drag as soon as it left it. So on an empty workspace the bar
+                // takes keyboard focus on click (nothing to steal it from); with
+                // windows it never does. No resizing: resizing the surface
+                // flashed its old buffer stretched over the screen.
+                readonly property var ws: Hyprland.monitorFor(screen) ? Hyprland.monitorFor(screen).activeWorkspace : null
+                readonly property bool emptyWorkspace: !ws || ws.toplevels.values.length === 0
+                WlrLayershell.keyboardFocus: emptyWorkspace ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+                implicitHeight: vertical ? 0 : thickness
+                implicitWidth: vertical ? thickness : 0
                 exclusionMode: ExclusionMode.Normal
                 exclusiveZone: thickness
                 color: "transparent"

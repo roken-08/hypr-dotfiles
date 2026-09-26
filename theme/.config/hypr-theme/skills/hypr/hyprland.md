@@ -56,9 +56,9 @@ remembers (`remember_window_size`, on by default): `hypr-float` passes
   the same reason: after a maximized kitty closed, every new one asked to start
   maximized ("new windows go fullscreen" — test with a probe `kitty --class
   probe`, kill it by pid, never `pkill -f` a pattern in your own command). Check a size rule a few seconds after the
-window maps, not at once. A layer surface that resizes itself (the bar
-grows while pressed) needs `no_anim = true`, or Hyprland animates the size
-and draws the old buffer stretched.
+window maps, not at once. A layer surface that resizes itself needs
+`no_anim = true`, or Hyprland animates the size; even without the animation
+the old buffer shows stretched for a frame, so avoid resizing on input.
 
 ## Monitors and scale
 

@@ -151,12 +151,14 @@ Layer-surface and input traps, each cost an evening:
   compositor while its size updates fine — the bar came up at 6,5 on a flush
   skin. Map once settings are read (`visible: … && Config.ready && Theme.ready`)
   and check real geometry with `hyprctl layers`, not the QML values.
-- Over an empty workspace Hyprland sends a layer surface a pointer *leave* as
-  soon as a drag leaves it, and Qt turns that into a release; nothing else
-  gets the motion, and a surface mapped mid-drag isn't shown until the button
-  is up. Over a window the grab holds, so always test drags on an empty
-  workspace too. The bar's fix: grow its own surface to the screen while a
-  button is held (exclusive zone fixed) so the cursor never leaves it.
+- Over an empty workspace Hyprland drops a drag the moment the pointer leaves
+  the pressed layer surface (Qt reads the leave as a release): it keeps a held
+  button's pointer focus only while *some* surface has keyboard focus
+  (InputManager.cpp). Over a window the window has it. The bar therefore sets
+  `keyboardFocus: OnDemand` only while its workspace has no windows. Don't
+  resize a surface to catch the pointer instead: Hyprland shows the old buffer
+  stretched for a frame, a flash over the whole screen. Always test drags on
+  an empty workspace too.
 - `GridView` fits `floor(height / cellHeight)` rows per column — size it in
   whole cells or rows spill into the next column and arrow keys land wrong.
 - A `PopupWindow` hanging off a layer surface that sets a `mask` (the dock)
