@@ -22,6 +22,7 @@ Loader {
         case "activewindow": return activewindow
         case "media":        return media
         case "sysmon":       return sysmon
+        case "netspeed":     return netspeed
         case "keyboard":     return keyboard
         case "agents":       return agents
         case "nightlight":   return nightlight
@@ -51,6 +52,7 @@ Loader {
     Component { id: activewindow; ActiveWindow {} }
     Component { id: media;        Media {} }
     Component { id: sysmon;       SysMon {} }
+    Component { id: netspeed;     NetSpeed {} }
     Component { id: keyboard;     KeyboardLayout {} }
     Component { id: agents;       Agents {} }
     Component { id: nightlight;   NightLight {} }

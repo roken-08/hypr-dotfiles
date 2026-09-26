@@ -74,7 +74,7 @@ Singleton {
     readonly property var tick: [Theme.name, Theme.barStyle, Config.position, Config.transparent, Config.hidden, Config.batteryPercent, Caffeine.on, Notifs.dnd, data]
 
     // ---- rows ------------------------------------------------------------
-    readonly property var widgetIds: ["clock", "workspaces", "tray", "audio", "network", "bluetooth", "battery", "caffeine", "bell", "activewindow", "media", "sysmon", "keyboard", "agents"]
+    readonly property var widgetIds: ["clock", "workspaces", "tray", "audio", "network", "bluetooth", "battery", "caffeine", "bell", "activewindow", "media", "sysmon", "netspeed", "nightlight", "keyboard", "agents"]
     function layoutAll() { const s = Theme.barLayout; return ["left", "center", "right"].map(sec => Config.layoutFor(s, sec)) }
     function widgetOn(id) { return layoutAll().some(l => l.indexOf(id) !== -1) }
     function toggleWidget(id) {

@@ -15,6 +15,7 @@ WidgetLoader 1.0 WidgetLoader.qml
 ActiveWindow 1.0 ActiveWindow.qml
 Media 1.0 Media.qml
 SysMon 1.0 SysMon.qml
+NetSpeed 1.0 NetSpeed.qml
 KeyboardLayout 1.0 KeyboardLayout.qml
 CommandWidget 1.0 CommandWidget.qml
 Agents 1.0 Agents.qml
