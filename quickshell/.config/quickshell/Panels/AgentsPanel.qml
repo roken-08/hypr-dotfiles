@@ -140,8 +140,8 @@ Panel {
             Label { text: "Default: " + (Agents.defaultAgent || "none"); font.pixelSize: Theme.fs(12); color: Theme.c.fg }
             Label { text: { void p.now; return "updated " + Agents.ago() } font.pixelSize: Theme.fs(10); color: Theme.c.accentMid; elide: Text.ElideRight; width: parent.width }
         }
-        PanelButton { id: refresh; icon: Agents.busy ? "󰑖" : "󰑐"; onClicked: Agents.refresh() }
-        PanelButton { id: launch; icon: "󱚝"; text: "Launch"; primary: true; enabled: Agents.defaultAgent !== ""
+        PanelButton { id: refresh; icon: Agents.busy ? "sync" : "refresh"; onClicked: Agents.refresh() }
+        PanelButton { id: launch; icon: "rocket_launch"; text: "Launch"; primary: true; enabled: Agents.defaultAgent !== ""
                       onClicked: { Agents.launch(""); Panels.close() } }
     }
 }

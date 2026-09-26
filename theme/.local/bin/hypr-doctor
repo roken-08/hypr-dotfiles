@@ -58,6 +58,7 @@ run "current/ files" sh -c "ls '$HOME/.config/hypr-theme/current' | tr '\n' ' ';
 run "gtk3 settings" sh -c "grep -E 'gtk-(theme|icon-theme)-name' '$HOME/.config/gtk-3.0/settings.ini'"
 run "gsettings" sh -c "gsettings get org.gnome.desktop.interface color-scheme; gsettings get org.gnome.desktop.interface gtk-theme"
 run "font" sh -c "fc-list : family | grep -i 'JetBrainsMono Nerd Font Propo' | head -1 || echo MISSING"
+run "icon font" sh -c "fc-list : family | grep -i -m1 'Material Symbols Rounded' || echo 'MISSING — shell icons are blank: sudo pacman -S ttf-material-symbols-variable'"
 run "wallpaper" hypr-wall current
 run "root sync" sh -c "ls -la /usr/local/bin/hypr-theme-root-sync /etc/sudoers.d/hypr-theme 2>&1"
 

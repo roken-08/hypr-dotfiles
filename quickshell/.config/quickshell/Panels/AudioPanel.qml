@@ -23,7 +23,7 @@ Panel {
         width: parent.width; spacing: 6
         Row {
             width: parent.width; spacing: 8
-            Label { text: p.sink && p.sink.audio.muted ? "󰝟" : "󰕾"; width: 20; font.pixelSize: Theme.fs(15)
+            Icon { icon: p.sink && p.sink.audio.muted ? "volume_off" : "volume_up"; width: 20; size: Theme.fs(18)
                     color: p.sink && p.sink.audio.muted ? Theme.c.accentDim : Theme.c.accentLight
                     MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor
                                 onClicked: if (p.sink) p.sink.audio.muted = !p.sink.audio.muted } }
@@ -40,7 +40,7 @@ Panel {
             model: p.sinks
             PanelRow {
                 required property var modelData
-                icon: modelData === p.sink ? "󰓃" : "󰓃"
+                icon: "speaker"
                 title: p.label(modelData)
                 active: modelData === p.sink
                 trailing: active ? "default" : ""
@@ -56,7 +56,7 @@ Panel {
         width: parent.width; spacing: 6
         Row {
             width: parent.width; spacing: 8
-            Label { text: p.source && p.source.audio.muted ? "󰍭" : "󰍬"; width: 20; font.pixelSize: Theme.fs(15)
+            Icon { icon: p.source && p.source.audio.muted ? "mic_off" : "mic"; width: 20; size: Theme.fs(18)
                     color: p.source && p.source.audio.muted ? Theme.c.accentDim : Theme.c.accentLight
                     MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor
                                 onClicked: if (p.source) p.source.audio.muted = !p.source.audio.muted } }
@@ -73,7 +73,7 @@ Panel {
             model: p.sources
             PanelRow {
                 required property var modelData
-                icon: "󰍬"
+                icon: "mic"
                 title: p.label(modelData)
                 active: modelData === p.source
                 trailing: active ? "default" : ""
@@ -84,6 +84,6 @@ Panel {
 
     Row {
         width: parent.width; spacing: 8; layoutDirection: Qt.RightToLeft
-        PanelButton { text: "Mixer"; icon: "󰕬"; onClicked: { Quickshell.execDetached(["pavucontrol"]); Panels.close() } }
+        PanelButton { text: "Mixer"; icon: "tune"; onClicked: { Quickshell.execDetached(["pavucontrol"]); Panels.close() } }
     }
 }

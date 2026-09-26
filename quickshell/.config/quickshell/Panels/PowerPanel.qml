@@ -43,9 +43,9 @@ Panel {
             readonly property int n: PowerProfiles.hasPerformanceProfile ? 3 : 2
             Repeater {
                 model: [
-                    { name: "Saver",    icon: "󰌪", v: PowerProfile.PowerSaver,  ok: true },
-                    { name: "Balanced", icon: "󰗑", v: PowerProfile.Balanced,    ok: true },
-                    { name: "Perf",     icon: "󱐋", v: PowerProfile.Performance, ok: PowerProfiles.hasPerformanceProfile }
+                    { name: "Saver",    icon: "eco", v: PowerProfile.PowerSaver,  ok: true },
+                    { name: "Balanced", icon: "balance", v: PowerProfile.Balanced,    ok: true },
+                    { name: "Perf",     icon: "bolt", v: PowerProfile.Performance, ok: PowerProfiles.hasPerformanceProfile }
                 ]
                 PanelButton {
                     required property var modelData
@@ -65,9 +65,9 @@ Panel {
     Row {
         id: session
         width: parent.width; spacing: 6
-        PanelButton { width: (session.width - 18) / 4; icon: "󰌾"; text: "Lock";     onClicked: { Quickshell.execDetached(["hyprlock"]); Panels.close() } }
-        PanelButton { width: (session.width - 18) / 4; icon: "󰤄"; text: "Sleep";    onClicked: { Quickshell.execDetached(["systemctl", "suspend"]); Panels.close() } }
-        PanelButton { width: (session.width - 18) / 4; icon: "󰜉"; text: "Reboot";   onClicked: { Quickshell.execDetached(["systemctl", "reboot"]); Panels.close() } }
-        PanelButton { width: (session.width - 18) / 4; icon: "󰐥"; text: "Off";      onClicked: { Quickshell.execDetached(["systemctl", "poweroff"]); Panels.close() } }
+        PanelButton { width: (session.width - 18) / 4; icon: "lock"; text: "Lock";     onClicked: { Quickshell.execDetached(["hyprlock"]); Panels.close() } }
+        PanelButton { width: (session.width - 18) / 4; icon: "bedtime"; text: "Sleep";    onClicked: { Quickshell.execDetached(["systemctl", "suspend"]); Panels.close() } }
+        PanelButton { width: (session.width - 18) / 4; icon: "restart_alt"; text: "Reboot";   onClicked: { Quickshell.execDetached(["systemctl", "reboot"]); Panels.close() } }
+        PanelButton { width: (session.width - 18) / 4; icon: "power_settings_new"; text: "Off";      onClicked: { Quickshell.execDetached(["systemctl", "poweroff"]); Panels.close() } }
     }
 }

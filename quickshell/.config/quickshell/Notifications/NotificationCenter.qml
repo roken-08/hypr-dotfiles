@@ -39,6 +39,6 @@ Panel {
 
     Row {
         width: parent.width; spacing: 8; layoutDirection: Qt.RightToLeft
-        PanelButton { visible: Notifs.count > 0; text: "Clear all"; icon: "󰎟"; onClicked: Notifs.clearAll() }
+        PanelButton { visible: Notifs.count > 0; text: "Clear all"; icon: "clear_all"; onClicked: Notifs.clearAll() }
     }
 }

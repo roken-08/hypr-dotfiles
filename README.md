@@ -66,17 +66,20 @@ repo as a fallback (`HYPR_SHELL=waybar`).
 ## Fonts
 
 ```bash
-sudo pacman -S ttf-jetbrains-mono-nerd inter-font
+sudo pacman -S ttf-jetbrains-mono-nerd ttf-material-symbols-variable inter-font
 ```
 
-The **Propo** variant matters — every glyph in the shell (and the classic tools) uses it. Check it landed:
+The shell's icons (bar, menu, panels, dock, power menu, OSD) are Google's
+[Material Symbols](https://fonts.google.com/icons) (Rounded) from `ttf-material-symbols-variable`;
+without it they stay blank and the shell says so in a notification. Text uses the Nerd Font's
+**Propo** variant, which the classic tools also need for their glyphs. Check both landed:
 
 ```bash
-fc-list : family | grep -i "JetBrainsMono Nerd Font Propo"
+fc-list : family | grep -i -e "JetBrainsMono Nerd Font Propo" -e "Material Symbols Rounded"
 ```
 
-**If that prints nothing, every icon renders as an empty box.** That's the usual reason a fresh
-install looks broken.
+**If that prints nothing, icons render as empty boxes or blanks.** That's the usual reason a fresh
+install looks broken; `hypr-doctor` checks both.
 
 ---
 

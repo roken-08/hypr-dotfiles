@@ -52,7 +52,7 @@ Minimal plugin, `~/.config/hypr-theme/plugins/hello.qml`:
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import qs.Commons        // Theme, Config
+import qs.Commons        // Theme, Config, Icon
 import qs.Bar            // Pill, Label
 import qs.Services       // Panels, Notifs, …
 import qs.Panels         // Panel, PanelHeader, PanelRow, PanelButton
@@ -65,15 +65,24 @@ Pill {
               stdout: StdioCollector { onStreamFinished: w.value = (parseInt(text) / 1e6).toFixed(1) + " W" } }
     Timer { interval: 5000; running: true; repeat: true; onTriggered: p.running = true }
     onClicked: Panels.toggle("hello", w)          // a panel, or Quickshell.execDetached([...])
-    Label { text: "󱐋"; color: Theme.c.accentLight }
+    Icon { icon: "bolt"; color: Theme.c.accentLight }
     Label { visible: w.pillMode && !w.vertical; text: w.value; color: Theme.c.fg }
     Panel { name: "hello"; anchorItem: w
             PanelHeader { title: "Power draw" }
-            PanelRow { icon: "󱐋"; title: w.value; subtitle: "battery discharge" } }
+            PanelRow { icon: "bolt"; title: w.value; subtitle: "battery discharge" } }
 }
 ```
 
 Rules of the house:
+- **Icons are Material Symbols Rounded, by name**: `Icon { icon: "wifi" }`
+  (Commons/Icon.qml; `fill: true` for an active state, `size`, `weight`).
+  Every `icon:` field (PanelRow, PanelButton, menu.jsonc rows) takes a name
+  too. Check a name exists before using it —
+  `grep -w '^<name>' /usr/share/fonts/*/MaterialSymbolsRounded*.codepoints` if the
+  package ships it, else fonts.google.com/icons — a wrong name renders as
+  nothing. Material has no brand logos: those (agents) stay Nerd Font glyphs,
+  which `Icon` draws as text. Icons are a full em wide; in the bar 15px (the
+  default) matches the text.
 - **Pill**: put `Label`s (or small Items) inside; it handles padding, every skin,
   vertical bars, hover, `clicked/rightClicked/middleClicked/scrolled`. Hide text
   in the minimal/vertical bar with `visible: pillMode && !vertical` like the

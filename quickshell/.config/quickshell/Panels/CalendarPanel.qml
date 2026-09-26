@@ -14,12 +14,12 @@ Panel {
 
     Item {
         width: parent.width; height: 26
-        Label { anchors.left: parent.left; anchors.leftMargin: 8; anchors.verticalCenter: parent.verticalCenter
-                text: "󰅁"; font.pixelSize: Theme.fs(14); color: Theme.c.accentMid
+        Icon { anchors.left: parent.left; anchors.leftMargin: 8; anchors.verticalCenter: parent.verticalCenter
+                icon: "chevron_left"; size: Theme.fs(18); color: Theme.c.accentMid
                 MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: p.step(-1) } }
         Label { anchors.centerIn: parent; text: Qt.formatDate(p.shown, "MMMM yyyy"); font.pixelSize: Theme.fs(13); font.weight: Font.Bold; color: Theme.c.accentBright }
-        Label { anchors.right: parent.right; anchors.rightMargin: 8; anchors.verticalCenter: parent.verticalCenter
-                text: "󰅂"; font.pixelSize: Theme.fs(14); color: Theme.c.accentMid
+        Icon { anchors.right: parent.right; anchors.rightMargin: 8; anchors.verticalCenter: parent.verticalCenter
+                icon: "chevron_right"; size: Theme.fs(18); color: Theme.c.accentMid
                 MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: p.step(1) } }
         MouseArea { anchors.fill: parent; z: -1; onWheel: (w) => p.step(w.angleDelta.y > 0 ? -1 : 1) }
     }

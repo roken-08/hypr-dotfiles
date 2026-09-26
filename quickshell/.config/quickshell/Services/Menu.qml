@@ -135,12 +135,12 @@ Singleton {
     }
     function providerRows(name) {
         void tick
-        if (name === "widgets") return widgetIds.map(w => ({ id: "widget." + w, icon: "󰕰", label: w, description: "", action: "", keep: true,
+        if (name === "widgets") return widgetIds.map(w => ({ id: "widget." + w, icon: "widgets", label: w, description: "", action: "", keep: true,
                                                               input: "", provider: "", sub: false, checked: widgetOn(w), value: "", crumb: "", internal: "widget" }))
         if (name === "dock.pins") return Apps.all.slice()   // pinned first, in dock order, then A–Z
                                         .sort((a, b) => ((Dock.isPinned(a.id) ? Dock.pinned.indexOf(a.id) : 1e4) - (Dock.isPinned(b.id) ? Dock.pinned.indexOf(b.id) : 1e4))
                                                         || a.name.localeCompare(b.name))
-                                        .map(a => ({ id: "dockpin." + a.id, icon: "󰐃", label: a.name, description: "", action: "", keep: true,
+                                        .map(a => ({ id: "dockpin." + a.id, icon: "push_pin", label: a.name, description: "", action: "", keep: true,
                                                      input: "", provider: "", sub: false, checked: Dock.isPinned(a.id), value: "", crumb: "", internal: "dockpin" }))
         if (name === "agents.default") return (data.agents || []).map(a => ({ id: "agent." + a.id, icon: a.icon, label: a.label, description: "", action: "hypr-agent default " + a.id,
                                                                             keep: true, input: "", provider: "", sub: false, checked: a.checked, value: "", crumb: "" }))

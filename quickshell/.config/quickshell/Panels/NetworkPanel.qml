@@ -33,7 +33,7 @@ Panel {
     Timer { interval: 2000; running: p.open; repeat: true; onTriggered: p.refresh() }
 
     // signalStrength is 0..1
-    function strengthIcon(v) { const s = v * 100; return s > 75 ? "󰤨" : s > 50 ? "󰤥" : s > 25 ? "󰤢" : "󰤟" }
+    function strengthIcon(v) { const s = v * 100; return s > 75 ? "signal_wifi_4_bar" : s > 50 ? "network_wifi_3_bar" : s > 25 ? "network_wifi_2_bar" : "network_wifi_1_bar" }
     function tap(n) {
         if (n.connected) { n.disconnect(); return }
         if (n.known || n.security === WifiSecurityType.None) { n.connect(); return }
@@ -49,7 +49,7 @@ Panel {
 
     PanelRow {
         visible: p.wired && p.wired.connected
-        icon: "󰈀"; title: "Wired"; subtitle: p.wired ? (p.wired.address || "") : ""; active: true; trailing: "connected"
+        icon: "lan"; title: "Wired"; subtitle: p.wired ? (p.wired.address || "") : ""; active: true; trailing: "connected"
     }
 
     Column {
@@ -65,7 +65,7 @@ Panel {
                     icon: p.strengthIcon(modelData.signalStrength)
                     title: modelData.name
                     subtitle: modelData.connected ? "connected" : modelData.known ? "saved" : ""
-                    trailing: modelData.security === WifiSecurityType.None ? "" : "󰌾"
+                    trailingIcon: modelData.security === WifiSecurityType.None ? "" : "lock"
                     active: modelData.connected
                     busy: modelData.stateChanging
                     onClicked: p.tap(modelData)
@@ -94,6 +94,6 @@ Panel {
 
     Row {
         width: parent.width; spacing: 8; layoutDirection: Qt.RightToLeft
-        PanelButton { text: "Settings"; icon: "󰒓"; onClicked: { Quickshell.execDetached(["nm-connection-editor"]); Panels.close() } }
+        PanelButton { text: "Settings"; icon: "settings"; onClicked: { Quickshell.execDetached(["nm-connection-editor"]); Panels.close() } }
     }
 }

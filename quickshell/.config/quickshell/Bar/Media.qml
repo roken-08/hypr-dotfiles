@@ -37,10 +37,11 @@ Pill {
                 asynchronous: true
             }
         }
-        Label {
+        Icon {
             anchors.centerIn: parent
             visible: thumb.status !== Image.Ready
-            text: media.playing ? "󰐊" : "󰏤"
+            icon: media.playing ? "play_arrow" : "pause"
+            fill: true
             color: media.playing ? Theme.c.accentBright : Theme.c.accentMid
         }
     }

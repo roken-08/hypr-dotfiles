@@ -10,6 +10,7 @@ Rectangle {
     property string title: ""
     property string subtitle: ""
     property string trailing: ""
+    property string trailingIcon: ""    // an Icon name, drawn after the trailing text
     property bool active: false
     property bool busy: false
     signal clicked()
@@ -19,10 +20,10 @@ Rectangle {
     radius: Theme.radius
     color: active ? Theme.c.bg2 : m.containsMouse ? Theme.c.bg1 : "transparent"
     Behavior on color { ColorAnimation { duration: 120 } }
-    Label {
+    Icon {
         id: ic
         x: 10; anchors.verticalCenter: parent.verticalCenter
-        text: r.icon; width: 20; font.pixelSize: Theme.fs(15)
+        icon: r.icon; width: 20; size: material ? Theme.fs(18) : Theme.fs(15); fill: r.active
         color: r.active ? Theme.c.accentBright : Theme.c.accentMid
     }
     Column {
@@ -35,10 +36,12 @@ Rectangle {
         Label { visible: r.subtitle !== ""; width: parent.width; elide: Text.ElideRight; text: r.subtitle
                 font.pixelSize: Theme.fs(11); color: Theme.c.accentMid }
     }
-    Label {
+    Row {
         id: tr
         anchors.right: parent.right; anchors.rightMargin: 10; anchors.verticalCenter: parent.verticalCenter
-        text: r.busy ? "…" : r.trailing; font.pixelSize: Theme.fs(11); color: Theme.c.accentMid
+        spacing: 6
+        Label { anchors.verticalCenter: parent.verticalCenter; visible: text !== ""; text: r.busy ? "…" : r.trailing; font.pixelSize: Theme.fs(11); color: Theme.c.accentMid }
+        Icon { anchors.verticalCenter: parent.verticalCenter; visible: !r.busy && r.trailingIcon !== ""; icon: r.trailingIcon; size: Theme.fs(14); color: Theme.c.accentMid }
     }
     MouseArea {
         id: m

@@ -12,7 +12,7 @@ Pill {
     readonly property color tone: pct >= 90 ? Theme.c.accentDim : pct >= 70 ? Theme.c.accentMid : Theme.c.accentLight
     onClicked: Panels.toggle("agents", ag)
     onRightClicked: Agents.launch("")
-    Label { text: "󱚝"; color: ag.tone }
+    Icon { icon: "smart_toy"; color: ag.tone }
     Label { visible: ag.pct >= 0 && !ag.vertical; text: ag.pct + "%"; color: ag.tone }
     AgentsPanel { anchorItem: ag }
 }

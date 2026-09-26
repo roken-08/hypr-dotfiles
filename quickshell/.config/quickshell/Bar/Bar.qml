@@ -201,16 +201,23 @@ Scope {
                     // positioned by hand: flipping anchors at runtime leaves items
                     // stretched or pinned (anchors override the size bindings)
                     Section {
+                        id: leftSec
                         name: "left"
                         x: win.vertical ? (parent.width - width) / 2 : 8
                         y: win.vertical ? 8 : (parent.height - height) / 2
                     }
                     Section {
+                        id: centerSec
                         name: "center"
-                        x: (parent.width - width) / 2
+                        // centred, but never under the right (or left) section when
+                        // those grow: it gives way, sliding toward the free side
+                        x: win.vertical ? (parent.width - width) / 2
+                                        : Math.max(leftSec.x + leftSec.width + 12,
+                                                   Math.min((parent.width - width) / 2, rightSec.x - width - 12))
                         y: (parent.height - height) / 2
                     }
                     Section {
+                        id: rightSec
                         name: "right"
                         x: win.vertical ? (parent.width - width) / 2 : parent.width - width - (win.pill ? 2 : 8)
                         y: win.vertical ? parent.height - height - (win.pill ? 2 : 8) : (parent.height - height) / 2

@@ -32,13 +32,13 @@ Variants {
             opacity: Osd.visible ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 120 } }
 
-            readonly property string icon: Osd.kind === "brightness" ? "󰃠"
-                                         : Osd.kind === "mic" ? (Osd.muted ? "󰍭" : "󰍬")
-                                         : Osd.muted ? "󰝟" : Osd.value < 0.34 ? "󰕿" : Osd.value < 0.67 ? "󰖀" : "󰕾"
+            readonly property string icon: Osd.kind === "brightness" ? (Osd.value < 0.34 ? "brightness_low" : Osd.value < 0.67 ? "brightness_medium" : "brightness_high")
+                                         : Osd.kind === "mic" ? (Osd.muted ? "mic_off" : "mic")
+                                         : Osd.muted ? "volume_off" : Osd.value < 0.01 ? "volume_mute" : Osd.value < 0.5 ? "volume_down" : "volume_up"
             Row {
                 anchors.centerIn: parent
                 spacing: 12
-                Label { text: parent.parent.icon; font.pixelSize: Theme.fs(18); width: 22; color: Osd.muted ? Theme.c.accentDim : Theme.c.accentBright }
+                Icon { icon: parent.parent.icon; size: Theme.fs(22); fill: true; width: 24; color: Osd.muted ? Theme.c.accentDim : Theme.c.accentBright }
                 Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: 150; height: 6; radius: 3; color: Theme.c.bg3

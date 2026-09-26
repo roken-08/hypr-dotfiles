@@ -18,7 +18,7 @@ PKGS_REPO=(
   neovim fastfetch btop eza
   grim slurp wl-clipboard cliphist playerctl brightnessctl batsignal ffmpeg hyprsunset
   thunar pavucontrol networkmanager nm-connection-editor
-  ttf-jetbrains-mono-nerd inter-font papirus-icon-theme adw-gtk-theme stow
+  ttf-jetbrains-mono-nerd ttf-material-symbols-variable inter-font papirus-icon-theme adw-gtk-theme stow
   # theme engine: renderer, JSON edits, gsettings schema, portal settings backend
   # (GTK4/Zen follow dark/light through it), login screen
   python jq gsettings-desktop-schemas xdg-desktop-portal-gtk sddm

@@ -24,6 +24,6 @@ Pill {
         Component.onCompleted: running = true
     }
     onClicked: Quickshell.execDetached(["bash", "-c", "hyprctl switchxkblayout $(hyprctl devices -j | jq -r '[.keyboards[] | select(.main)][0].name') next"])
-    Label { text: "󰌌"; color: Theme.c.accentLight }
+    Icon { icon: "keyboard"; color: Theme.c.accentLight }
     Label { visible: !kb.vertical && kb.layout !== ""; text: kb.layout; color: Theme.c.accentLight }
 }

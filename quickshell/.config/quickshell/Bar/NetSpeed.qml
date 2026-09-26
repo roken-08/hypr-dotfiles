@@ -36,7 +36,8 @@ Pill {
         }
         last = { rx: rx, tx: tx, t: t }
     }
-    // 4 characters, always: "  0K" " 12K" "123K" "1.2M" " 12M" "123M" "1.2G"
+    // "0K" "12K" "123K" "1.2M" "12M" "123M" "1.2G": at most 4 characters, shown
+    // left-aligned next to the arrow in a box 4 digits wide, so nothing shifts
     function fmt(b) {
         const k = b / 1024
         let s
@@ -44,7 +45,7 @@ Pill {
         else if (k < 1024 * 10) s = (k / 1024).toFixed(1) + "M"
         else if (k < 1024 * 1000) s = Math.round(k / 1024) + "M"
         else s = (k / 1024 / 1024).toFixed(1) + "G"
-        return s.padStart(4, " ")   // figure space: as wide as a digit
+        return s
     }
 
     FileView { id: dev; path: "/proc/net/dev"; blockLoading: true }
@@ -53,9 +54,9 @@ Pill {
         onTriggered: { dev.reload(); ns.sample(dev.text()) }
     }
 
-    Label { text: "󰇚"; color: ns.busy ? Theme.c.accentBright : Theme.c.accentLight }
-    Label { visible: !ns.vertical; text: ns.fmt(ns.down); color: Theme.c.accentLight }
-    Item { visible: !ns.vertical; implicitWidth: 4; implicitHeight: 1 }   // keeps the pairs apart
-    Label { visible: !ns.vertical; text: "󰕒"; color: Theme.c.accentLight }
-    Label { visible: !ns.vertical; text: ns.fmt(ns.up); color: Theme.c.accentLight }
+    Icon { icon: "arrow_downward"; color: ns.busy ? Theme.c.accentBright : Theme.c.accentLight }
+    TextMetrics { id: wide; font.family: Theme.font; font.pixelSize: Theme.fontSize; font.weight: Font.Medium; text: "8.8M" }
+    Label { visible: !ns.vertical; width: wide.width; text: ns.fmt(ns.down); color: Theme.c.accentLight }
+    Icon { visible: !ns.vertical; icon: "arrow_upward"; color: Theme.c.accentLight }
+    Label { visible: !ns.vertical; width: wide.width; text: ns.fmt(ns.up); color: Theme.c.accentLight }
 }

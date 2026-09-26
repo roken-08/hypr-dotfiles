@@ -20,13 +20,13 @@ Panel {
 
     function icon(d) {
         const i = String(d.icon || "")
-        if (i.indexOf("headset") >= 0 || i.indexOf("headphone") >= 0) return "󰋋"
-        if (i.indexOf("audio") >= 0) return "󰓃"
-        if (i.indexOf("phone") >= 0) return "󰄜"
-        if (i.indexOf("mouse") >= 0) return "󰍽"
-        if (i.indexOf("keyboard") >= 0) return "󰌌"
-        if (i.indexOf("computer") >= 0) return "󰇅"
-        return "󰂯"
+        if (i.indexOf("headset") >= 0 || i.indexOf("headphone") >= 0) return "headphones"
+        if (i.indexOf("audio") >= 0) return "speaker"
+        if (i.indexOf("phone") >= 0) return "smartphone"
+        if (i.indexOf("mouse") >= 0) return "mouse"
+        if (i.indexOf("keyboard") >= 0) return "keyboard"
+        if (i.indexOf("computer") >= 0) return "computer"
+        return "bluetooth"
     }
     function state(d) {
         if (d.pairing) return "pairing…"
@@ -69,6 +69,6 @@ Panel {
 
     Row {
         width: parent.width; spacing: 8; layoutDirection: Qt.RightToLeft
-        PanelButton { text: "Manager"; icon: "󰒓"; onClicked: { Quickshell.execDetached(["blueman-manager"]); Panels.close() } }
+        PanelButton { text: "Manager"; icon: "settings"; onClicked: { Quickshell.execDetached(["blueman-manager"]); Panels.close() } }
     }
 }

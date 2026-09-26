@@ -105,10 +105,10 @@ Variants {
                     width: list.width; height: win.rowH
                     radius: Theme.radiusSm
                     color: sel ? Theme.c.bg2 : "transparent"
-                    Label {
+                    Icon {
                         id: ic
                         x: 10; anchors.verticalCenter: parent.verticalCenter; width: 18
-                        text: row.modelData.icon; font.pixelSize: Theme.fs(13)
+                        icon: row.modelData.icon; size: material ? Theme.fs(17) : Theme.fs(13)
                         color: row.sel ? Theme.c.accentBright : Theme.c.accentMid
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -128,8 +128,8 @@ Variants {
                                 elide: Text.ElideRight; width: Math.min(implicitWidth, 150) }
                         Label { visible: row.modelData.value !== ""; text: row.modelData.value; font.pixelSize: Theme.fs(11); color: Theme.c.accentMid
                                 elide: Text.ElideRight; width: Math.min(implicitWidth, 170) }
-                        Label { visible: row.modelData.checked === true; text: "󰄬"; font.pixelSize: Theme.fs(13); color: Theme.c.accentBright }
-                        Label { visible: row.modelData.sub; text: "󰅂"; font.pixelSize: Theme.fs(13); color: Theme.c.accentDim }
+                        Icon { visible: row.modelData.checked === true; icon: "check"; size: Theme.fs(16); color: Theme.c.accentBright }
+                        Icon { visible: row.modelData.sub; icon: "chevron_right"; size: Theme.fs(16); color: Theme.c.accentDim }
                     }
                     // click only: hovering never moves the selection
                     MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor

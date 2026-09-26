@@ -121,7 +121,7 @@ Variants {
                             x: 16; anchors.verticalCenter: parent.verticalCenter
                             implicitSize: 30
                             source: row.modelData.icon ? Quickshell.iconPath(row.modelData.icon, true) : ""
-                            Label { visible: parent.source === ""; anchors.centerIn: parent; text: "󰀻"; font.pixelSize: Theme.fs(18); color: Theme.c.accentMid }
+                            Icon { visible: parent.source === ""; anchors.centerIn: parent; icon: "apps"; size: Theme.fs(22); color: Theme.c.accentMid }
                         }
                         Label {
                             x: 58; anchors.verticalCenter: parent.verticalCenter; width: parent.width - 70; elide: Text.ElideRight

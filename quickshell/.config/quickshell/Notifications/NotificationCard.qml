@@ -43,8 +43,8 @@ Rectangle {
                       : card.n.appIcon !== "" ? Quickshell.iconPath(card.n.appIcon, true) : ""
                 implicitSize: 32
             }
-            Label { anchors.centerIn: parent; visible: card.n.image === "" && (card.n.appIcon === "" || Quickshell.iconPath(card.n.appIcon, true) === "")
-                    text: "󰂚"; font.pixelSize: Theme.fs(18); color: Theme.c.accentMid }
+            Icon { anchors.centerIn: parent; visible: card.n.image === "" && (card.n.appIcon === "" || Quickshell.iconPath(card.n.appIcon, true) === "")
+                   icon: "notifications"; size: Theme.fs(22); color: Theme.c.accentMid }
         }
 
         Column {
@@ -80,9 +80,9 @@ Rectangle {
     }
 
     // close
-    Label {
+    Icon {
         anchors.top: parent.top; anchors.right: parent.right; anchors.margins: 8
-        text: "󰅖"; font.pixelSize: Theme.fs(12); color: cm.containsMouse ? Theme.c.accentBright : Theme.c.accentDim
+        icon: "close"; size: Theme.fs(15); color: cm.containsMouse ? Theme.c.accentBright : Theme.c.accentDim
         MouseArea { id: cm; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: Notifs.dismiss(card.entry) }
     }
     MouseArea {

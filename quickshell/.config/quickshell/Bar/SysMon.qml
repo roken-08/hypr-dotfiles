@@ -37,10 +37,10 @@ Pill {
     }
     Timer { interval: 3000; running: true; repeat: true; triggeredOnStart: true; onTriggered: rd.running = true }
     readonly property color hot: Theme.hued ? Theme.c.warning : Theme.c.accentBright
-    Label { text: "󰍛"; color: sm.cpu > 85 ? sm.hot : Theme.c.accentLight }
+    Icon { icon: "memory"; color: sm.cpu > 85 ? sm.hot : Theme.c.accentLight }
     Label { visible: !sm.vertical; text: sm.cpu + "%"; color: Theme.c.accentLight }
-    Label { visible: !sm.vertical; text: "󰘚"; color: sm.mem > 85 ? sm.hot : Theme.c.accentLight }
+    Icon { visible: !sm.vertical; icon: "memory_alt"; color: sm.mem > 85 ? sm.hot : Theme.c.accentLight }
     Label { visible: !sm.vertical; text: sm.mem + "%"; color: Theme.c.accentLight }
-    Label { visible: !sm.vertical && sm.gpu >= 0; text: "󰢮"; color: sm.gpu > 85 ? sm.hot : Theme.c.accentLight }
+    Icon { visible: !sm.vertical && sm.gpu >= 0; icon: "developer_board"; color: sm.gpu > 85 ? sm.hot : Theme.c.accentLight }
     Label { visible: !sm.vertical && sm.gpu >= 0; text: sm.gpu + "%"; color: Theme.c.accentLight }
 }

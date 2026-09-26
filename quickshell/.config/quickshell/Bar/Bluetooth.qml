@@ -11,8 +11,8 @@ Pill {
     readonly property bool connected: Bluetooth.devices.values.some(d => d.connected)
     visible: adapter !== null
     onClicked: Panels.toggle("bluetooth", bt)
-    Label {
-        text: !bt.on ? "󰂲" : bt.connected ? "󰂱" : "󰂯"
+    Icon {
+        icon: !bt.on ? "bluetooth_disabled" : bt.connected ? "bluetooth_connected" : "bluetooth"
         color: !bt.on ? Theme.c.accentDim : bt.connected ? Theme.c.accentBright : Theme.c.accentLight
     }
     BluetoothPanel { anchorItem: bt }

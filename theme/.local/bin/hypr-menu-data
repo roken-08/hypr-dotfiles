@@ -57,6 +57,7 @@ def state():
     }
 
 
+# brand logos: Material Symbols has none, so these stay Nerd Font glyphs
 AGENT_ICONS = {"claude": "󰛄", "codex": "", "opencode": "", "gemini": "󰊭", "copilot": ""}
 
 
@@ -67,7 +68,7 @@ def agents(default):
         if not m:
             continue
         cmd, label = m.group(1), m.group(2)
-        out.append({"id": cmd, "label": label, "icon": AGENT_ICONS.get(cmd, "󰚩"),
+        out.append({"id": cmd, "label": label, "icon": AGENT_ICONS.get(cmd, "smart_toy"),
                     "action": f"hypr-agent launch {cmd}", "checked": cmd == default})
     return out
 
@@ -108,7 +109,7 @@ def keybindings():
             w = re.search(r'exec_cmd\(\s*(?:"|\[\[)?([^"\]\n]+)', args)
             label = (w.group(1) if w else re.sub(r"^\s*[^,]+,\s*", "", args)).strip()
             label = re.sub(r"^~/.config/hypr/scripts/", "", label).replace("hl.dsp.", "")
-        rows.append({"id": key, "label": label[:60], "value": key.replace(" + ", "+"), "description": args[:80], "icon": "\U000F030C"})
+        rows.append({"id": key, "label": label[:60], "value": key.replace(" + ", "+"), "description": args[:80], "icon": "keyboard"})
         i = j
     rows += [{"id": "ws", "label": "Switch to workspace N (SHIFT: move window there)", "value": "SUPER+1…0", "description": "workspace"}]
     return rows
@@ -121,7 +122,7 @@ def fonts():
         f = f.strip()
         if not f:
             continue
-        out.append({"id": f, "label": f, "icon": "\U000F031A", "checked": f == cur,
+        out.append({"id": f, "label": f, "icon": "font_download", "checked": f == cur,
                     "action": "hypr-font set " + json.dumps(f), "keep": True})
     return out
 
@@ -129,8 +130,8 @@ def fonts():
 def reminders():
     out = []
     for line in sh("hypr-remind show").splitlines():
-        out.append({"id": line, "label": line, "icon": "󰢌"})
-    return out or [{"id": "none", "label": "No reminders", "icon": "󰢌"}]
+        out.append({"id": line, "label": line, "icon": "alarm"})
+    return out or [{"id": "none", "label": "No reminders", "icon": "alarm_off"}]
 
 
 def about():
@@ -138,13 +139,13 @@ def about():
     branch = sh(f"git -C {REPO} rev-parse --abbrev-ref HEAD")
     up = sh("uptime -p").replace("up ", "")
     return [
-        {"id": "rice", "label": "HyprMono rice", "value": f"{branch} · {commit[:40]}", "icon": "\U000F0313"},
-        {"id": "theme", "label": "Theme", "value": sh("hypr-theme current"), "icon": "󰸌"},
-        {"id": "host", "label": "Machine", "value": f"{os.environ.get('USER','')}@{read('/etc/hostname')}", "icon": "󰟀"},
-        {"id": "kernel", "label": "Kernel", "value": sh("uname -r"), "icon": "\U000F033D"},
-        {"id": "hypr", "label": "Hyprland", "value": sh("hyprctl version -j | jq -r .tag"), "icon": "\U000F05B0"},
-        {"id": "qs", "label": "Quickshell", "value": re.sub(r" *\(.*", "", sh("qs --version")).replace("quickshell ", ""), "icon": "\U000F0219"},
-        {"id": "uptime", "label": "Uptime", "value": up, "icon": "󰔟"},
+        {"id": "rice", "label": "HyprMono rice", "value": f"{branch} · {commit[:40]}", "icon": "auto_awesome"},
+        {"id": "theme", "label": "Theme", "value": sh("hypr-theme current"), "icon": "palette"},
+        {"id": "host", "label": "Machine", "value": f"{os.environ.get('USER','')}@{read('/etc/hostname')}", "icon": "computer"},
+        {"id": "kernel", "label": "Kernel", "value": sh("uname -r"), "icon": "terminal"},
+        {"id": "hypr", "label": "Hyprland", "value": sh("hyprctl version -j | jq -r .tag"), "icon": "desktop_windows"},
+        {"id": "qs", "label": "Quickshell", "value": re.sub(r" *\(.*", "", sh("qs --version")).replace("quickshell ", ""), "icon": "code"},
+        {"id": "uptime", "label": "Uptime", "value": up, "icon": "schedule"},
     ]
 
 
