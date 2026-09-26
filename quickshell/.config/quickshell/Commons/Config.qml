@@ -95,6 +95,8 @@ Singleton {
     }
     function setPosition(p) { if (["top", "bottom", "left", "right"].indexOf(p) !== -1) set("bar.position", p) }
     function toggleTransparent() { set("bar.transparent", !transparent) }
+    // a skin's widgets back to the shipped order
+    function resetLayout(style) { if (defaults.bar.layout[style]) set("bar.layout." + style, JSON.parse(JSON.stringify(defaults.bar.layout[style]))) }
 
     FileView {
         id: view

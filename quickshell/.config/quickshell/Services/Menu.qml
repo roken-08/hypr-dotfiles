@@ -84,8 +84,30 @@ Singleton {
             const i = l.indexOf(id)
             if (i !== -1) { l.splice(i, 1); Config.set("bar.layout." + s + "." + sec, l); return }
         }
-        const r = Config.layoutFor(s, "right").slice(); r.unshift(id); Config.set("bar.layout." + s + ".right", r)
+        // back where the default layout has it, so turning a widget off and
+        // on never reshuffles the bar. While the section still follows the
+        // default order it is rebuilt from the default (spacers included);
+        // a hand-reordered one gets it after its nearest shown neighbour.
+        const d = Config.defaults.bar.layout[s] || {}
+        let sec = "right"
+        for (const k of ["left", "center", "right"]) if ((d[k] || []).indexOf(id) !== -1) sec = k
+        const def = d[sec] || []
+        let l = Config.layoutFor(s, sec).slice()
+        const real = x => x !== "spacer"
+        const shown = l.filter(real), order = def.filter(x => real(x) && shown.indexOf(x) !== -1)
+        if (def.indexOf(id) !== -1 && shown.join() === order.join()) {
+            l = def.filter(x => !real(x) || x === id || shown.indexOf(x) !== -1)
+        } else {
+            const at = def.indexOf(id)
+            let pos = -1
+            for (let j = at - 1; j >= 0 && pos === -1; j--) { const q = real(def[j]) ? l.indexOf(def[j]) : -1; if (q !== -1) pos = q + 1 }
+            for (let j = at + 1; at !== -1 && j < def.length && pos === -1; j++) { const q = real(def[j]) ? l.indexOf(def[j]) : -1; if (q !== -1) pos = q }
+            if (pos === -1) pos = l.indexOf("bell") !== -1 ? l.indexOf("bell") : l.length
+            l.splice(pos, 0, id)
+        }
+        Config.set("bar.layout." + s + "." + sec, l)
     }
+
 
     function row(id, e, crumb) {
         return { id: id, icon: e.icon || "", label: e.label || id.split(".").pop(), description: e.description || "",
@@ -203,6 +225,8 @@ Singleton {
         function close(): void { root.close() }
         function search(q: string): void { root.show(""); root.query = q }
         // run one entry by id without opening the menu (keybinds, scripts): `qs ipc call menu run toggle.caffeine`
+        // show/hide a bar widget (the Widgets page does the same)
+        function widget(id: string): bool { root.toggleWidget(id); return root.widgetOn(id) }
         function run(id: string): string {
             const e = root.entries[id]
             if (!e) return "unknown: " + id

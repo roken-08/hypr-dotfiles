@@ -199,7 +199,10 @@ Omarchy's: drag empty bar space (or press-and-hold) and let go near a screen edg
 there (top, bottom, left, right; vertical bars go icon-only); double-click empty space on the floating
 or minimal bar to toggle transparency. Both persist in `~/.config/hypr-theme/shell.json`, which also holds each
 skin's layout (floating uses minimal's) — reorder or drop widgets by editing the `left` / `center` / `right` lists, and hand
-edits apply live. Scripts: `qs ipc call bar position left`, `qs ipc call bar transparent`.
+edits apply live. Menu › Style › Bar › Widgets shows and hides them; a widget turned back on
+returns to its default place, and *Reset widget order* restores the shipped layout. Scripts:
+`qs ipc call bar position left`, `qs ipc call bar transparent`, `qs ipc call bar reset`,
+`qs ipc call menu widget <id>`.
 
 Widgets: `clock` (calendar popup), `workspaces`, `tray`, `audio`, `network`, `bluetooth`, `battery`,
 `caffeine`, `bell`, `activewindow` (focused title), `tray` (click / right-click opens the app's menu, drawn in the theme; white/black single-colour icons are inverted when they'd vanish on the bar), `media` (now playing: click opens the

@@ -52,6 +52,8 @@ Scope {
         function position(edge: string): string { Config.setPosition(edge); return Config.position }
         function transparent(): bool { Config.toggleTransparent(); return Config.transparent }
         function visible(): bool { Config.set("bar.hidden", !Config.hidden); return !Config.hidden }
+        // the current skin's widgets back to the shipped order
+        function reset(): void { Config.resetLayout(Theme.barLayout) }
         function battery(): bool { Config.set("bar.battery", !Config.batteryPercent); return Config.batteryPercent }
     }
 
@@ -130,7 +132,7 @@ Scope {
                         anchors.fill: parent
                         z: 0
                         acceptedButtons: Qt.LeftButton
-                        pressAndHoldInterval: 200
+                        pressAndHoldInterval: 400   // a slow click is not a move
                         cursorShape: bars.moving ? Qt.ClosedHandCursor : Qt.ArrowCursor
                         property real px: 0
                         property real py: 0
