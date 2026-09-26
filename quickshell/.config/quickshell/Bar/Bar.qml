@@ -97,7 +97,9 @@ Scope {
                 // the motion; kept under the cursor, the bar keeps its grab
                 // and gets the real release. Reserved space and the visible
                 // strip stay the same.
-                property bool held: false
+                // follows the mouse area itself, so a lost release can never
+                // leave the bar stuck at full-screen size
+                readonly property bool held: gesture.pressed
                 readonly property int grown: vertical ? screen.width - edgeGap : screen.height - edgeGap
                 implicitHeight: vertical ? 0 : (held ? grown : thickness)
                 implicitWidth: vertical ? (held ? grown : thickness) : 0
@@ -149,7 +151,7 @@ Scope {
                             bars.candidate = bars.nearestEdge(Math.max(0, Math.min(1, sx / win.screen.width)),
                                                               Math.max(0, Math.min(1, sy / win.screen.height)))
                         }
-                        onPressed: (e) => { win.held = true; px = e.x; py = e.y; suppress = false }
+                        onPressed: (e) => { px = e.x; py = e.y; suppress = false }
                         onPressAndHold: (e) => { if (pressed) begin(e.x, e.y) }
                         onPositionChanged: (e) => {
                             if (!(e.buttons & Qt.LeftButton)) return
@@ -157,12 +159,11 @@ Scope {
                             else update(e.x, e.y)
                         }
                         onReleased: {
-                            win.held = false
                             if (!bars.moving) return
                             suppress = true
                             bars.finish()
                         }
-                        onCanceled: { win.held = false; bars.moving = false; bars.candidate = "" }
+                        onCanceled: { bars.moving = false; bars.candidate = "" }
                         onDoubleClicked: (e) => {
                             if (suppress) { suppress = false; return }
                             if (!win.pill) Config.toggleTransparent()

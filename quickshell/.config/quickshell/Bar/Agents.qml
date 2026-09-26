@@ -9,7 +9,10 @@ Pill {
     id: ag
     visible: Agents.present
     readonly property int pct: Agents.session ? Agents.session.percent : -1
-    readonly property color tone: pct >= 90 ? Theme.c.accentDim : pct >= 70 ? Theme.c.accentMid : Theme.c.accentLight
+    // normal colour while there is quota left; dimmed only once the limit is
+    // used up (hued themes warn from 90%)
+    readonly property color tone: pct >= 100 ? Theme.c.accentDim
+                                : Theme.hued && pct >= 90 ? Theme.c.warning : Theme.c.accentLight
     onClicked: Panels.toggle("agents", ag)
     onRightClicked: Agents.launch("")
     Icon { icon: "󱚝"; size: Theme.fontSize + 1; color: ag.tone }   // the rice's own robot glyph
