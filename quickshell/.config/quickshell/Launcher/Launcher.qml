@@ -34,13 +34,12 @@ Variants {
 
         Rectangle {
             id: card
-            // rofi: 800 wide, 30px padding, 42px inputbar, 10px gap, ten 44px
-            // rows 10px apart, 6px under the last row; window 150..768 on a
-            // 900px-high screen, i.e. 9px below dead centre
+            // 800 wide, 30px padding on every side, 42px inputbar, 10px gap,
+            // ten 44px rows 10px apart in two columns 10px apart
             x: (parent.width - width) / 2
-            y: (parent.height - height) / 2 + 9
+            y: (parent.height - height) / 2
             width: 800
-            height: 30 + 42 + 10 + win.rowsShown * 44 + (win.rowsShown - 1) * 10 + 6
+            height: 30 + 42 + 10 + win.rowsShown * 44 + (win.rowsShown - 1) * 10 + 30
             radius: Theme.radius
             color: Theme.alpha(Theme.c.bg0, 0.74)
             // one physical pixel: a logical 1px is ~2 device px at scale 1.6
@@ -93,14 +92,16 @@ Variants {
             GridView {
                 id: grid
                 x: 30; y: bar.y + bar.height + 10
-                width: parent.width - 60
+                // each cell carries its 10px gap on the right and bottom, so the
+                // grid runs 10px past the padding and the gaps fall outside it
+                width: parent.width - 60 + 10
                 // GridView fits floor(height / cellHeight) rows per column:
                 // a full cell per row, or the last row wraps into the next
                 // column and the arrows (which assume rowsShown) land wrong
                 height: win.rowsShown * cellHeight
                 clip: true
                 flow: GridView.FlowTopToBottom
-                cellWidth: (width - 10) / win.cols + 5
+                cellWidth: width / win.cols
                 cellHeight: 54
                 model: Apps.results
                 currentIndex: win.selected
