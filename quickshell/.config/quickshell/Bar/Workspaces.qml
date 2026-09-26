@@ -71,7 +71,7 @@ Pill {
             Icon {
                 visible: !ws.pillMode && btn.active
                 anchors.centerIn: parent
-                icon: "square"; fill: true; size: Theme.fs(13)
+                icon: "square"; size: Theme.fs(13)
                 color: Theme.c.fg
             }
             MouseArea {

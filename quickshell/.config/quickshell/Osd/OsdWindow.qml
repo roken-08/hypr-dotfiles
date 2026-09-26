@@ -38,7 +38,7 @@ Variants {
             Row {
                 anchors.centerIn: parent
                 spacing: 12
-                Icon { icon: parent.parent.icon; size: Theme.fs(22); fill: true; width: 24; color: Osd.muted ? Theme.c.accentDim : Theme.c.accentBright }
+                Icon { icon: parent.parent.icon; size: Theme.fs(22); width: 24; color: Osd.muted ? Theme.c.accentDim : Theme.c.accentBright }
                 Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: 150; height: 6; radius: 3; color: Theme.c.bg3

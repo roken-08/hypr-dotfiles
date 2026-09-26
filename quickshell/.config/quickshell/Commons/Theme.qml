@@ -33,18 +33,6 @@ Singleton {
     // it never starts with another skin's margins (they would stick)
     property bool ready: false
 
-    // shell icons: Material Symbols Rounded (Commons/Icon.qml). Checked once;
-    // without it named icons stay blank and a notification says what to install.
-    readonly property string iconFont: "Material Symbols Rounded"
-    // the look: filled, heavy, high-emphasis grade (fonts.google.com/icons:
-    // Fill on, Weight 600, Grade 200)
-    readonly property bool iconFill: true
-    readonly property int iconWeight: 600
-    readonly property int iconGrade: 200
-    readonly property bool iconsOk: Qt.fontFamilies().indexOf(iconFont) !== -1
-    Component.onCompleted: if (!iconsOk) Quickshell.execDetached(["notify-send", "-a", "hypr-dotfiles", "Shell icons missing",
-        "Install the Material Symbols font: sudo pacman -S ttf-material-symbols-variable, then restart the shell (SUPER+R)."])
-
     // hued = true for a real-palette theme (Catppuccin…): widgets then use
     // c.good / c.warning / c.critical the way a stock bar does; the mono
     // themes keep telling state apart by shade only.

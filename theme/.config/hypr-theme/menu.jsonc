@@ -2,7 +2,8 @@
   // The menu (SUPER+SPACE). Keys are ids; a dot makes a child: "style.bar.top"
   // sits under "style.bar" under "style". Fields:
   //   icon, label      the row. icon: a Material Symbols name ("wifi", "palette" —
-//                    fonts.google.com/icons, Rounded) or any glyph, e.g. a Nerd Font one.
+//                    fonts.google.com/icons; new names go in quickshell's
+//                    Commons/icons/names.txt + build.py) or any glyph, e.g. a Nerd Font one.
 //                    description: extra words the search matches.
   //   action           shell command, run detached. Omit → the row opens its children.
   //   keep             true: the menu stays open after the action (toggles) and re-reads state.

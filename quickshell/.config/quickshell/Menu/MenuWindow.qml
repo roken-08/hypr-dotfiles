@@ -110,7 +110,6 @@ Variants {
                         x: 10; anchors.verticalCenter: parent.verticalCenter; width: 18
                         icon: row.modelData.icon; size: material ? Theme.fs(17) : Theme.fs(13)
                         color: row.sel ? Theme.c.accentBright : Theme.c.accentMid
-                        horizontalAlignment: Text.AlignHCenter
                     }
                     Label {
                         anchors.left: ic.right; anchors.leftMargin: 10

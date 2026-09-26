@@ -66,20 +66,22 @@ repo as a fallback (`HYPR_SHELL=waybar`).
 ## Fonts
 
 ```bash
-sudo pacman -S ttf-jetbrains-mono-nerd ttf-material-symbols-variable inter-font
+sudo pacman -S ttf-jetbrains-mono-nerd inter-font
 ```
 
-The shell's icons (bar, menu, panels, dock, power menu, OSD) are Google's
-[Material Symbols](https://fonts.google.com/icons) (Rounded) from `ttf-material-symbols-variable`;
-without it they stay blank and the shell says so in a notification. Text uses the Nerd Font's
-**Propo** variant, which the classic tools also need for their glyphs. Check both landed:
+Text uses the Nerd Font's **Propo** variant, which the classic tools also need for their glyphs.
+Check it landed:
 
 ```bash
-fc-list : family | grep -i -e "JetBrainsMono Nerd Font Propo" -e "Material Symbols Rounded"
+fc-list : family | grep -i "JetBrainsMono Nerd Font Propo"
 ```
 
-**If that prints nothing, icons render as empty boxes or blanks.** That's the usual reason a fresh
-install looks broken; `hypr-doctor` checks both.
+**If that prints nothing, text and glyphs render as empty boxes.** That's the usual reason a
+fresh install looks broken. The shell's own icons (bar, menu, panels, dock, power menu, OSD) need
+no font: they are Google's [Material Symbols](https://fonts.google.com/icons) SVGs (Rounded,
+filled, weight 600), shipped in `quickshell/.config/quickshell/Commons/IconPaths.js` and drawn as
+vectors. To use another one, add its name to `Commons/icons/names.txt` and run
+`Commons/icons/build.py`.
 
 ---
 
