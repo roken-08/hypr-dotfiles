@@ -44,13 +44,14 @@ hl.layer_rule({
 ---- WINDOW RULES --
 --------------------
 
--- floating terminal for menu actions (hypr-float): centred, roomy
+-- floating terminal for menu actions (hypr-float, hypr-edit): centred, medium.
+-- size takes expressions, not percentages ("60%" is silently ignored)
 hl.window_rule({
 	name = "hypr-float",
 	match = { class = "^hypr-float$" },
 	float = true,
 	center = true,
-	size = { "60%", "60%" },
+	size = { "monitor_w * 0.78", "monitor_h * 0.82" },
 })
 
 hl.window_rule({
