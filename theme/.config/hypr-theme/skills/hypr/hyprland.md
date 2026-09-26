@@ -46,6 +46,17 @@ between versions — fetch, don't recall). A keybind that ships with the rice go
 Layer rules blur the shell's overlays by namespace; a new overlay gets one
 (see windowrules.lua for the alpha values that match the old tools).
 
+Traps: `size`/`move` take numbers or *expressions*
+(`{ "monitor_w * 0.78", "monitor_h * 0.82" }`); `"60%"` is accepted without
+a config error and silently does nothing. The wiki source is
+github.com/hyprwm/hyprland-wiki `content/configuring/core/rules/` when the
+site's page comes back truncated. kitty then resizes itself to the size it
+remembers (`remember_window_size`, on by default): `hypr-float` passes
+`-o remember_window_size=no`. Check a size rule a few seconds after the
+window maps, not at once. A layer surface that resizes itself (the bar
+grows while pressed) needs `no_anim = true`, or Hyprland animates the size
+and draws the old buffer stretched.
+
 ## Monitors and scale
 
 `hl.monitor({ output = "eDP-1", mode = "2560x1440@165", position = "0x0", scale = 1.6 })`
