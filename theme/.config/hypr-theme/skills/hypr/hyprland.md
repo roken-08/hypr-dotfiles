@@ -52,7 +52,10 @@ a config error and silently does nothing. The wiki source is
 github.com/hyprwm/hyprland-wiki `content/configuring/core/rules/` when the
 site's page comes back truncated. kitty then resizes itself to the size it
 remembers (`remember_window_size`, on by default): `hypr-float` passes
-`-o remember_window_size=no`. Check a size rule a few seconds after the
+`-o remember_window_size=no`. kitty.conf sets `remember_window_size no` for
+  the same reason: after a maximized kitty closed, every new one asked to start
+  maximized ("new windows go fullscreen" — test with a probe `kitty --class
+  probe`, kill it by pid, never `pkill -f` a pattern in your own command). Check a size rule a few seconds after the
 window maps, not at once. A layer surface that resizes itself (the bar
 grows while pressed) needs `no_anim = true`, or Hyprland animates the size
 and draws the old buffer stretched.

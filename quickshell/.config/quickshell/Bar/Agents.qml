@@ -12,7 +12,7 @@ Pill {
     readonly property color tone: pct >= 90 ? Theme.c.accentDim : pct >= 70 ? Theme.c.accentMid : Theme.c.accentLight
     onClicked: Panels.toggle("agents", ag)
     onRightClicked: Agents.launch("")
-    Icon { icon: "smart_toy"; color: ag.tone }
+    Icon { icon: "󱚝"; size: Theme.fontSize + 1; color: ag.tone }   // the rice's own robot glyph
     TextMetrics { id: widest; font.family: Theme.font; font.pixelSize: Theme.fontSize; font.weight: Font.Medium; text: "100%" }
     Label { visible: ag.pct >= 0 && !ag.vertical; text: ag.pct + "%"; width: widest.width; color: ag.tone }
     AgentsPanel { anchorItem: ag }

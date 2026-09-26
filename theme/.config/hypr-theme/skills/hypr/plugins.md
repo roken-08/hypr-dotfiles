@@ -163,6 +163,10 @@ Layer-surface and input traps, each cost an evening:
   gets no pointer input from Hyprland, even while the mask covers the whole
   window: draw such menus inside the window and grow it while open (the
   dock's right-click menu). The bar's panels work because the bar sets no mask.
+- Two surfaces that both reserve the same edge: Hyprland hands out edges
+  layer by layer from Background up, then in map order. The dock is on
+  Overlay so the bar (Top) always gets the edge; it is created right after
+  the bar so later overlays (launcher, menu) still draw over it.
 - `HyprlandWorkspace.hasFullscreen` is also true for a *maximized* window;
   check `toplevel.wayland.fullscreen` when only real fullscreen should count.
 - Numbers in the bar keep a fixed width (Bar/Reading.qml, `widest`), or every

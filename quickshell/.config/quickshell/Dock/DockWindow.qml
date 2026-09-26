@@ -46,7 +46,9 @@ Variants {
         exclusiveZone: Dock.mode === "always" ? depth : 0
         color: "transparent"
         WlrLayershell.namespace: "hypr-dock"
-        WlrLayershell.layer: WlrLayer.Top
+        // Overlay, not Top: Hyprland reserves edges layer by layer from the bottom
+        // up, so the bar (Top) always gets the edge first when both share one
+        WlrLayershell.layer: WlrLayer.Overlay
 
         // ---- shown or hidden ------------------------------------------------
         readonly property var monitor: Hyprland.monitorFor(screen)

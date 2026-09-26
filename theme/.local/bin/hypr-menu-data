@@ -68,7 +68,7 @@ def agents(default):
         if not m:
             continue
         cmd, label = m.group(1), m.group(2)
-        out.append({"id": cmd, "label": label, "icon": AGENT_ICONS.get(cmd, "smart_toy"),
+        out.append({"id": cmd, "label": label, "icon": AGENT_ICONS.get(cmd, "󰚩"),
                     "action": f"hypr-agent launch {cmd}", "checked": cmd == default})
     return out
 

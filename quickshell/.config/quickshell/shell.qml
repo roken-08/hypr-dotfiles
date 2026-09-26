@@ -18,6 +18,7 @@ import qs.Services
 ShellRoot {
     WallpaperWindow {}
     Bar {}
+    DockWindow {}   // right after the bar: the overlays below draw over it
     OsdWindow {}
     NotificationPopups {}
     LockScreen {}
@@ -26,7 +27,6 @@ ShellRoot {
     Launcher {}
     Clipboard {}
     MenuWindow {}
-    DockWindow {}
     // singletons only come alive when referenced; these must run from the start
     Scope { Component.onCompleted: { void Idle.paused; void Caffeine.on; void Notifs.count; void Bt.on; void Night.on; void Themes.themes } }
 }
