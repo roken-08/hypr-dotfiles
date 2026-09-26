@@ -11,7 +11,6 @@ Pill {
     onRightClicked: Notifs.toggleDnd()
     Icon {
         icon: Notifs.dnd ? (Notifs.count > 0 ? "notifications_paused" : "notifications_off") : (Notifs.count > 0 ? "notifications_unread" : "notifications")
-        fill: Notifs.count > 0
         color: Notifs.dnd ? Theme.c.accentDim : Theme.c.accentLight
     }
     NotificationCenter { anchorItem: bell }

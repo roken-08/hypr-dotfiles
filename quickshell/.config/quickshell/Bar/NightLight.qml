@@ -13,7 +13,6 @@ Pill {
     }
     Icon {
         icon: "nightlight"
-        fill: Night.on
         color: !Night.available ? Theme.c.accentDim : Night.on ? Theme.c.accentBright : Theme.c.accentLight
     }
 }

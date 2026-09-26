@@ -65,8 +65,12 @@ Singleton {
         const cur = w.findIndex(t => t.activated)
         w[(cur + 1) % w.length].activate()
     }
+    // look the entry up again: the one cached in `items` can be a stale
+    // object after Quickshell re-reads the desktop files
     function launch(item) {
-        if (item.entry) item.entry.execute()
+        const e = entryFor(item.key)
+        if (e && typeof e.execute === "function") e.execute()
+        else if (item.entry) Quickshell.execDetached(["gtk-launch", item.key])
         else if (item.key) Quickshell.execDetached(["sh", "-c", item.key])
     }
     function closeAll(item) { for (const t of item.windows) t.close() }

@@ -37,10 +37,15 @@ Pill {
     }
     Timer { interval: 3000; running: true; repeat: true; triggeredOnStart: true; onTriggered: rd.running = true }
     readonly property color hot: Theme.hued ? Theme.c.warning : Theme.c.accentBright
-    Icon { icon: "memory"; color: sm.cpu > 85 ? sm.hot : Theme.c.accentLight }
-    Label { visible: !sm.vertical; text: sm.cpu + "%"; color: Theme.c.accentLight }
-    Icon { visible: !sm.vertical; icon: "memory_alt"; color: sm.mem > 85 ? sm.hot : Theme.c.accentLight }
-    Label { visible: !sm.vertical; text: sm.mem + "%"; color: Theme.c.accentLight }
-    Icon { visible: !sm.vertical && sm.gpu >= 0; icon: "developer_board"; color: sm.gpu > 85 ? sm.hot : Theme.c.accentLight }
-    Label { visible: !sm.vertical && sm.gpu >= 0; text: sm.gpu + "%"; color: Theme.c.accentLight }
+    // each icon sits with its number; the pill's gap separates the pairs
+    gap: pillMode ? 13 : 8
+    Row { spacing: 3
+          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "memory"; color: sm.cpu > 85 ? sm.hot : Theme.c.accentLight }
+          Label { anchors.verticalCenter: parent.verticalCenter; visible: !sm.vertical; text: sm.cpu + "%"; color: Theme.c.accentLight } }
+    Row { visible: !sm.vertical; spacing: 3
+          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "memory_alt"; color: sm.mem > 85 ? sm.hot : Theme.c.accentLight }
+          Label { anchors.verticalCenter: parent.verticalCenter; text: sm.mem + "%"; color: Theme.c.accentLight } }
+    Row { visible: !sm.vertical && sm.gpu >= 0; spacing: 3
+          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "developer_board"; color: sm.gpu > 85 ? sm.hot : Theme.c.accentLight }
+          Label { anchors.verticalCenter: parent.verticalCenter; text: sm.gpu + "%"; color: Theme.c.accentLight } }
 }

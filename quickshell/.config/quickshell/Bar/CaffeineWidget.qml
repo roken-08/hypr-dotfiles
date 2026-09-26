@@ -7,7 +7,6 @@ Pill {
     onClicked: Caffeine.toggle()
     Icon {
         icon: "coffee"
-        fill: Caffeine.on
         color: Caffeine.on ? Theme.c.accentBright : Theme.c.accentDim
     }
 }

@@ -10,7 +10,7 @@ Rectangle {
     property bool pillMode: Theme.barStyle === "pill"
     property bool hovered: mouse.containsMouse
     property bool interactive: true
-    property int padH: pillMode ? 9 : 7
+    property int padH: pillMode ? 9 : 4   // minimal: widgets sit close, a small gap apart
     property int padV: pillMode ? 2 : 0
     property bool round: false        // the tray pill in the classic look
     property int extraRight: 0        // waybar reserves room after an ellipsized label
@@ -33,7 +33,7 @@ Rectangle {
     Behavior on color { ColorAnimation { duration: 150 } }
     Behavior on border.color { ColorAnimation { duration: 150 } }
 
-    property int gap: pillMode ? 13 : 6   // measured against waybar
+    property int gap: pillMode ? 13 : 4   // icon to its text (pill: measured against waybar)
     Grid {
         id: inner
         anchors.verticalCenter: parent.verticalCenter

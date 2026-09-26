@@ -5,8 +5,7 @@ import qs.Commons
 
 // Live download / upload speed, summed over the real network interfaces
 // (loopback, bridges, containers and VPN tunnels are left out so traffic is
-// not counted twice). Read from /proc/net/dev once a second; the numbers
-// keep a fixed width so the bar does not shift as they change. Click opens
+// not counted twice). Read from /proc/net/dev once a second. Click opens
 // the network panel.
 Pill {
     id: ns
@@ -36,8 +35,7 @@ Pill {
         }
         last = { rx: rx, tx: tx, t: t }
     }
-    // "0K" "12K" "123K" "1.2M" "12M" "123M" "1.2G": at most 4 characters, shown
-    // left-aligned next to the arrow in a box 4 digits wide, so nothing shifts
+    // "0K" "12K" "123K" "1.2M" "12M" "123M" "1.2G": at most 4 characters
     function fmt(b) {
         const k = b / 1024
         let s
@@ -54,9 +52,11 @@ Pill {
         onTriggered: { dev.reload(); ns.sample(dev.text()) }
     }
 
-    Icon { icon: "arrow_downward"; color: ns.busy ? Theme.c.accentBright : Theme.c.accentLight }
-    TextMetrics { id: wide; font.family: Theme.font; font.pixelSize: Theme.fontSize; font.weight: Font.Medium; text: "8.8M" }
-    Label { visible: !ns.vertical; width: wide.width; text: ns.fmt(ns.down); color: Theme.c.accentLight }
-    Icon { visible: !ns.vertical; icon: "arrow_upward"; color: Theme.c.accentLight }
-    Label { visible: !ns.vertical; width: wide.width; text: ns.fmt(ns.up); color: Theme.c.accentLight }
+    gap: pillMode ? 13 : 8
+    Row { spacing: 2
+          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "arrow_downward"; color: ns.busy ? Theme.c.accentBright : Theme.c.accentLight }
+          Label { anchors.verticalCenter: parent.verticalCenter; visible: !ns.vertical; text: ns.fmt(ns.down); color: Theme.c.accentLight } }
+    Row { visible: !ns.vertical; spacing: 2
+          Icon { anchors.verticalCenter: parent.verticalCenter; icon: "arrow_upward"; color: Theme.c.accentLight }
+          Label { anchors.verticalCenter: parent.verticalCenter; text: ns.fmt(ns.up); color: Theme.c.accentLight } }
 }

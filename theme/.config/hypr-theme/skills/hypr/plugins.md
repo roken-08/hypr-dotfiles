@@ -75,14 +75,16 @@ Pill {
 
 Rules of the house:
 - **Icons are Material Symbols Rounded, by name**: `Icon { icon: "wifi" }`
-  (Commons/Icon.qml; `fill: true` for an active state, `size`, `weight`).
+  (Commons/Icon.qml; `size`; the look, filled, weight 600, grade 200, is
+  Theme.iconFill/iconWeight/iconGrade — show state with colour, not outline).
   Every `icon:` field (PanelRow, PanelButton, menu.jsonc rows) takes a name
   too. Check a name exists before using it —
   `grep -w '^<name>' /usr/share/fonts/*/MaterialSymbolsRounded*.codepoints` if the
   package ships it, else fonts.google.com/icons — a wrong name renders as
   nothing. Material has no brand logos: those (agents) stay Nerd Font glyphs,
   which `Icon` draws as text. Icons are a full em wide; in the bar 15px (the
-  default) matches the text.
+  default) matches the text. In the minimal skin widgets are 4px padded; pair an
+  icon with its number in a `Row { spacing: 3 }` and let the pill's `gap` part the pairs.
 - **Pill**: put `Label`s (or small Items) inside; it handles padding, every skin,
   vertical bars, hover, `clicked/rightClicked/middleClicked/scrolled`. Hide text
   in the minimal/vertical bar with `visible: pillMode && !vertical` like the

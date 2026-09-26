@@ -23,7 +23,7 @@ Rectangle {
     Icon {
         id: ic
         x: 10; anchors.verticalCenter: parent.verticalCenter
-        icon: r.icon; width: 20; size: material ? Theme.fs(18) : Theme.fs(15); fill: r.active
+        icon: r.icon; width: 20; size: material ? Theme.fs(18) : Theme.fs(15)
         color: r.active ? Theme.c.accentBright : Theme.c.accentMid
     }
     Column {

@@ -82,7 +82,7 @@ Scope {
                             Icon {
                                 anchors.centerIn: parent
                                 icon: btn.modelData.icon
-                                size: 64; weight: 300
+                                size: 64
                                 color: btn.hov ? Theme.c.bg0 : btn.foc ? Theme.c.fg : Theme.c.accentLight
                             }
                             MouseArea { id: m; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
