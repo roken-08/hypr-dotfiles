@@ -39,6 +39,15 @@ Singleton {
             //   "agent": { "qml": "~/.config/hypr-theme/plugins/agent.qml" }   (any QML Item; import qs.Bar for Pill)
             modules: {}
         },
+        // the dock (Services/Dock.qml): pinned = desktop ids, in order
+        dock: {
+            enabled: true,
+            mode: "intellihide",             // always | autohide | intellihide
+            position: "bottom",              // bottom | left | right | top
+            transparent: false,
+            iconSize: 40,
+            pinned: ["kitty", "thunar", "zen", "firefox", "code"]
+        },
         // apparent text size in px (hypr-text-size); every size in the shell
         // is derived from it through Theme.fs()
         font: { size: 12, family: "" },   // "" = the rice's own font

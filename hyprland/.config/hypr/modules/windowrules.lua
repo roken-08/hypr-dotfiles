@@ -32,6 +32,7 @@ hl.layer_rule({ match = { namespace = "^hypr-menu$" },           blur = true, ig
 -- the bar's surface grows to the screen while a button is held on it (Bar.qml,
 -- to keep drags over empty workspaces); animated, that resize stretched the bar
 hl.layer_rule({ match = { namespace = "^hypr-bar$" },            no_anim = true })
+hl.layer_rule({ match = { namespace = "^hypr-dock$" },           blur = true, ignore_alpha = 0.5 })
 
 -- Rofi
 hl.layer_rule({

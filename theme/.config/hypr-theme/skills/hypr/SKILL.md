@@ -63,7 +63,7 @@ anything; otherwise just do it.
 │   └── scripts/  shell.sh lock.sh launcher.sh clipboard.sh powermenu.sh caffeine.sh brightness.sh
 ├── quickshell/.config/quickshell/   THE SHELL (Quickshell 0.3, QML) — see plugins.md
 │   ├── shell.qml  Commons/{Theme,Config}.qml  Services/*.qml (singletons + IPC)
-│   ├── Bar/ Panels/ Launcher/ Clipboard/ Picker/ Lock/ Power/ Notifications/ Osd/ Wallpaper/
+│   ├── Bar/ Dock/ Panels/ Launcher/ Clipboard/ Picker/ Lock/ Power/ Notifications/ Osd/ Wallpaper/
 ├── theme/.config/hypr-theme/        THE THEME ENGINE — see theming.md
 │   ├── themes/<id>/colors.toml + backgrounds/      one folder = one theme (picker auto-discovers)
 │   ├── templates/*.tpl              one per app, rendered by render.py
@@ -83,7 +83,7 @@ Commands you will use (all `--help`/header-documented — read the script if uns
 | `hypr-theme list / current / set <id> / toggle / next / reload / json` | apply a theme everywhere (renders templates → current/, installs GTK/Qt/KDE/btop files, reloads kitty/hyprland/nvim/shell, root+SDDM sync) |
 | `hypr-wall set <path> / next / current / ensure` | wallpaper (shell layer; also lock + SDDM) |
 | `hypr-theme-menu theme|wallpaper` | open the carousel picker |
-| `qs ipc call <target> <fn> [args]` | talk to the running shell. Targets: `bar theme wallpaper picker launcher clipboard notifications panels powermenu lock caffeine osd agents menu` (`qs ipc show` lists functions) |
+| `qs ipc call <target> <fn> [args]` | talk to the running shell. Targets: `bar dock theme wallpaper picker launcher clipboard notifications panels powermenu lock caffeine osd agents menu` (`qs ipc show` lists functions) |
 | `qs log` | the shell's log (QML errors show here) |
 | `~/.config/hypr/scripts/shell.sh restart` | restart the shell (needed after new files/qmldir changes; hot-reload can serve stale code) |
 | `hyprctl reload && hyprctl configerrors` | after ANY Hyprland change; must print nothing |

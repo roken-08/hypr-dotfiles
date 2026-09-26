@@ -5,21 +5,24 @@ config at `~/.config/quickshell` = repo `quickshell/.config/quickshell`.
 
 ```
 shell.qml                 mounts everything: WallpaperWindow Bar OsdWindow NotificationPopups
-                          LockScreen PowerMenu ImagePicker Launcher Clipboard
+                          LockScreen PowerMenu ImagePicker Launcher Clipboard MenuWindow DockWindow
 Commons/Theme.qml         colours from current/colors.json: Theme.c.bg0..bg4, fg, accentBright,
                           accentLight, accentMid, accentDim, border, borderStrong;
                           Theme.radius (4), radiusSm, font, fontSize, light, barStyle, alpha(col, a)
 Commons/Config.qml        shell.json: Config.position/vertical/transparent, layoutFor(), moduleDef(),
                           set("a.b", v) — writes the file, everything rebinds
 Services/*.qml            singletons (pragma Singleton) with IpcHandler: Notifs, Panels, Themes,
-                          Wallpaper, Lock, Idle, Caffeine, Osd, Apps, Clip, Agents
+                          Wallpaper, Lock, Idle, Caffeine, Osd, Apps, Clip, Agents, Menu, Dock
 Bar/Bar.qml               per-screen PanelWindow, gestures (drag to edge, double-click transparent)
 Bar/Pill.qml              the module container: pill skin (bordered) / floating + minimal (flat)
 Bar/WidgetLoader.qml      id → widget map (add new built-in widgets here)
 Bar/<Widget>.qml          Clock Workspaces Tray Audio Network Bluetooth Battery Caffeine Bell
-                          ActiveWindow Media SysMon KeyboardLayout Agents CommandWidget Label
+                          ActiveWindow Media SysMon NetSpeed KeyboardLayout Agents NightLight CommandWidget Label
 Panels/Panel.qml          popup under a widget; PanelHeader PanelRow PanelButton Slider Toggle
 Panels/<X>Panel.qml       Audio Network Bluetooth Power Calendar Agents Media · TrayMenu
+Dock/DockWindow.qml       the dock: Services/Dock.qml holds shell.json › dock, pins and the items
+                          (pinned, then running via ToplevelManager); intellihide reads window
+                          geometry from Hyprland.toplevels (lastIpcObject after refreshToplevels())
 Launcher/ Clipboard/ Picker/ Lock/ Power/ Notifications/ Osd/ Wallpaper/   overlays
 ```
 

@@ -13,3 +13,4 @@ singleton Agents 1.0 Agents.qml
 singleton Menu 1.0 Menu.qml
 singleton Bt 1.0 Bt.qml
 singleton Night 1.0 Night.qml
+singleton Dock 1.0 Dock.qml

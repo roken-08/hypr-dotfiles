@@ -61,6 +61,10 @@ Singleton {
         case "bar.transparent": return Config.transparent
         case "bar.hidden":      return Config.hidden
         case "bar.battery":     return Config.batteryPercent
+        case "dock":             return Dock.enabled
+        case "dock.mode":        return Dock.mode
+        case "dock.position":    return Dock.position
+        case "dock.transparent": return Dock.transparent
         case "caffeine": return Caffeine.on
         case "dnd":      return Notifs.dnd
         case "laptop":   return !!laptop
@@ -71,7 +75,7 @@ Singleton {
         }
     }
     // rebinds rows when live state changes
-    readonly property var tick: [Theme.name, Theme.barStyle, Config.position, Config.transparent, Config.hidden, Config.batteryPercent, Caffeine.on, Notifs.dnd, data]
+    readonly property var tick: [Theme.name, Theme.barStyle, Config.position, Config.transparent, Config.hidden, Config.batteryPercent, Caffeine.on, Notifs.dnd, Dock.cfg, data]
 
     // ---- rows ------------------------------------------------------------
     readonly property var widgetIds: ["clock", "workspaces", "tray", "audio", "network", "bluetooth", "battery", "caffeine", "bell", "activewindow", "media", "sysmon", "netspeed", "nightlight", "keyboard", "agents"]
@@ -133,6 +137,11 @@ Singleton {
         void tick
         if (name === "widgets") return widgetIds.map(w => ({ id: "widget." + w, icon: "󰕰", label: w, description: "", action: "", keep: true,
                                                               input: "", provider: "", sub: false, checked: widgetOn(w), value: "", crumb: "", internal: "widget" }))
+        if (name === "dock.pins") return Apps.all.slice()   // pinned first, in dock order, then A–Z
+                                        .sort((a, b) => ((Dock.isPinned(a.id) ? Dock.pinned.indexOf(a.id) : 1e4) - (Dock.isPinned(b.id) ? Dock.pinned.indexOf(b.id) : 1e4))
+                                                        || a.name.localeCompare(b.name))
+                                        .map(a => ({ id: "dockpin." + a.id, icon: "󰐃", label: a.name, description: "", action: "", keep: true,
+                                                     input: "", provider: "", sub: false, checked: Dock.isPinned(a.id), value: "", crumb: "", internal: "dockpin" }))
         if (name === "agents.default") return (data.agents || []).map(a => ({ id: "agent." + a.id, icon: a.icon, label: a.label, description: "", action: "hypr-agent default " + a.id,
                                                                             keep: true, input: "", provider: "", sub: false, checked: a.checked, value: "", crumb: "" }))
         return (data[name] || []).map(r => ({ id: name + "." + r.id, icon: r.icon || "", label: r.label, description: r.description || "", action: r.action || "",
@@ -165,7 +174,7 @@ Singleton {
             const r = row(k, e, "")
             if (r.sub && !e.provider) continue            // only leaves; submenus are reached via their rows
             consider(r, crumbFor(k))
-            if (e.provider && e.provider !== "widgets") for (const pr of providerRows(e.provider)) consider(pr, crumbFor(k + ".x"))
+            if (e.provider && e.provider !== "widgets" && e.provider !== "dock.pins") for (const pr of providerRows(e.provider)) consider(pr, crumbFor(k + ".x"))
         }
         out.sort((a, b) => b.score - a.score)
         return out.slice(0, 40)
@@ -187,6 +196,7 @@ Singleton {
     function activate(r) {
         if (!r) return
         if (r.internal === "widget") { toggleWidget(r.id.slice(7)); return }
+        if (r.internal === "dockpin") { Dock.togglePin(r.id.slice(8)); return }
         if (r.input) { inputRow = r; query = ""; return }
         if (r.sub) { path = r.id; query = ""; selected = 0; return }
         if (!r.action) return

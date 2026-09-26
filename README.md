@@ -288,6 +288,23 @@ The shell also draws the **wallpaper** (one background layer per screen, crossfa
 
 ---
 
+
+### The dock
+
+A dock on any screen edge: your pinned apps, then whatever else is running (an app shows up as
+soon as it opens). Click to launch or focus it (click again to cycle its windows), middle-click
+for a new window, right-click to pin, unpin or close. It follows the theme like the bar.
+Everything is in **Menu › Style › Dock**:
+
+| Mode | |
+|---|---|
+| Hide when a window covers it | the default: shown on an empty desktop, slides away while a window would sit under it |
+| Auto-hide | hidden until the cursor touches the screen edge |
+| Always visible | always there, and windows keep clear of it |
+
+plus Bottom / Left / Right / Top, Transparent, and *Pinned apps* (tick the apps you want). A
+fullscreen window hides it in every mode. Settings live in `shell.json` › `dock` (`pinned` holds
+desktop ids, in order; `iconSize` 24–72). Scripts: `qs ipc call dock toggle|mode <m>|position <p>|transparent|pin <id>|size <px>`.
 ## Theming
 
 Colours live in **one place**: [`theme/.config/hypr-theme/themes/<name>/colors.toml`](theme/.config/hypr-theme/themes/).
