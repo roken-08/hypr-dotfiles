@@ -204,8 +204,10 @@ Variants {
                     id: img
                     anchors.centerIn: parent
                     implicitSize: Dock.iconSize
+                    // the app's icon; a window with no desktop entry gets the
+                    // generic terminal/app icon from the theme rather than nothing
                     source: app.entry && app.entry.icon ? Quickshell.iconPath(app.entry.icon, true)
-                                                        : Quickshell.iconPath(app.modelData.key, true)
+                          : Quickshell.iconPath(app.modelData.key, true) || Quickshell.iconPath("application-x-executable", true)
                     scale: hit.pressed ? 0.9 : 1
                     Behavior on scale { NumberAnimation { duration: 80 } }
                     Text {   // no icon anywhere: the name's first letter

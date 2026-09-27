@@ -60,7 +60,9 @@ Pill {
                     const d = ctx.getImageData(0, 0, width, height).data
                     let n = 0, lum = 0, sat = 0
                     for (let i = 0; i < d.length; i += 4) {
-                        if (d[i + 3] < 100) continue
+                        // (passive icons are drawn at half opacity: a high alpha
+                        // cut-off skipped every pixel of them, e.g. blueman)
+                        if (d[i + 3] < 40) continue
                         const r = d[i] / 255, g = d[i + 1] / 255, b = d[i + 2] / 255
                         const mx = Math.max(r, g, b), mn = Math.min(r, g, b)
                         lum += (mx + mn) / 2; sat += mx - mn; n++
