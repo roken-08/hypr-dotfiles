@@ -175,7 +175,17 @@ Scope {
                     component Section: Item {
                         id: sec
                         property string name
-                        readonly property var entries: Config.layoutFor(Theme.barLayout, name)
+                        // spacers only between widgets: turning widgets off left two side by
+                        // side (a double gap) or one at the section's edge
+                        readonly property var entries: {
+                            const out = []
+                            for (const id of Config.layoutFor(Theme.barLayout, name)) {
+                                if (id === "spacer" && (out.length === 0 || out[out.length - 1] === "spacer")) continue
+                                out.push(id)
+                            }
+                            while (out.length && out[out.length - 1] === "spacer") out.pop()
+                            return out
+                        }
                         implicitWidth: win.vertical ? col.implicitWidth : row.implicitWidth
                         implicitHeight: win.vertical ? col.implicitHeight : row.implicitHeight
                         width: implicitWidth

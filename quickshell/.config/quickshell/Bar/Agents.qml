@@ -16,6 +16,6 @@ Pill {
     onClicked: Panels.toggle("agents", ag)
     onRightClicked: Agents.launch("")
     Icon { icon: "󱚝"; size: Theme.fontSize + 1; color: ag.tone }   // the rice's own robot glyph
-    FixedLabel { visible: ag.pct >= 0 && !ag.vertical; text: ag.pct + "%"; widest: "100%"; color: ag.tone }
+    FixedLabel { visible: ag.pct >= 0 && !ag.vertical; text: ag.pct + "%"; widest: "88%"; color: ag.tone }
     AgentsPanel { anchorItem: ag }
 }
