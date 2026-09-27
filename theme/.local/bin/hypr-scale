@@ -4,17 +4,18 @@
     hypr-scale                 print the focused monitor and its scale
     hypr-scale <n>             set it (1, 1.25, 1.6, 2 …)
     hypr-scale up|down         step through the presets
-    hypr-scale reset           back to what monitors.lua says (hyprctl reload)
+    hypr-scale reset           back to what monitors(.local).lua says (hyprctl reload)
 
 Hyprland only accepts a scale where the mode divides into whole logical
 pixels (1/120 steps), so a requested value is rounded to the nearest clean
 one. The change is applied live with `hyprctl eval` (the Lua config has no
-`keyword`) and written into modules/monitors.lua so it survives a reload.
+`keyword`) and written into modules/monitors.local.lua so it survives a reload.
 """
 import json, math, os, re, subprocess, sys
 
 PRESETS = [1, 1.25, 1.5, 1.6, 1.75, 2, 2.5, 3]
-LUA = os.path.expanduser("~/.config/hypr/modules/monitors.lua")
+# per-machine rules; monitors.lua (in the repo) loads it and stays generic
+LUA = os.path.expanduser("~/.config/hypr/modules/monitors.local.lua")
 
 
 def hypr(*args):
@@ -43,11 +44,11 @@ def fmt(x):
 
 
 def persist(name, scale):
-    """Rewrite this output's scale in monitors.lua, or append a rule for it."""
+    """Rewrite this output's scale in monitors.local.lua, or append a rule for it."""
     try:
         src = open(LUA).read()
     except OSError:
-        return
+        src = "-- This machine's monitors (gitignored; hypr-scale writes here).\n"
     block = re.compile(r'(hl\.monitor\(\{[^}]*?output\s*=\s*"' + re.escape(name) + r'"[^}]*?scale\s*=\s*)([0-9.]+)', re.S)
     if block.search(src):
         src = block.sub(lambda m: m.group(1) + fmt(scale), src, count=1)

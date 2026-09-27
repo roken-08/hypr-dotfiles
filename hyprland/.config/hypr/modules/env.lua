@@ -30,11 +30,15 @@ hl.env("HYPRCURSOR_SIZE", "16")
 hl.env("XCURSOR_SIZE", "24")
 
 -- ─── 5. NVIDIA / GPU ─────────────────────────────────────────────────────────
-hl.env("GBM_BACKEND", "nvidia-drm")
-hl.env("LIBVA_DRIVER_NAME", "nvidia")
-
-
-hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+-- only when the NVIDIA driver is loaded: on an Intel/AMD machine these
+-- stop Hyprland from starting
+local nv = io.open("/proc/driver/nvidia/version")
+if nv then
+    nv:close()
+    hl.env("GBM_BACKEND", "nvidia-drm")
+    hl.env("LIBVA_DRIVER_NAME", "nvidia")
+    hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+end
 
 -- ─── 6. Disabled / optional ────────────────────────────
 

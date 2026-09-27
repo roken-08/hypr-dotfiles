@@ -62,6 +62,13 @@ the old buffer shows stretched for a frame, so avoid resizing on input.
 
 ## Monitors and scale
 
+`modules/monitors.lua` (in the repo) is generic: every output at its
+preferred mode, auto scale. This machine's own rules live in
+`modules/monitors.local.lua` (gitignored, loaded after it); `hypr-scale`
+writes there. Put a user's exact mode/scale/position in the local file, never
+in monitors.lua. NVIDIA env vars in env.lua apply only when
+/proc/driver/nvidia exists.
+
 `hl.monitor({ output = "eDP-1", mode = "2560x1440@165", position = "0x0", scale = 1.6 })`
 — `hyprctl monitors all` lists outputs/modes. Fractional scale is why the shell
 uses `Hyprland.monitorFor(screen).scale` instead of `devicePixelRatio`.

@@ -18,6 +18,8 @@ PKGS_REPO=(
   neovim fastfetch btop eza
   grim slurp wl-clipboard cliphist playerctl brightnessctl batsignal ffmpeg hyprsunset
   thunar pavucontrol networkmanager nm-connection-editor
+  # what the shell talks to: notifications, volume, bluetooth, battery, links
+  libnotify pipewire pipewire-pulse wireplumber bluez bluez-utils blueman upower xdg-utils
   ttf-jetbrains-mono-nerd inter-font papirus-icon-theme adw-gtk-theme stow
   # theme engine: renderer, JSON edits, gsettings schema, portal settings backend
   # (GTK4/Zen follow dark/light through it), login screen
@@ -42,7 +44,7 @@ else
 fi
 
 STEP_N=0
-STEP_TOTAL=9
+STEP_TOTAL=10
 
 banner() {
   printf '%s\n' ""
@@ -627,6 +629,48 @@ else
     ok "/hypr skill linked for coding agents ($(ls -d "$HOME"/.claude/skills "$HOME"/.agents/skills 2>/dev/null | tr '\n' ' '))."
   else
     warn "Skill link failed — run: hypr-agent skills install"
+  fi
+fi
+
+# ============================================================================
+# Services the desktop needs. Wi-Fi (NetworkManager), Bluetooth, power
+# profiles and the login screen (SDDM). Careful with the two that another
+# setup may already own: NetworkManager is not started while another network
+# daemon runs (it would take the connection away mid-install), and SDDM is
+# only enabled when no other display manager is.
+if [[ $DRY_RUN -eq 1 ]]; then
+  step "Services"
+  info "Would enable: bluetooth, power-profiles-daemon, NetworkManager, sddm (each only if safe)."
+elif ! command -v systemctl >/dev/null 2>&1; then
+  skip "Services (no systemd)"
+else
+  step "Services"
+  _enable() {   # unit [--now]
+    systemctl is-enabled --quiet "$1" 2>/dev/null && { ok "$1 already enabled."; return; }
+    if sudo systemctl enable ${2:-} "$1" >/dev/null 2>&1; then ok "$1 enabled."; else warn "Could not enable $1."; fi
+  }
+  systemctl list-unit-files bluetooth.service >/dev/null 2>&1 && _enable bluetooth.service --now
+  systemctl list-unit-files power-profiles-daemon.service >/dev/null 2>&1 && _enable power-profiles-daemon.service --now
+  _other_net=""
+  for u in systemd-networkd iwd dhcpcd connman netctl; do
+    systemctl is-active --quiet "$u" 2>/dev/null && _other_net="$u"
+  done
+  if systemctl is-enabled --quiet NetworkManager 2>/dev/null; then
+    ok "NetworkManager already enabled."
+  elif [[ -n $_other_net ]]; then
+    warn "$_other_net manages the network now; NetworkManager left alone (the Wi-Fi panel needs it)."
+    info "To switch: sudo systemctl disable --now $_other_net && sudo systemctl enable --now NetworkManager"
+  else
+    _enable NetworkManager.service --now
+  fi
+  _dm="$(readlink /etc/systemd/system/display-manager.service 2>/dev/null || true)"
+  if [[ -z $_dm ]]; then
+    _enable sddm.service   # not --now: that would end this session
+  elif [[ $_dm == *sddm* ]]; then
+    ok "sddm is the display manager."
+  else
+    warn "Display manager is $(basename "$_dm" .service); SDDM not enabled."
+    info "To use the rice's login screen: sudo systemctl disable $(basename "$_dm") && sudo systemctl enable sddm"
   fi
 fi
 
