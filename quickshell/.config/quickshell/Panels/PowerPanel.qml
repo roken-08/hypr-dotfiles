@@ -65,7 +65,7 @@ Panel {
     Row {
         id: session
         width: parent.width; spacing: 6
-        PanelButton { width: (session.width - 18) / 4; icon: "lock"; text: "Lock";     onClicked: { Quickshell.execDetached(["hyprlock"]); Panels.close() } }
+        PanelButton { width: (session.width - 18) / 4; icon: "lock"; text: "Lock";     onClicked: { Panels.close(); Lock.lock() } }   // the shell's lock, as SUPER+L
         PanelButton { width: (session.width - 18) / 4; icon: "bedtime"; text: "Sleep";    onClicked: { Quickshell.execDetached(["systemctl", "suspend"]); Panels.close() } }
         PanelButton { width: (session.width - 18) / 4; icon: "restart_alt"; text: "Reboot";   onClicked: { Quickshell.execDetached(["systemctl", "reboot"]); Panels.close() } }
         PanelButton { width: (session.width - 18) / 4; icon: "power_settings_new"; text: "Off";      onClicked: { Quickshell.execDetached(["systemctl", "poweroff"]); Panels.close() } }
