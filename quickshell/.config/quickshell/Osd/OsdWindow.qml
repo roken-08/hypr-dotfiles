@@ -14,7 +14,9 @@ Variants {
         screen: modelData
         visible: Osd.visible
         anchors.bottom: true
-        margins.bottom: 60
+        // clear of a bottom dock (its icon row + padding + gap), whether or not
+        // it is slid away at the moment
+        margins.bottom: Dock.enabled && Dock.position === "bottom" ? Dock.iconSize + 12 + 12 + 6 + 16 : 60
         implicitWidth: 260
         implicitHeight: 48
         color: "transparent"

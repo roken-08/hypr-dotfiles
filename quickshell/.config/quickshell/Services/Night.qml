@@ -16,7 +16,7 @@ Singleton {
     function set(want) { run([want ? "on" : "off"]) }
     function run(args) { proc.command = [Quickshell.env("HOME") + "/.local/bin/hypr-nightlight"].concat(args); proc.running = true }
 
-    Process { id: proc; onExited: poll.running = true }
+    Process { id: proc }   // hypr-nightlight reports the new state itself
     Process {
         id: poll
         command: ["bash", "-c", "command -v hyprsunset >/dev/null || { echo missing; exit 0; }; pgrep -x hyprsunset >/dev/null && echo on || echo off"]
@@ -36,6 +36,8 @@ Singleton {
         function toggle(): bool { root.toggle(); return !root.on }
         function on(): void { root.set(true) }
         function off(): void { root.set(false) }
+        // set by hypr-nightlight when it changes the state (no 10 s wait)
+        function state(s: string): void { if (s === "on" || s === "off") root.on = s === "on" }
         function status(): string { return !root.available ? "hyprsunset not installed" : root.on ? "on" : "off" }
     }
 }

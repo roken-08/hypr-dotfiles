@@ -53,8 +53,10 @@ hl.window_rule({
 	name = "hypr-float",
 	match = { class = "^hypr-float$" },
 	float = true,
-	center = true,
 	size = { "monitor_w * 0.78", "monitor_h * 0.82" },
+	-- centred, 12px above the middle so its bottom clears a bottom dock
+	-- (window_w is the size before the size rule, so use the same fractions)
+	move = { "monitor_w * 0.11", "monitor_h * 0.09 - 12" },
 })
 
 hl.window_rule({

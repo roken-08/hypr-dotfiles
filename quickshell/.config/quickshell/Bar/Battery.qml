@@ -42,7 +42,10 @@ Pill {
             onRunningChanged: if (!running) ic.opacity = 1
         }
     }
-    Label { visible: bat.pillMode && !bat.vertical && Config.batteryPercent; text: bat.pct + "%"; color: bat.tone }
+    // Menu › Toggle › Battery percentage, in every skin (it was only drawn in
+    // Legacy); fixed width so 9% → 10% doesn't push the bar
+    TextMetrics { id: widest; font.family: Theme.font; font.pixelSize: Theme.fontSize; font.weight: Font.Medium; text: "100%" }
+    Label { visible: !bat.vertical && Config.batteryPercent; text: bat.pct + "%"; width: widest.width; color: bat.tone }
 
     PowerPanel { anchorItem: bat }
 }

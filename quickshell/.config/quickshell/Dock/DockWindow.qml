@@ -112,14 +112,20 @@ Variants {
                      "fullscreen", "activewindowv2", "focusedmon"].indexOf(e.name) !== -1) refresh.restart()
             }
         }
-        Timer { id: refresh; interval: 60; onTriggered: { Hyprland.refreshToplevels(); Hyprland.refreshMonitors(); settle.restart() } }
-        Timer { id: settle; interval: 80; onTriggered: win.checkOverlap() }
+        Timer { id: refresh; interval: 60; onTriggered: { Hyprland.refreshToplevels(); Hyprland.refreshMonitors(); settle.go() } }
+        // the refresh answers asynchronously: look again a couple of times
+        Timer { id: settle; interval: 80; property int left: 0
+                onTriggered: { win.checkOverlap(); if (--left > 0) { interval = 220; restart() } else interval = 80 }
+                function go() { left = 3; interval = 80; restart() } }
         Timer { interval: 1000; repeat: true; running: Dock.mode === "intellihide"; triggeredOnStart: true; onTriggered: refresh.restart() }
         onWsChanged: refresh.restart()
-        Connections { target: Dock; function onItemsChanged() { settle.restart() } }
+        Connections { target: Dock; function onItemsChanged() { settle.go() } }
 
-        Timer { id: hideLater; interval: 600; onTriggered: win.hovered = false }
-        Timer { id: showSoon; interval: 120; onTriggered: win.hovered = true }
+        Timer { id: hideLater; interval: 900; onTriggered: if (!cardHover.hovered && !win.menuOpen) win.hovered = false }
+        // revealed from the edge: it goes away again unless the pointer
+        // reaches the card (cardHover stops hideLater); without this a quick
+        // touch of the edge left it up for good
+        Timer { id: showSoon; interval: 120; onTriggered: { win.hovered = true; hideLater.restart() } }
 
         // a thin strip on the edge: touching it brings a hidden dock back
         Item {

@@ -97,6 +97,15 @@ Variants {
                 model: win.rows
                 currentIndex: Menu.selected
                 onCurrentIndexChanged: positionViewAtIndex(currentIndex, ListView.Contain)
+                // a toggle re-reads the rows, which resets the view to the top:
+                // on the same page, put the scroll position back
+                // (saved on click; -1 = nothing to restore)
+                property real keepY: -1
+                onModelChanged: if (keepY >= 0) {
+                    const y = keepY
+                    keepY = -1
+                    Qt.callLater(() => { list.contentY = Math.min(y, Math.max(0, list.contentHeight - list.height)) })
+                }
                 delegate: Rectangle {
                     id: row
                     required property var modelData
@@ -132,7 +141,7 @@ Variants {
                     }
                     // click only: hovering never moves the selection
                     MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                                onClicked: Menu.activate(row.modelData) }
+                                onClicked: { if (row.modelData.keep) list.keepY = list.contentY; Menu.selected = row.index; Menu.activate(row.modelData) } }
                 }
                 Label { visible: win.rows.length === 0 && !Menu.inputRow; anchors.centerIn: parent; text: "nothing found"; font.pixelSize: Theme.fs(12); color: Theme.c.accentDim }
                 Label { visible: !!Menu.inputRow; anchors.centerIn: parent; text: "Enter to set"; font.pixelSize: Theme.fs(12); color: Theme.c.accentDim }
