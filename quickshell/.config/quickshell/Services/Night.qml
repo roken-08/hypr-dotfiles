@@ -29,7 +29,9 @@ Singleton {
             }
         }
     }
-    Timer { interval: 10000; running: true; repeat: true; onTriggered: poll.running = true }
+    // hypr-nightlight reports its own changes; this only catches hyprsunset
+    // started or stopped some other way
+    Timer { interval: 60000; running: true; repeat: true; onTriggered: poll.running = true }
 
     IpcHandler {
         target: "nightlight"

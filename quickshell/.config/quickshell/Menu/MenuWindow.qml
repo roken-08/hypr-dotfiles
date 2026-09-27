@@ -75,7 +75,7 @@ Variants {
                         const n = win.rows.length
                         if (e.key === Qt.Key_Escape) { if (Menu.inputRow || input.text !== "") Menu.up(); else Menu.close(); e.accepted = true; return }
                         if (e.key === Qt.Key_Return || e.key === Qt.Key_Enter) {
-                            if (Menu.inputRow) Menu.submitInput(input.text); else if (n) Menu.activate(win.rows[Menu.selected])
+                            if (Menu.inputRow) Menu.submitInput(input.text); else if (n) list.activate(Menu.selected)
                             e.accepted = true; return
                         }
                         if ((e.key === Qt.Key_Backspace || e.key === Qt.Key_Left) && input.text === "") { Menu.up(); e.accepted = true; return }
@@ -94,22 +94,28 @@ Variants {
                 width: parent.width - 20
                 height: win.rowsShown * win.rowH
                 clip: true; spacing: 0
-                model: win.rows
+                // the model is the row count, and each row reads win.rows[index]:
+                // a toggle re-reads the rows, and a new array as the model reset
+                // the view to the top every time; same count, nothing resets
+                model: win.rows.length
                 currentIndex: Menu.selected
                 onCurrentIndexChanged: positionViewAtIndex(currentIndex, ListView.Contain)
-                // a toggle re-reads the rows, which resets the view to the top:
-                // on the same page, put the scroll position back
-                // (saved on click; -1 = nothing to restore)
-                property real keepY: -1
-                onModelChanged: if (keepY >= 0) {
-                    const y = keepY
-                    keepY = -1
-                    Qt.callLater(() => { list.contentY = Math.min(y, Math.max(0, list.contentHeight - list.height)) })
+                // another page or another search: start at the top
+                Connections {
+                    target: Menu
+                    function onPathChanged() { list.positionViewAtBeginning() }
+                    function onQueryChanged() { list.positionViewAtBeginning() }
+                }
+                function activate(i) {
+                    const r = win.rows[i]
+                    if (!r) return
+                    Menu.selected = i
+                    Menu.activate(r)
                 }
                 delegate: Rectangle {
                     id: row
-                    required property var modelData
                     required property int index
+                    readonly property var modelData: win.rows[index] || ({ icon: "", label: "", crumb: "", value: "" })
                     readonly property bool sel: index === Menu.selected
                     width: list.width; height: win.rowH
                     radius: Theme.radiusSm
@@ -141,7 +147,7 @@ Variants {
                     }
                     // click only: hovering never moves the selection
                     MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                                onClicked: { if (row.modelData.keep) list.keepY = list.contentY; Menu.selected = row.index; Menu.activate(row.modelData) } }
+                                onClicked: list.activate(row.index) }
                 }
                 Label { visible: win.rows.length === 0 && !Menu.inputRow; anchors.centerIn: parent; text: "nothing found"; font.pixelSize: Theme.fs(12); color: Theme.c.accentDim }
                 Label { visible: !!Menu.inputRow; anchors.centerIn: parent; text: "Enter to set"; font.pixelSize: Theme.fs(12); color: Theme.c.accentDim }

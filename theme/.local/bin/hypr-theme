@@ -283,8 +283,14 @@ cmd_set() {
     local name="${1:-}" src
     src="$(theme_path "$name")"
     render_into "$src" "$NEXT_DIR"
-    rm -rf "$CURRENT_DIR"
-    mv "$NEXT_DIR" "$CURRENT_DIR"
+    # swap in one step (the shell and apps watch current/; a delete-then-rename
+    # left them a moment with no colours file); plain rename where mv can't
+    if [[ -d "$CURRENT_DIR" ]] && mv --exchange -T "$NEXT_DIR" "$CURRENT_DIR" 2>/dev/null; then
+        rm -rf "$NEXT_DIR"
+    else
+        rm -rf "$CURRENT_DIR"
+        mv "$NEXT_DIR" "$CURRENT_DIR"
+    fi
     apply
     have notify-send && notify-send -a hypr-theme "Theme: $(sed -n 's/^name *= *"\(.*\)".*/\1/p' "$src/colors.toml")" "$(theme_mode "$src") mode" 2>/dev/null || true
     printf '%s\n' "$name"

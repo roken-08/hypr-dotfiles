@@ -18,7 +18,7 @@ Singleton {
             transparent: false,              // floating + minimal skins only
             skin: "",                        // pill (Legacy) | floating | minimal | "" = the theme's choice
             hidden: false,                   // Menu › Toggle › Bar
-            battery: true,                   // show the percentage next to the battery glyph
+            battery: false,                  // show the percentage next to the battery glyph
             layout: {
                 // the classic bar, exactly as waybar had it
                 pill: {
@@ -67,7 +67,7 @@ Singleton {
     readonly property string skin: (bar && skins.indexOf(bar.skin) !== -1) ? bar.skin : ""
     // true once shell.json was read (or found missing); see Theme.ready
     property bool ready: false
-    readonly property bool batteryPercent: !(bar && bar.battery === false)
+    readonly property bool batteryPercent: !!(bar && bar.battery === true)
 
     function layoutFor(style, section) {
         const l = bar && bar.layout && bar.layout[style]

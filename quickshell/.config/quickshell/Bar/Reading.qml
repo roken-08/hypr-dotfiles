@@ -18,12 +18,11 @@ Grid {
     rowSpacing: 1
     horizontalItemAlignment: Grid.AlignHCenter
     verticalItemAlignment: Grid.AlignVCenter
-    TextMetrics { id: m; font.family: Theme.font; font.pixelSize: Theme.fontSize; font.weight: Font.Medium; text: r.widest }
     Icon { icon: r.icon; color: r.iconColor; size: r.vertical ? Theme.fs(14) : Theme.fs(15) }
-    Label {
+    FixedLabel {
         text: r.text
+        widest: r.widest
         color: r.color
-        width: r.vertical ? implicitWidth : m.width
         font.pixelSize: r.vertical ? Theme.fs(9) : Theme.fontSize
     }
 }

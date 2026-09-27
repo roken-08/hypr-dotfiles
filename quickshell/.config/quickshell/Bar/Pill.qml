@@ -41,9 +41,12 @@ Rectangle {
         x: pill.vertical ? 0 : pill.padH
         // exactly as many cells as visible children: Grid pads its implicit
         // size with spacing for every declared row/column, used or not
+        // (a Repeater is a child too, and a 0x0 one: skip it by what it is,
+        // not by size, or items not yet measured go uncounted and the grid
+        // gets fewer cells than items: widgets wrapped or overlapped for a frame)
         readonly property int n: {
             let c = 0
-            for (let i = 0; i < visibleChildren.length; i++) if (visibleChildren[i].width > 0 || visibleChildren[i].height > 0) c++   // a Repeater is a 0x0 child
+            for (let i = 0; i < visibleChildren.length; i++) if (visibleChildren[i].delegate === undefined) c++
             return Math.max(1, c)
         }
         columns: pill.vertical ? 1 : n
