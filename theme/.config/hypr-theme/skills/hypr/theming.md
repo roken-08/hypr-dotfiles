@@ -71,6 +71,16 @@ plus any key from `[terminal]`, `[git]`, `[apps]`.
    this machine. Don't commit it or `git add -f` it (MAINTAINER.md decides
    what ships). To share it, the user copies the folder.
 
+**Folder colour.** `icon_theme = "Papirus-Dark-<colour>"` (or `Papirus-Light-…`,
+`Papirus-…`) gives Thunar & co. folders in one of Papirus' colours (`ls
+/usr/share/icons/Papirus/48x48/places/folder-*.svg`: teal, darkcyan, violet,
+indigo, grey…); `hypr-theme` builds that variant in `~/.local/share/icons`
+without root. Starlink uses darkcyan to match its rings.
+
+**Spotify** follows through Spicetify (`templates/spicetify-color.ini.tpl`,
+`spicetify/user.css`) when `spicetify` is installed and configured; nothing to
+do per theme.
+
 ## Hued vs monochrome in templates
 
 `{{ hued <a> <b> }}` renders `a` when the theme has `hued = true`, else `b`; only the chosen

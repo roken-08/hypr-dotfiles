@@ -187,11 +187,87 @@ apply_firefox() {
     done
 }
 
+# Papirus with its folders in another colour, for themes whose [apps]
+# icon_theme is "<Papirus base>-<colour>" (Papirus-Dark-darkcyan…). Built in
+# ~/.local/share/icons, no root: the theme inherits its base and holds only
+# folder/user icon links re-pointed from the blue set to <colour>, which is
+# what papirus-folders does system-wide.
+ensure_folder_icons() {
+    local name="$1" base colour src out dir sub f link target
+    [[ $name =~ ^(Papirus|Papirus-Dark|Papirus-Light)-([a-z]+)$ ]] || return 0
+    base="${BASH_REMATCH[1]}"; colour="${BASH_REMATCH[2]}"
+    src=/usr/share/icons/Papirus
+    [[ -d /usr/share/icons/$base && -e $src/48x48/places/folder-$colour.svg ]] || return 0
+    out="$HOME/.local/share/icons/$name"
+    [[ -f $out/index.theme && $out/index.theme -nt $src/48x48/places ]] && return 0
+    rm -rf "$out"; mkdir -p "$out"
+    local dirs=()
+    for dir in "$src"/*/places; do
+        sub="${dir#"$src"/}"; mkdir -p "$out/$sub"; dirs+=("$sub")
+        for f in "$dir"/folder-blue*.svg "$dir"/user-blue*.svg; do
+            [[ -e $f ]] || continue
+            f="${f##*/}"; target="${f/-blue/-$colour}"; link="${f/-blue/}"
+            [[ -e $dir/$target ]] && ln -sf "$src/$sub/$target" "$out/$sub/$link"
+        done
+        # names that reach a blue icon through a chain of links
+        # (folder-publicshare -> folder-image-people -> folder-blue-image-people)
+        for f in "$dir"/*.svg; do
+            [[ -L $f && ! -e $out/$sub/${f##*/} ]] || continue
+            target="$(readlink -f "$f")"; target="${target##*/}"
+            [[ $target == folder-blue*.svg || $target == user-blue*.svg ]] || continue
+            target="${target/-blue/-$colour}"
+            [[ -e $dir/$target ]] && ln -s "$src/$sub/$target" "$out/$sub/${f##*/}"
+        done
+    done
+    {
+        printf '[Icon Theme]\nName=%s\nComment=%s with %s folders (hypr-theme)\nInherits=%s,hicolor\n' "$name" "$base" "$colour" "$base"
+        printf 'Directories=%s\n' "$(IFS=,; echo "${dirs[*]}")"
+        # each directory's own section, copied from Papirus
+        for sub in "${dirs[@]}"; do
+            awk -v s="[$sub]" '$0==s{p=1;print "";print;next} /^\[/{p=0} p' /usr/share/icons/Papirus/index.theme
+        done
+    } > "$out/index.theme"
+    have gtk-update-icon-cache && gtk-update-icon-cache -q -f "$out" 2>/dev/null || true
+}
+
+# Spotify, through Spicetify, when both are there: the "hypr" theme gets the
+# current colours and is (re)applied. Spotify itself is patched once
+# ("spicetify backup apply"), later switches only refresh the colours; a
+# running Spotify is restarted when it isn't playing. Spotify updates undo
+# the patch: run "spicetify backup apply" again.
+apply_spotify() {
+    local sp dir
+    sp="$(command -v spicetify || { [[ -x $HOME/.spicetify/spicetify ]] && echo "$HOME/.spicetify/spicetify"; })"
+    [[ -n $sp ]] || return 0
+    [[ -n "$("$sp" config spotify_path 2>/dev/null)" ]] || return 0
+    dir="$("$sp" path userdata 2>/dev/null)/Themes/hypr"
+    [[ $dir == /* ]] || return 0
+    mkdir -p "$dir"
+    install_file "$CURRENT_DIR/spicetify-color.ini" "$dir/color.ini"
+    install_file "$HT_DIR/spicetify/user.css" "$dir/user.css"
+    if [[ "$("$sp" config current_theme 2>/dev/null)" != hypr ]]; then
+        "$sp" config current_theme hypr color_scheme hypr inject_theme_js 0 >/dev/null 2>&1
+        "$sp" backup apply >/dev/null 2>&1 || "$sp" apply >/dev/null 2>&1 || true
+    else
+        "$sp" refresh >/dev/null 2>&1 || true
+    fi
+    # a running Spotify only reads its colours at start: restart it when that
+    # interrupts nothing, otherwise say when the theme will show
+    if pgrep -x spotify >/dev/null 2>&1; then
+        if [[ "$(playerctl -p spotify status 2>/dev/null)" == Playing ]]; then
+            have notify-send && notify-send -a hypr-theme "Spotify" "The new theme shows the next time Spotify starts." 2>/dev/null || true
+        else
+            "$sp" restart >/dev/null 2>&1 &
+        fi
+    fi
+}
+
 apply() {
     local mode gtk_theme icon_theme
     mode="$(theme_mode "$CURRENT_DIR/theme")"
     gtk_theme="$(sed -n 's/^gtk-theme-name=\(.*\)/\1/p' "$CURRENT_DIR/gtk3-settings.ini")"
     icon_theme="$(sed -n 's/^gtk-icon-theme-name=\(.*\)/\1/p' "$CURRENT_DIR/gtk3-settings.ini")"
+    ensure_folder_icons "$icon_theme"
 
     # Files that must live at a fixed path the app owns.
     install_file "$CURRENT_DIR/gtk3-settings.ini" "$HOME/.config/gtk-3.0/settings.ini"
@@ -222,6 +298,8 @@ apply() {
         gsettings set org.gnome.desktop.interface gtk-theme  "$gtk_theme"  2>/dev/null || true
         gsettings set org.gnome.desktop.interface icon-theme "$icon_theme" 2>/dev/null || true
     fi
+
+    apply_spotify
 
     # Running apps: reload in place where the app supports it.
     have hyprctl       && hyprctl reload >/dev/null 2>&1 || true
