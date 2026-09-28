@@ -124,10 +124,15 @@ Commands you will use (all `--help`/header-documented — read the script if uns
    `hyprctl eval 'hl.clear_crashed_lockscreen()'` ready). No `sudo` prompts
    in a non-interactive run: use `hypr-doctor` (no-sudo) or ask the user to
    run the privileged step.
-6. **Backups are git.** Work on the current branch; `git stash`/`git checkout
+6. **Never clobber the user's uncommitted work.** Check `git status` before
+   editing; a file with their changes gets your edit applied on top of what
+   is on disk (read it fully *before* opening it for writing: Python's
+   `open(f, "w").write(fix(open(f).read()))` truncates first and reads an
+   empty file). Commit only your own hunks, never `git add -A` over theirs.
+7. **Backups are git.** Work on the current branch; `git stash`/`git checkout
    -- <file>` undoes a bad change. Before deleting or overwriting anything
    outside the repo, look at it.
-7. **Fresh install must still work.** A change meant to ship with the rice
+8. **Fresh install must still work.** A change meant to ship with the rice
    (MAINTAINER.md) that adds a package, a file the theme installs, a stow
    package or a sudo step also updates `install.sh` and README. For a change
    that is only for this machine, tell the user what to install instead.

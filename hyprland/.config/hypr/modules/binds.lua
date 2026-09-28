@@ -10,9 +10,23 @@ local function default_app(kind, fallback)
 	local v = f:read("*l"); f:close()
 	return (v and v ~= "") and v or fallback
 end
+-- the first of these that is installed (a fresh machine may have no zen)
+local function installed(names)
+	for _, n in ipairs(names) do
+		local p = io.popen("command -v " .. n .. " 2>/dev/null")
+		local out = p and p:read("*l") or nil
+		if p then
+			p:close()
+		end
+		if out and out ~= "" then
+			return n
+		end
+	end
+	return names[1]
+end
 local terminal = default_app("terminal", "kitty")
 local fileManager = "thunar"
-local browser = default_app("browser", "zen-browser")
+local browser = default_app("browser", installed({ "zen-browser", "firefox", "chromium", "brave" }))
 
 local mainMod = "SUPER"
 

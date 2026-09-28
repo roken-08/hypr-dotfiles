@@ -263,7 +263,8 @@ if [[ $STOW_ONLY -eq 0 && $DRY_RUN -eq 0 ]]; then
 
   if [[ ${#from_repo[@]} -gt 0 ]]; then
     info "In a configured repo: ${from_repo[*]}"
-    sudo pacman -S --needed "${from_repo[@]}"
+    # (not fatal: these are the logout menu and Qt styling, not the desktop)
+    sudo pacman -S --needed "${from_repo[@]}" || warn "Could not install: ${from_repo[*]}"
   fi
 
   if [[ ${#need_aur[@]} -gt 0 ]]; then
@@ -280,8 +281,11 @@ if [[ $STOW_ONLY -eq 0 && $DRY_RUN -eq 0 ]]; then
       # given, and an unanswered one aborts the whole batch. These are three
       # named packages, not an open-ended set.
       info "Installing with $aur_helper: ${need_aur[*]}"
-      "$aur_helper" -S --needed --noconfirm "${need_aur[@]}"
-      ok "AUR packages done."
+      if "$aur_helper" -S --needed --noconfirm "${need_aur[@]}"; then
+        ok "AUR packages done."
+      else
+        warn "$aur_helper could not install all of: ${need_aur[*]} (the rest of the install carries on)"
+      fi
     elif [[ $NO_AUR -eq 1 ]]; then
       warn "--no-aur given. Install these by hand to complete the rice:"
       block "${need_aur[*]}"
