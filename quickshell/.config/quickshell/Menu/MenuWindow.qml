@@ -139,7 +139,9 @@ Variants {
                         anchors.right: parent.right; anchors.rightMargin: 10; anchors.verticalCenter: parent.verticalCenter
                         spacing: 10
                         Label { visible: Menu.query !== "" && row.modelData.crumb !== ""; text: row.modelData.crumb; font.pixelSize: Theme.fs(11); color: Theme.c.accentDim
-                                elide: Text.ElideRight; width: Math.min(implicitWidth, 150) }
+                                // cut from the left: the end of the path ("Dock › Position") is what
+                                // tells two "Top" rows apart
+                                elide: Text.ElideLeft; width: Math.min(implicitWidth, 190) }
                         Label { visible: row.modelData.value !== ""; text: row.modelData.value; font.pixelSize: Theme.fs(11); color: Theme.c.accentMid
                                 elide: Text.ElideRight; width: Math.min(implicitWidth, 170) }
                         Icon { visible: row.modelData.checked === true; icon: "check"; size: Theme.fs(16); color: Theme.c.accentBright }

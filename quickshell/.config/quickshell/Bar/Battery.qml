@@ -42,7 +42,7 @@ Pill {
             onRunningChanged: if (!running) ic.opacity = 1
         }
     }
-    // Menu › Toggle › Battery percentage, in every skin (it was only drawn in
+    // Menu › Appearance › Bar › Battery percentage, in every skin (it was only drawn in
     // Legacy); fixed width so 9% → 10% doesn't push the bar
     FixedLabel { visible: !bat.vertical && Config.batteryPercent; text: bat.pct + "%"; widest: "100%"; color: bat.tone }
 

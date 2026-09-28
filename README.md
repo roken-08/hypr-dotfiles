@@ -118,7 +118,7 @@ It's safe to run again, and it never deletes or overwrites your files.
 - Press **`SUPER SPACE`** to open the menu. Everything is in there: theme, wallpaper, bar,
   dock, fonts, Wi-Fi, keybindings.
 - **Monitor:** every screen starts at its preferred resolution, with the scale picked
-  automatically. To choose your own, use Menu › Style › Display scale, or add a rule to
+  automatically. To choose your own, use Menu › Appearance › Display scale, or add a rule to
   `~/.config/hypr/modules/monitors.local.lua`, for example:
   ```lua
   hl.monitor({ output = "eDP-1", mode = "2560x1440@165", position = "auto", scale = 1.6 })
@@ -173,9 +173,9 @@ even on the lock screen. The full list is in
 - **Themes:** copy `theme/.config/hypr-theme/themes/hyprmono/`, edit its `colors.toml`, put a
   wallpaper in `backgrounds/`, then run `hypr-theme set <name>`. Your themes stay private; git
   ignores them.
-- **Bar and dock:** use Menu › Style › Bar / Dock for the style, edge, transparency, widgets and
+- **Bar and dock:** use Menu › Appearance › Bar / Dock for the style, edge, transparency, widgets and
   pinned apps.
-- **Look and feel:** use Menu › Style for font, text size and display scale, and *Edit look &
+- **Look and feel:** use Menu › Appearance for font, text size and display scale, and *Edit look &
   feel* for gaps, blur and animations.
 - **Your own menu entries** go in `~/.config/hypr-theme/menu.local.jsonc`.
 

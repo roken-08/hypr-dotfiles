@@ -51,6 +51,7 @@ delete_sweep
 description
 desktop_windows
 developer_board
+devices
 do_not_disturb_on
 dock_to_bottom
 dock_to_left

@@ -9,7 +9,7 @@ import qs.Services
 // The dock: pinned apps, then whatever else is running, on any screen edge.
 // Click launches or focuses (again cycles the app's windows), middle-click
 // opens a new window, right-click has Pin / New window / Close. Modes
-// (Menu › Style › Dock, or `qs ipc call dock mode <m>`):
+// (Menu › Appearance › Dock, or `qs ipc call dock mode <m>`):
 //   always       always shown, and windows keep clear of it
 //   autohide     slides away; touch the screen edge to bring it back
 //   intellihide  shown until a window would sit under it

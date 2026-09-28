@@ -26,11 +26,33 @@ Singleton {
 
     // ---- files -----------------------------------------------------------
     function strip(text) { return text.split("\n").filter(l => !/^\s*\/\//.test(l)).join("\n") }
+    // ids from before the menu was regrouped, so an older menu.local.jsonc
+    // still overrides the entry it meant (longest prefix wins)
+    readonly property var oldIds: [
+        ["style.bar.pill", "appearance.bar.style.pill"], ["style.bar.floating", "appearance.bar.style.floating"],
+        ["style.bar.minimal", "appearance.bar.style.minimal"], ["style.bar.top", "appearance.bar.position.top"],
+        ["style.bar.bottom", "appearance.bar.position.bottom"], ["style.bar.left", "appearance.bar.position.left"],
+        ["style.bar.right", "appearance.bar.position.right"], ["style.dock.always", "appearance.dock.behaviour.always"],
+        ["style.dock.intellihide", "appearance.dock.behaviour.intellihide"], ["style.dock.autohide", "appearance.dock.behaviour.autohide"],
+        ["style.dock.bottom", "appearance.dock.position.bottom"], ["style.dock.left", "appearance.dock.position.left"],
+        ["style.dock.right", "appearance.dock.position.right"], ["style.dock.top", "appearance.dock.position.top"],
+        ["toggle.battery", "appearance.bar.battery"], ["setup.defaults", "settings.defaults"],
+        ["setup.wifi", "devices.wifi"], ["setup.bluetooth", "devices.bluetooth"], ["setup.audio", "devices.audio"],
+        ["setup.power", "devices.power"], ["setup.monitors", "devices.monitors"], ["setup.input", "devices.input"],
+        ["setup", "settings"], ["style", "appearance"], ["system", "power"]
+    ]
+    function renamed(id) {
+        for (const [a, b] of oldIds) if (id === a || id.indexOf(a + ".") === 0) return b + id.slice(a.length)
+        return id
+    }
     function load() {
         let base = {}, local = {}
         try { base = JSON.parse(strip(baseFile.text())) } catch (e) { console.warn("Menu: menu.jsonc: " + e) }
         try { if (localFile.text()) local = JSON.parse(strip(localFile.text())) } catch (e) { console.warn("Menu: menu.local.jsonc: " + e) }
-        for (const k in local) base[k] = Object.assign({}, base[k] || {}, local[k])
+        for (const k0 in local) {
+            const k = renamed(k0)
+            base[k] = Object.assign({}, base[k] || {}, local[k0])
+        }
         entries = base
     }
     FileView { id: baseFile;  path: root.dir + "menu.jsonc";       watchChanges: true; onFileChanged: reload(); onLoaded: root.load() }
@@ -57,6 +79,10 @@ Singleton {
         case "bar.pill":  return Theme.barStyle === "pill"
         case "bar.floating": return Theme.barStyle === "floating"
         case "bar.minimal": return Theme.barStyle === "minimal"
+        case "bar.style":   return ({ pill: "Legacy", floating: "Floating", minimal: "Minimal" })[Theme.barStyle] || ""
+        case "bar.position": return Config.position.charAt(0).toUpperCase() + Config.position.slice(1)
+        case "dock.positionLabel": return Dock.position.charAt(0).toUpperCase() + Dock.position.slice(1)
+        case "dock.modeLabel": return ({ always: "Always visible", intellihide: "Hide when covered", autohide: "Auto-hide" })[Dock.mode] || ""
         case "bar.top": case "bar.bottom": case "bar.left": case "bar.right": return Config.position === key.slice(4)
         case "bar.transparent": return Config.transparent
         case "bar.hidden":      return Config.hidden

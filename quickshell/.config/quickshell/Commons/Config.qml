@@ -17,7 +17,7 @@ Singleton {
             position: "top",                 // top | bottom | left | right
             transparent: false,              // floating + minimal skins only
             skin: "",                        // pill (Legacy) | floating | minimal | "" = the theme's choice
-            hidden: false,                   // Menu › Toggle › Bar
+            hidden: false,                   // Menu › Quick toggles › Bar
             battery: false,                  // show the percentage next to the battery glyph
             layout: {
                 // the classic bar, exactly as waybar had it
