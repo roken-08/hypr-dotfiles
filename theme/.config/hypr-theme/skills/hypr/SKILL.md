@@ -82,6 +82,7 @@ Commands you will use (all `--help`/header-documented — read the script if uns
 |---|---|
 | `hypr-theme list / current / set <id> / toggle / next / reload / json` | apply a theme everywhere (renders templates → current/, installs GTK/Qt/KDE/btop files, reloads kitty/hyprland/nvim/shell, root+SDDM sync) |
 | `hypr-wall set <path> / next / current / ensure` | wallpaper (shell layer; also lock + SDDM) |
+| `hypr-theme-preview [<id>]` | real screenshot for the theme picker → `themes/<id>/preview.jpg`; restores everything after |
 | `hypr-theme-menu theme|wallpaper` | open the carousel picker |
 | `qs ipc call <target> <fn> [args]` | talk to the running shell. Targets: `bar dock theme wallpaper picker launcher clipboard notifications panels powermenu lock caffeine osd agents menu` (`qs ipc show` lists functions) |
 | `qs log` | the shell's log (QML errors show here) |

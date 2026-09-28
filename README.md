@@ -200,7 +200,8 @@ even on the lock screen. The full list is in
 ## Make it yours
 
 - **Themes:** copy `theme/.config/hypr-theme/themes/hyprmono/`, edit its `colors.toml`, put a
-  wallpaper in `backgrounds/`, then run `hypr-theme set <name>`. Your themes stay private; git
+  wallpaper in `backgrounds/`, then run `hypr-theme set <name>` and `hypr-theme-preview <name>`
+  (a real screenshot for the theme picker). Your themes stay private; git
   ignores them.
 - **Bar and dock:** use Menu › Appearance › Bar / Dock for the style, edge, transparency, widgets and
   pinned apps.

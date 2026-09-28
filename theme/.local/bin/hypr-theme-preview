@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# hypr-theme-preview [<theme>]   take the theme picker's preview picture
+#
+# Applies <theme> (default: the current one), lays out a small scene on an
+# empty workspace — kitty with fastfetch, Thunar, btop (CPU, memory, network; no process list), the bar and the dock
+# in the theme's colours — screenshots it into themes/<theme>/preview.jpg and
+# puts everything back: your theme, workspace and dock mode. The picker
+# (SUPER+CTRL+SHIFT+SPACE) shows that picture instead of a drawn mock.
+#
+# Nothing personal ends up in it: fastfetch runs a trimmed config (no user,
+# host or IP) and Thunar opens a demo folder, not your home.
+set -u
+die() { echo "hypr-theme-preview: $*" >&2; exit 1; }
+[[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] || die "run it inside Hyprland"
+for c in hyprctl grim kitty fastfetch jq ffmpeg; do command -v $c >/dev/null || die "needs $c"; done
+
+HT="$HOME/.config/hypr-theme"
+orig_theme="$(hypr-theme current)"
+theme="${1:-$orig_theme}"
+dir="$HT/themes/$theme"
+[[ -f $dir/colors.toml ]] || die "no theme '$theme' (hypr-theme list)"
+
+orig_ws="$(hyprctl -j activeworkspace | jq -r .id)"
+orig_dock="$(qs ipc call dock mode "" 2>/dev/null || echo intellihide)"
+# an unused workspace, so nothing of yours is in the picture
+ws=10; while hyprctl -j workspaces | jq -e --argjson w $ws '.[] | select(.id == $w)' >/dev/null; do ws=$((ws + 1)); done
+
+tmp="${XDG_RUNTIME_DIR:-/tmp}/hypr-theme-preview"
+rm -rf "$tmp"; mkdir -p "$tmp/home"
+for d in Desktop Documents Downloads Music Pictures Videos Projects dotfiles; do mkdir -p "$tmp/home/$d"; done
+name="$(sed -n 's/^name *= *"\(.*\)".*/\1/p' "$dir/colors.toml")"
+# the shell your terminal runs (kitty.conf "shell"), else your login shell
+sh_name="$(sed -n 's/^shell[[:space:]]\+\([^[:space:]]*\).*/\1/p' "$HOME/.config/kitty/kitty.conf" 2>/dev/null | head -1)"
+[[ -z $sh_name || $sh_name == . ]] && sh_name="$(basename "$(getent passwd "$USER" | cut -d: -f7)")"
+# short lines only: long ones wrap in a preview-sized window
+cat > "$tmp/fastfetch.jsonc" <<FF
+{ "logo": { "type": "small" },
+  "modules": [ { "type": "custom", "format": "hypr-dotfiles" }, "separator",
+  { "type": "os", "format": "{name}" }, { "type": "wm", "format": "{pretty-name}" },
+  { "type": "custom", "key": "Theme", "format": "$name" },
+  { "type": "custom", "key": "Terminal", "format": "kitty" },
+  { "type": "custom", "key": "Shell", "format": "$(basename "$sh_name")" },
+  "break", "colors" ] }
+FF
+
+
+pids=()
+cleanup() {
+    for a in $(hyprctl -j clients | jq -r --argjson w $ws '.[] | select(.workspace.id == $w) | .address'); do
+        hyprctl dispatch "hl.dsp.window.close({ window = 'address:$a' })" >/dev/null 2>&1
+    done
+    for p in "${pids[@]}"; do kill "$p" 2>/dev/null; done
+    qs ipc call dock mode "$orig_dock" >/dev/null 2>&1
+    if [[ $theme != "$orig_theme" ]]; then
+        hypr-theme set "$orig_theme" >/dev/null 2>&1
+        [[ "$(hypr-theme current)" == "$orig_theme" ]] || hypr-theme set "$orig_theme" >/dev/null 2>&1
+    fi
+    hyprctl reload >/dev/null 2>&1                       # drops the temporary window rules
+    hyprctl dispatch "hl.dsp.focus({ workspace = $orig_ws })" >/dev/null 2>&1
+    rm -rf "$tmp"
+}
+trap cleanup EXIT
+
+[[ $theme != "$orig_theme" ]] && { hypr-theme set "$theme" >/dev/null 2>&1 || die "could not apply $theme"; sleep 4; }
+qs ipc call dock mode always >/dev/null 2>&1
+qs ipc call menu close >/dev/null 2>&1; qs ipc call launcher close >/dev/null 2>&1; qs ipc call panels close >/dev/null 2>&1
+
+# (after the theme is applied: it copies that theme's GTK settings)
+# Thunar in its own D-Bus session and config dir: no running instance takes
+# the window, and it shows no bookmarks or drives of yours
+mkdir -p "$tmp/config/gtk-3.0"
+for f in settings.ini gtk.css; do [[ -e $HOME/.config/gtk-3.0/$f ]] && cp -L "$HOME/.config/gtk-3.0/$f" "$tmp/config/gtk-3.0/"; done
+ln -s "$HT" "$tmp/config/hypr-theme"          # gtk.css imports ../hypr-theme/current/palette.css
+[[ -d $HOME/.config/dconf ]] && cp -r "$HOME/.config/dconf" "$tmp/config/"   # GTK's own settings (icon theme, dark)
+: > "$tmp/config/gtk-3.0/bookmarks"
+
+rule() { hyprctl eval "hl.window_rule({ name = '$1', match = { class = '$2' }, float = true, size = { $3 }, move = { $4 }, workspace = '$ws silent' })" >/dev/null; }
+# a scene with the wallpaper around it: fastfetch and btop on the left,
+# Thunar on the right
+rule hp-ff '^hp-ff$' '"monitor_w * 0.40", "monitor_h * 0.36"' '"monitor_w * 0.08", "monitor_h * 0.12"'
+rule hp-bt '^hp-bt$' '"monitor_w * 0.40", "monitor_h * 0.36"' '"monitor_w * 0.08", "monitor_h * 0.50"'
+rule hp-th '^[Tt]hunar$' '"monitor_w * 0.40", "monitor_h * 0.74"' '"monitor_w * 0.51", "monitor_h * 0.12"'
+
+hyprctl dispatch "hl.dsp.focus({ workspace = $ws })" >/dev/null
+kitty --class hp-ff -o remember_window_size=no -o window_margin_width=10 -e sh -c "clear; fastfetch -c '$tmp/fastfetch.jsonc'; sleep 60" >/dev/null 2>&1 & pids+=($!)
+kitty --class hp-bt -o remember_window_size=no -o window_margin_width=4 -o font_size=7 -e btop -p 2 >/dev/null 2>&1 & pids+=($!)
+command -v thunar >/dev/null && command -v dbus-run-session >/dev/null && {
+    HOME="$tmp/home" XDG_CONFIG_HOME="$tmp/config" dbus-run-session -- thunar "$tmp/home" >/dev/null 2>&1 & pids+=($!); }
+sleep 4
+hyprctl dispatch "hl.dsp.focus({ workspace = $ws })" >/dev/null
+hyprctl dispatch 'hl.dsp.cursor.move({ x = 99999, y = 99999 })' >/dev/null     # out of the way
+sleep 1.2
+[[ "$(hyprctl -j activeworkspace | jq -r .id)" == "$ws" ]] || die "workspace changed during the shot; try again"
+
+raw="$tmp/shot.png"
+grim -o "$(hyprctl -j monitors | jq -r '.[] | select(.focused) | .name')" "$raw" || die "grim failed"
+ffmpeg -loglevel error -y -i "$raw" -vf "scale=1600:-1" -q:v 3 "$dir/preview.jpg" || die "ffmpeg failed"
+echo "$dir/preview.jpg"

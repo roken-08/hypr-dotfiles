@@ -68,6 +68,15 @@ reasoning in the colors.toml header comment.
    source that allows reuse (Unsplash / Pexels / Wikimedia) and note the URL in a
    `backgrounds/SOURCES` file.
 4. `hypr-theme set <id>` — it appears in the carousel (`SUPER+CTRL+SHIFT+SPACE`) automatically.
+   **Then take its picker preview: `hypr-theme-preview <id>`** (and again after
+   the last rating round, so the picture shows the final colours). It lays out
+   fastfetch (small logo, no user/host), btop (preset 2: no process list) and
+   Thunar (its own D-Bus session and config, a demo folder: no bookmarks,
+   username or home folders) on an unused workspace, screenshots it into
+   `themes/<id>/preview.jpg`, and restores the user's theme, workspace and dock.
+   The picker shows that picture; a theme without one gets the drawn mock.
+   Look at the result: nothing personal on screen, nothing wrapped or "too
+   small", the wallpaper visible around the windows.
 5. **Verify in every surface** (verify.md). For btop use `hypr-float btop`
    (a tiled kitty next to other windows is < 80×24 and btop only prints "Terminal size too
    small"). `hypr-wall next` cycles to the theme's other backgrounds. Verify: bar (every skin: `qs ipc call bar toggle` cycles them),
@@ -97,7 +106,7 @@ reasoning in the colors.toml header comment.
    theme). Typical round-2/3 fixes: surfaces too neutral → tint them toward
    the image; borders grey → tint `accent_light` toward the accent (borders
    take it at 24%); a hue too loud → soften it toward the image.
-6. The theme is the user's: `themes/<id>/` is gitignored, so it stays on
+6. The theme is the user's (its preview.jpg too): `themes/<id>/` is gitignored, so it stays on
    this machine. Don't commit it or `git add -f` it (MAINTAINER.md decides
    what ships). To share it, the user copies the folder.
 

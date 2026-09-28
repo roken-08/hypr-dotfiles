@@ -415,8 +415,10 @@ for d in sorted(os.listdir(root)):
     imgs = sorted(os.path.realpath(os.path.join(bg, x)) for x in os.listdir(bg)
                   if os.path.isfile(os.path.join(bg, x)) and x.lower().rsplit(".", 1)[-1] in ("png", "jpg", "jpeg", "webp")) if os.path.isdir(bg) else []
     c = t.get("colors", {})
+    # a real screenshot of the theme (hypr-theme-preview), shown by the picker
+    pv = next((os.path.join(root, d, "preview." + e) for e in ("jpg", "png") if os.path.isfile(os.path.join(root, d, "preview." + e))), "")
     out.append({"id": d, "name": t.get("name", d), "mode": t.get("mode", "dark"), "bar": t.get("bar", "pill"),
-                "current": d == current, "backgrounds": imgs,
+                "current": d == current, "backgrounds": imgs, "preview": os.path.realpath(pv) if pv else "",
                 "colors": {k: c.get(k, "") for k in ("bg0", "bg1", "bg2", "bg3", "fg", "accent_bright", "accent_light", "accent_mid", "accent_dim")}})
 print(json.dumps(out))
 PY

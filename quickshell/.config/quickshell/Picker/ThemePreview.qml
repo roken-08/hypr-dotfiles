@@ -3,11 +3,24 @@ import Quickshell
 import Quickshell.Io
 import qs.Commons
 
-// A theme, previewed: its wallpaper with a mock desktop drawn in its own
-// colours — the bar, a kitty running fastfetch, a Thunar window.
+// A theme, previewed: its real screenshot (themes/<id>/preview.jpg, taken by
+// hypr-theme-preview) when there is one; otherwise its wallpaper with a mock
+// desktop drawn in its own colours — the bar, a kitty running fastfetch, a
+// Thunar window.
 Item {
     id: tp
     required property var theme
+    readonly property bool shot: !!theme.preview
+    Image {
+        z: 10
+        visible: tp.shot
+        anchors.fill: parent
+        source: tp.shot ? "file://" + tp.theme.preview : ""
+        fillMode: Image.PreserveAspectCrop
+        asynchronous: true
+        sourceSize: Qt.size(1600, 900)
+        cache: false          // a retaken preview must show
+    }
     readonly property var c: theme.colors
     readonly property bool light: theme.mode === "light"
     readonly property string wall: theme.backgrounds && theme.backgrounds.length ? theme.backgrounds[0] : ""
