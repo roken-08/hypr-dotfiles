@@ -28,8 +28,8 @@ fallbacks kept for when the shell is not running). **Edit files in the repo**
 **Changes stay on this machine.** Do not commit, push or open a PR unless
 the user asks for it; `git diff` shows what you changed and `git stash` /
 `git checkout -- <file>` undo it. Themes the user makes are theirs:
-`themes/` tracks only the three shipped ones (`hyprmono`, `hyprmono-light`,
-`catppuccin-mocha`) and `.gitignore` keeps every other theme folder out —
+`themes/` tracks only the four shipped ones (`hyprmono`, `hyprmono-light`,
+`catppuccin-mocha`, `starlink`) and `.gitignore` keeps every other theme folder out —
 never force-add one.
 
 **If `MAINTAINER.md` exists next to this file, read it now**: you are then

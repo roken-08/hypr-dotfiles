@@ -10,7 +10,7 @@ Lua-configured Hyprland · a hand-built Quickshell shell · one palette for ever
 ![Arch Linux](https://img.shields.io/badge/Arch-Linux-0d0d0f?style=flat-square&logo=archlinux&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/license-MIT-0d0d0f?style=flat-square)
 
-![Three themes](Screenshots/banner.jpg)
+![Four themes](Screenshots/banner.jpg)
 
 [Themes](#themes) · [Features](#features) · [Install](#install) · [Keybinds](#keybinds) · [Customise](#make-it-yours) · [Help](#troubleshooting)
 
@@ -20,35 +20,40 @@ Lua-configured Hyprland · a hand-built Quickshell shell · one palette for ever
 
 ## Themes
 
-Three themes ship with it. Switch live with **`SUPER` `CTRL` `SHIFT` `SPACE`**. Every app changes
-with it: the shell, terminals, GTK and Qt apps, Neovim, btop, VS Code, Firefox and the login
-screen.
+Four themes ship with it. Switch live with **`SUPER` `CTRL` `SHIFT` `SPACE`**. Every app changes
+with it: the shell, terminals, GTK and Qt apps, Neovim, btop, VS Code, Firefox, Spotify and the
+login screen.
 
 <table>
 <tr>
-<td width="33%" align="center"><b>HyprMono</b><br><sub>dark · greys only</sub></td>
-<td width="33%" align="center"><b>HyprMono Light</b><br><sub>the same design on white</sub></td>
-<td width="33%" align="center"><b>Catppuccin Mocha</b><br><sub>the official Mocha palette</sub></td>
+<td width="25%" align="center"><b>HyprMono</b><br><sub>dark · greys only</sub></td>
+<td width="25%" align="center"><b>HyprMono Light</b><br><sub>the same design on white</sub></td>
+<td width="25%" align="center"><b>Catppuccin Mocha</b><br><sub>the official Mocha palette</sub></td>
+<td width="25%" align="center"><b>Starlink</b><br><sub>ringed giant · ice-teal on deep space</sub></td>
 </tr>
 <tr>
 <td><img src="Screenshots/hyprmono.jpg" alt="HyprMono"></td>
 <td><img src="Screenshots/hyprmono-light.jpg" alt="HyprMono Light"></td>
 <td><img src="Screenshots/catppuccin-mocha.jpg" alt="Catppuccin Mocha"></td>
+<td><img src="Screenshots/starlink.jpg" alt="Starlink"></td>
 </tr>
 <tr>
 <td><img src="Screenshots/launcher-hyprmono.jpg" alt="Launcher"></td>
 <td><img src="Screenshots/launcher-hyprmono-light.jpg" alt="Launcher, light"></td>
 <td><img src="Screenshots/launcher-catppuccin-mocha.jpg" alt="Launcher, Catppuccin"></td>
+<td><img src="Screenshots/launcher-starlink.jpg" alt="Launcher, Starlink"></td>
 </tr>
 <tr>
 <td><img src="Screenshots/menu-hyprmono.jpg" alt="Menu"></td>
 <td><img src="Screenshots/menu-hyprmono-light.jpg" alt="Menu, light"></td>
 <td><img src="Screenshots/menu-catppuccin-mocha.jpg" alt="Menu, Catppuccin"></td>
+<td><img src="Screenshots/menu-starlink.jpg" alt="Menu, Starlink"></td>
 </tr>
 <tr>
 <td><img src="Screenshots/panel-hyprmono.jpg" alt="Power panel"></td>
 <td><img src="Screenshots/panel-hyprmono-light.jpg" alt="Power panel, light"></td>
 <td><img src="Screenshots/panel-catppuccin-mocha.jpg" alt="Power panel, Catppuccin"></td>
+<td><img src="Screenshots/panel-starlink.jpg" alt="Power panel, Starlink"></td>
 </tr>
 </table>
 
@@ -112,6 +117,21 @@ It's safe to run again, and it never deletes or overwrites your files.
 | `--no-aur` | Skip the AUR packages |
 
 </details>
+
+### Optional: Spotify
+
+Spotify follows the theme through [Spicetify](https://spicetify.app/). Install both, then apply
+the theme once:
+
+```bash
+yay -S spotify-launcher spicetify-cli
+spicetify config spotify_path ~/.local/share/spotify-launcher/install/usr/share/spotify
+hypr-theme reload
+```
+
+From then on every theme switch recolours Spotify. It restarts Spotify if nothing is playing;
+otherwise the new colours show the next time it starts. After a Spotify update, run
+`spicetify backup apply` again.
 
 ### First steps
 
@@ -241,7 +261,7 @@ Built on [Hyprland](https://hyprland.org/), [Quickshell](https://quickshell.org/
 [Omarchy](https://omarchy.org/).
 
 **Wallpapers** aren't mine and aren't covered by the licence. HyprMono's is Mount Ararat over
-Yerevan (photographer unknown). The light and Catppuccin wallpapers came from wallpaper sites
-without a traceable author. If one is yours, open an issue and it will be credited or removed.
+Yerevan (photographer unknown). The light, Catppuccin and Starlink wallpapers came from
+wallpaper sites (Starlink's is wallhaven 7jeozo) without a traceable author. If one is yours, open an issue and it will be credited or removed.
 
 The configuration is [MIT](LICENSE).
