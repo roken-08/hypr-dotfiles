@@ -1,278 +1,244 @@
+<div align="center">
+
 # hypr-dotfiles
 
-A complete Hyprland desktop for Arch Linux: a **Lua-configured Hyprland** and a hand-built
-**Quickshell** shell (bar, dock, launcher, menu, panels, notifications, lock screen, power menu)
-with one theme engine that colours everything from a single palette. That covers GTK, Qt, kitty,
-alacritty, Neovim, btop, VS Code, Firefox and the login screen too. Three themes ship with it,
-one command installs it, and switching theme or bar style happens live.
+**A complete, themeable Hyprland desktop for Arch Linux.**<br>
+Lua-configured Hyprland · a hand-built Quickshell shell · one palette for every app
 
-![License: MIT](https://img.shields.io/badge/license-MIT-black)
-![Hyprland 0.56](https://img.shields.io/badge/hyprland-0.56-black)
-![Quickshell 0.3](https://img.shields.io/badge/quickshell-0.3-black)
-![Config: Lua](https://img.shields.io/badge/config-lua-black)
+![Hyprland 0.56](https://img.shields.io/badge/Hyprland-0.56-0d0d0f?style=flat-square&logo=hyprland&logoColor=white)
+![Quickshell 0.3](https://img.shields.io/badge/Quickshell-0.3-0d0d0f?style=flat-square)
+![Arch Linux](https://img.shields.io/badge/Arch-Linux-0d0d0f?style=flat-square&logo=archlinux&logoColor=white)
+![License: MIT](https://img.shields.io/badge/license-MIT-0d0d0f?style=flat-square)
+
+![Three themes](Screenshots/banner.jpg)
+
+[Themes](#themes) · [Features](#features) · [Install](#install) · [Keybinds](#keybinds) · [Customise](#make-it-yours) · [Help](#troubleshooting)
+
+</div>
 
 ---
 
 ## Themes
 
-Switch any time with `SUPER` + `CTRL` + `SHIFT` + `SPACE` (a live carousel) or `hypr-theme set <name>`.
+Three themes ship with it. Switch live with **`SUPER` `CTRL` `SHIFT` `SPACE`**. Every app changes
+with it: the shell, terminals, GTK and Qt apps, Neovim, btop, VS Code, Firefox and the login
+screen.
 
-**HyprMono** (`hyprmono`): dark, greys only.
+<table>
+<tr>
+<td width="33%" align="center"><b>HyprMono</b><br><sub>dark · greys only</sub></td>
+<td width="33%" align="center"><b>HyprMono Light</b><br><sub>the same design on white</sub></td>
+<td width="33%" align="center"><b>Catppuccin Mocha</b><br><sub>the official Mocha palette</sub></td>
+</tr>
+<tr>
+<td><img src="Screenshots/hyprmono.jpg" alt="HyprMono"></td>
+<td><img src="Screenshots/hyprmono-light.jpg" alt="HyprMono Light"></td>
+<td><img src="Screenshots/catppuccin-mocha.jpg" alt="Catppuccin Mocha"></td>
+</tr>
+<tr>
+<td><img src="Screenshots/launcher-hyprmono.jpg" alt="Launcher"></td>
+<td><img src="Screenshots/launcher-hyprmono-light.jpg" alt="Launcher, light"></td>
+<td><img src="Screenshots/launcher-catppuccin-mocha.jpg" alt="Launcher, Catppuccin"></td>
+</tr>
+<tr>
+<td><img src="Screenshots/menu-hyprmono.jpg" alt="Menu"></td>
+<td><img src="Screenshots/menu-hyprmono-light.jpg" alt="Menu, light"></td>
+<td><img src="Screenshots/menu-catppuccin-mocha.jpg" alt="Menu, Catppuccin"></td>
+</tr>
+<tr>
+<td><img src="Screenshots/panel-hyprmono.jpg" alt="Power panel"></td>
+<td><img src="Screenshots/panel-hyprmono-light.jpg" alt="Power panel, light"></td>
+<td><img src="Screenshots/panel-catppuccin-mocha.jpg" alt="Power panel, Catppuccin"></td>
+</tr>
+</table>
 
-![HyprMono](Screenshots/hyprmono.jpg)
-
-**HyprMono Light** (`hyprmono-light`): the same design on white.
-
-![HyprMono Light](Screenshots/hyprmono-light.jpg)
-
-**Catppuccin Mocha** (`catppuccin-mocha`): the official Mocha palette. Every app is coloured the
-way its own Catppuccin port does it.
-
-![Catppuccin Mocha](Screenshots/catppuccin-mocha.jpg)
-
-### Launcher, menu and panels
-
-| | HyprMono | HyprMono Light | Catppuccin Mocha |
-|---|---|---|---|
-| **Launcher** · `SUPER+D` | ![](Screenshots/launcher-hyprmono.jpg) | ![](Screenshots/launcher-hyprmono-light.jpg) | ![](Screenshots/launcher-catppuccin-mocha.jpg) |
-| **Menu** · `SUPER+SPACE` | ![](Screenshots/menu-hyprmono.jpg) | ![](Screenshots/menu-hyprmono-light.jpg) | ![](Screenshots/menu-catppuccin-mocha.jpg) |
-| **Power panel** · click the battery | ![](Screenshots/panel-hyprmono.jpg) | ![](Screenshots/panel-hyprmono-light.jpg) | ![](Screenshots/panel-catppuccin-mocha.jpg) |
+<sub>Top to bottom: the desktop, the launcher (<code>SUPER D</code>), the menu (<code>SUPER SPACE</code>) and the power panel (click the battery).</sub>
 
 ---
 
-## What you get
+## Features
 
-- **Bar**: three styles (Legacy pills, Floating, Minimal) on any screen edge. Drag it to move
-  it, double-click to make it transparent. Widgets: workspaces, focused window, now playing,
-  clock and calendar, tray, CPU/RAM/GPU, live network speed, coding-agent usage, night light,
-  caffeine, Bluetooth, volume, Wi-Fi, battery, keyboard layout, notifications. Turn each one on
-  or off from the menu.
-- **Dock**: pinned apps, then whatever else is running. Always visible, auto-hide, or hidden
-  only while a window covers it. Works on any edge.
-- **Launcher** with fuzzy search and a launch history, and **clipboard history** with image
-  previews.
-- **The menu** (`SUPER+SPACE`): every setting in one searchable list. Theme, wallpaper, bar,
-  dock, font, text size, display scale, toggles, Wi-Fi/Bluetooth/audio, keybindings, reminders,
-  power.
-- **Panels** under the bar for sound, Wi-Fi, Bluetooth and power profiles. There's also a
-  volume/brightness OSD, notifications with a history and do-not-disturb, a **lock screen** and a
-  **power menu**.
-- **Theme engine**: `hypr-theme` renders one `colors.toml` into every app, dark and light.
-  Themes you make stay on your machine.
-- **Idle handling**: dim, lock, screen off and suspend on timers. **Caffeine** pauses them.
-  **Night light** runs through hyprsunset.
-- **Coding agents**: Claude Code usage in the bar, and a `/hypr` skill that lets an AI agent
-  make themes and widgets or fix your setup safely.
-- **Login screen**: an SDDM theme that matches the lock screen, running under Hyprland.
+| | |
+|---|---|
+| **Bar** | Three styles (Legacy, Floating, Minimal) on any screen edge. Drag it to move it; show or hide each widget from the menu |
+| **Dock** | Pinned and running apps: always visible, auto-hide, or hidden while a window covers it |
+| **Menu** | `SUPER SPACE`: every setting in one searchable list |
+| **Launcher** | Fuzzy app search that learns what you use, plus clipboard history with image previews |
+| **Panels** | Sound, Wi-Fi, Bluetooth and power profiles, dropping down from the bar |
+| **Theme engine** | One `colors.toml` colours every app, dark or light. Make your own in minutes |
+| **Desktop extras** | Notifications with do-not-disturb, lock screen, power menu, volume and brightness OSD, night light, idle lock, caffeine |
+| **Login screen** | An SDDM theme that matches the lock screen |
+| **AI agents** | Claude Code usage in the bar, and a `/hypr` skill that lets an agent theme and fix the rice for you |
 
 ---
 
 ## Install
 
-Arch Linux or an Arch-based distro (CachyOS, EndeavourOS…), on a Wayland-capable GPU.
+> **You need:** Arch Linux or an Arch-based distro (CachyOS, EndeavourOS…), a user with `sudo`,
+> and a GPU that runs Wayland. In a VM, turn on 3D acceleration (virt-manager: Virtio GPU with
+> OpenGL).
 
 ```bash
 sudo pacman -Syu --needed git
 git clone https://github.com/thomasmartinoa/hypr-dotfiles.git ~/hypr-dotfiles
-cd ~/hypr-dotfiles
-./install.sh
+cd ~/hypr-dotfiles && ./install.sh
 ```
 
-Then **log out and pick Hyprland** on the login screen (or reboot).
+Reboot, choose **Hyprland** on the login screen, and you're in. Run `./install.sh --dry-run` first
+if you'd like to see the plan without changing anything.
 
-The installer:
+<details>
+<summary><b>What the installer does</b></summary>
 
-1. Installs every package the desktop uses, from the repos plus a few from the AUR (it offers
-   to set up `yay`). If pacman fails because the system is half-upgraded, it explains that and
-   offers `pacman -Syu`.
-2. Moves any configs that are in the way into a backup folder, but only after asking.
-3. Links everything into your home with GNU Stow, so the repo stays the source of truth.
-4. Renders and applies the default theme.
-5. Enables Bluetooth, power profiles and NetworkManager. NetworkManager is skipped if another
-   network daemon is running.
-6. Enables SDDM, unless you already use another login manager.
-7. Installs the login-screen theme and a small root helper, so theme switches also reach the
-   login screen and pkexec apps.
+1. Installs every package the desktop needs: the repo ones with pacman, and three from the AUR
+   (it offers to build `yay` if you have no AUR helper).
+2. Moves any existing configs that are in the way into a backup folder under `~/.config/`,
+   after asking you.
+3. Links the configs into your home with GNU Stow, so the repo stays the one source.
+4. Applies the default theme.
+5. Enables NetworkManager, Bluetooth, power profiles and SDDM. It leaves a service alone if you
+   already use something else for it.
+6. Installs the login-screen theme and a small helper, so theme changes also reach the login
+   screen.
 
-It is safe to run again, and it never overwrites without asking.
+It's safe to run again, and it never deletes or overwrites your files.
 
-| Flag | Does |
+| Flag | |
 |---|---|
 | `--dry-run` | Show what would happen, change nothing |
-| `--stow-only` | Skip package installation |
-| `--migrate` / `--no-migrate` | Back up blocking files without asking / never move anything |
+| `--stow-only` | Skip installing packages |
+| `--migrate` · `--no-migrate` | Back up blocking files without asking · never move anything |
 | `--skip-root` | Don't touch `/root`, SDDM or sudoers |
-| `--no-aur` | Don't offer yay / AUR packages |
-| `--no-logout` | Don't offer to log out at the end |
+| `--no-aur` | Skip the AUR packages |
 
-### After installing
+</details>
 
-- **Your monitor.** By default every screen gets its preferred mode, with the scale picked
-  automatically. For an exact mode, refresh rate or scale, put a rule in
-  `~/.config/hypr/modules/monitors.local.lua`. That file is yours and not part of the repo;
-  `hyprctl monitors all` lists your outputs and modes. For example:
-  `hl.monitor({ output = "eDP-1", mode = "2560x1440@165", position = "auto", scale = 1.6 })`.
-  Menu › Style › Display scale saves there too.
-- **Something off?** Run `hypr-doctor --print` for a no-sudo diagnostics report: versions,
-  GPU, config errors, the shell's log and more.
-- **The login screen comes up black?** Switch to a TTY (`Ctrl`+`Alt`+`F3`) and run
-  `sudo rm /etc/sddm.conf.d/10-wayland.conf`. SDDM then falls back to X11 with the same theme.
+### First steps
+
+- Press **`SUPER SPACE`** to open the menu. Everything is in there: theme, wallpaper, bar,
+  dock, fonts, Wi-Fi, keybindings.
+- **Monitor:** every screen starts at its preferred resolution, with the scale picked
+  automatically. To choose your own, use Menu › Style › Display scale, or add a rule to
+  `~/.config/hypr/modules/monitors.local.lua`, for example:
+  ```lua
+  hl.monitor({ output = "eDP-1", mode = "2560x1440@165", position = "auto", scale = 1.6 })
+  ```
+  `hyprctl monitors all` lists your outputs. This file is yours; updates never touch it.
+- **Updating later:** run `cd ~/hypr-dotfiles && git pull && ./install.sh`.
 
 ---
 
 ## Keybinds
 
-`SUPER` is the mod key. They all live in
-[`modules/binds.lua`](hyprland/.config/hypr/modules/binds.lua), and Menu › Learn › Keybindings
-lists them live.
+| Keys | Action |
+|---|---|
+| `SUPER` `Return` | Terminal |
+| `SUPER` `D` · `V` | App launcher · clipboard history |
+| `SUPER` `SPACE` | The menu |
+| `SUPER` `E` · `B` | File manager · browser |
+| `SUPER` `Q` · `T` · `F` | Close · float · fullscreen |
+| `SUPER` `1`–`0` | Go to workspace (add `SHIFT` to move the window there) |
+| `SUPER` `L` · `M` | Lock screen · power menu |
+| `SUPER` `CTRL` `SHIFT` `SPACE` | Theme picker |
+| `SUPER` `X` · `Print` | Screenshot a region · the whole screen |
+
+<details>
+<summary><b>All keybinds</b></summary>
 
 | Keys | Action |
 |---|---|
-| `SUPER` + `Return` / `E` / `B` | Terminal · file manager · browser |
-| `SUPER` + `D` / `V` | App launcher · clipboard history |
-| `SUPER` + `SPACE` | The menu |
-| `SUPER` + `CTRL` + `O` | The menu, opened on Toggle |
-| `SUPER` + `L` / `M` | Lock screen · power menu |
-| `SUPER` + `R` | Restart the shell |
-| `SUPER` + `SHIFT` + `B` | Bar style: Legacy → Floating → Minimal |
-| `SUPER` + `CTRL` + `I` | Caffeine: pause idle lock and suspend |
-| `SUPER` + `CTRL` + `SHIFT` + `SPACE` / `SHIFT` + `W` | Theme picker · wallpaper picker |
-| `SUPER` + `CTRL` + `SPACE` | Next wallpaper |
-| `SUPER` + `SHIFT` + `CTRL` + `A` | Launch the default coding agent |
-| `SUPER` + `Q` / `T` / `F` | Close · float · fullscreen |
-| `SUPER` + `SHIFT` + `F` / `P` / `J` | Maximize · pseudo-tile · toggle split |
-| `SUPER` + arrows | Move focus |
+| `SUPER` `CTRL` `O` | The menu, opened on Toggle |
+| `SUPER` `R` | Restart the shell |
+| `SUPER` `SHIFT` `B` | Bar style: Legacy → Floating → Minimal |
+| `SUPER` `CTRL` `I` | Caffeine: pause idle lock and suspend |
+| `SUPER` `SHIFT` `W` · `SUPER` `CTRL` `SPACE` | Wallpaper picker · next wallpaper |
+| `SUPER` `SHIFT` `CTRL` `A` | Launch the default coding agent |
+| `SUPER` `SHIFT` `F` · `P` · `J` | Maximize · pseudo-tile · toggle split |
+| `SUPER` arrows | Move focus |
 | `SUPER` + drag with left / right mouse button | Move · resize a window |
-| `SUPER` + `1`–`0` | Switch workspace (add `SHIFT` to move the window there) |
-| `SUPER` + scroll · 3-finger swipe | Cycle workspaces |
-| `SUPER` + `S` / `SHIFT` + `S` | Toggle the scratchpad · move a window to it |
-| `SUPER` + `Print` / `X` | Screenshot: whole screen · region (saved and copied) |
-| `SUPER` + `SHIFT` + `Print` / `X` | Active window · region, clipboard only |
+| `SUPER` scroll · 3-finger swipe | Cycle workspaces |
+| `SUPER` `S` · `SHIFT` `S` | Scratchpad · move a window to it |
+| `SUPER` `SHIFT` `Print` · `SHIFT` `X` | Active window · region, clipboard only |
 
-Screenshots go to `~/Pictures/screenshot/`. Volume, brightness and media keys work while locked.
-Brightness glides smoothly and never goes below 5%.
+Screenshots are saved to `~/Pictures/screenshot/`. Media, volume and brightness keys work too,
+even on the lock screen. The full list is in
+[`modules/binds.lua`](hyprland/.config/hypr/modules/binds.lua) and under Menu › Learn.
+
+</details>
 
 ---
 
-## Making it yours
+## Make it yours
 
-### Themes
+- **Themes:** copy `theme/.config/hypr-theme/themes/hyprmono/`, edit its `colors.toml`, put a
+  wallpaper in `backgrounds/`, then run `hypr-theme set <name>`. Your themes stay private; git
+  ignores them.
+- **Bar and dock:** use Menu › Style › Bar / Dock for the style, edge, transparency, widgets and
+  pinned apps.
+- **Look and feel:** use Menu › Style for font, text size and display scale, and *Edit look &
+  feel* for gaps, blur and animations.
+- **Your own menu entries** go in `~/.config/hypr-theme/menu.local.jsonc`.
 
-Every colour lives in one file,
-[`themes/<name>/colors.toml`](theme/.config/hypr-theme/themes/). `hypr-theme set <name>` renders
-the [templates](theme/.config/hypr-theme/templates/) into `~/.config/hypr-theme/current/` and
-tells running apps to reload.
+<details>
+<summary><b>More: command modules, theme details, the agent skill</b></summary>
 
-```sh
-hypr-theme list            # available themes, * = current
-hypr-theme set hyprmono    # apply one
-hypr-theme toggle          # dark <-> light
-hypr-wall next             # the theme's next wallpaper
-```
-
-To make a theme, copy `themes/hyprmono/`, edit `colors.toml`, and drop wallpapers into its
-`backgrounds/` folder:
-
-- `mode = "light"` flips GTK, Qt and Neovim to their light variants.
-- `hued = true` marks a real palette, so apps get colour where their stock theme has it.
-
-It shows up in the picker straight away. Themes you create are gitignored, so they stay yours.
-
-| Follows a theme switch live | Needs an app restart |
-|---|---|
-| The shell, Hyprland borders, wallpaper, kitty, Neovim, btop | GTK3 apps (Thunar…), Qt apps |
-| GTK4 / libadwaita apps, VS Code, Zen and Electron apps (portal) | Alacritty, Firefox's UI, KDE apps |
-| Login screen and `/root` GTK config (root sync) | pkexec apps such as grub-customizer |
-
-A theme can also colour apps the [Aether](https://github.com/omacom/aether) way. See
-`nvim_colorscheme = "aether"` and the `*-aether*` templates.
-
-### Bar
-
-Menu › Style › Bar picks the style, the edge and transparency, and has **Widgets** to show or
-hide each one. A widget you turn back on returns to its usual place, and *Reset widget order*
-restores the default layout. You can also drag empty bar space to another edge.
-
-The layout itself is in `~/.config/hypr-theme/shell.json`, under `bar.layout.<style>`. Its lists
-can be edited by hand and apply live. A layout entry that isn't a built-in widget is a
-**command module**; any script that prints text (or waybar-style JSON) works:
+**Command modules.** Any script that prints text can become a bar widget. Add it under
+`modules` in `~/.config/hypr-theme/shell.json` and put its id in a layout list:
 
 ```json
 "modules": { "vpn": { "exec": "~/bin/vpn-status", "interval": 5, "onClick": "nm-connection-editor" } }
 ```
 
-A module can also be a QML file: `{ "qml": "~/.config/hypr-theme/plugins/mine.qml" }`.
+**Themes in depth.** In `colors.toml`, `mode = "light"` switches GTK, Qt and Neovim to their
+light variants, and `hued = true` gives apps their stock colours. The shell, kitty, Neovim,
+btop, GTK4 and VS Code follow a switch live. GTK3 apps, Qt apps, Alacritty and Firefox's UI pick
+it up the next time they start. Useful commands: `hypr-theme list`, `hypr-theme toggle`,
+`hypr-wall next`.
 
-### Dock
+**The `/hypr` skill.** If you use Claude Code, Codex, OpenCode or Gemini, the installer links a
+`/hypr` skill into them. Ask something like *"make a warm dark theme called ember"* or *"why is
+my wifi dropping"*. It follows the rice's own guides, checks its work in both light and dark,
+and never commits anything for you.
 
-Menu › Style › Dock has the settings:
+</details>
 
-| Mode | |
+---
+
+## Troubleshooting
+
+| Problem | Fix |
 |---|---|
-| Hide when a window covers it (default) | Shown on an empty desktop, slides away while a window would sit under it |
-| Auto-hide | Hidden until the cursor touches the screen edge |
-| Always visible | Always there, and windows keep clear of it |
-
-It also has the edge, transparency, and **Pinned apps** (tick the ones you want). Click an app to
-launch or focus it (click again to cycle its windows), middle-click for a new window, and
-right-click to pin, unpin or close.
-
-### Menu, fonts, scale
-
-- **Your own menu entries** go in `~/.config/hypr-theme/menu.local.jsonc`. It is merged into
-  [`menu.jsonc`](theme/.config/hypr-theme/menu.jsonc) by id; the format is documented at the top
-  of that file.
-- **Fonts and size:** `hypr-font set <family>`, `hypr-text-size <px>` and `hypr-scale <n>`
-  change the desktop font, the text size everywhere, and the monitor scale. All three are in
-  Menu › Style too.
-- **Blur, gaps, rounding, animations** are in
-  [`decorations.lua`](hyprland/.config/hypr/modules/decorations.lua), reachable from Menu ›
-  Style › Edit look & feel.
-
-### The `/hypr` agent skill
-
-If you use a coding agent (Claude Code, Codex, OpenCode, Gemini…), the installer links a
-`/hypr` skill into it. Say what you want:
-
-- *"make a warm dark theme called ember"*
-- *"add a widget that shows my power draw"*
-- *"bind SUPER+N to a scratchpad"*
-- *"why is my wifi dropping"*
-
-It reads the rice's own guides, edits the right files, checks the result in both light and dark
-with screenshots, and never breaks your session. It won't commit or push anything unless you ask.
+| Something looks wrong | `hypr-doctor --print` prints a full, no-sudo diagnostics report |
+| Boxes instead of icons or text | `fc-list \| grep -i "JetBrainsMono Nerd Font Propo"` should print a line; if not, `sudo pacman -S ttf-jetbrains-mono-nerd` |
+| The login screen is black | From a TTY (`Ctrl` `Alt` `F3`): `sudo rm /etc/sddm.conf.d/10-wayland.conf`, then reboot |
+| The Wi-Fi panel is empty | Your network is run by something other than NetworkManager. The installer prints how to switch |
+| The bar or dock is missing | `SUPER` `R` restarts the shell; `qs log` shows why it stopped |
 
 ---
 
-## Layout
-
-Each top-level folder is a Stow package that mirrors your home directory:
+<details>
+<summary><b>Repository layout</b></summary>
 
 ```
-hyprland/      ~/.config/hypr/            Lua config: modules/ (binds, monitors, decorations, env, autostart, windowrules), scripts/
-quickshell/    ~/.config/quickshell/      the shell: Bar/ Dock/ Launcher/ Menu/ Panels/ Lock/ Power/ Notifications/ Osd/ Picker/ Services/
-theme/         ~/.config/hypr-theme/      themes, templates, render engine, menu.jsonc, the /hypr skill; ~/.local/bin/hypr-*
-kittyterminal/ alacritty/ nvim/ zsh/ starship/ gtk/      terminals, LazyVim, shell prompt, GTK css
-waybar/ rofi/ swaync/ wlogout/            the classic stack, used only if the shell isn't running (HYPR_SHELL=waybar)
-sddm/          /usr/share/sddm/themes/hyprmono   login screen (copied by install.sh, not stowed)
+hyprland/     ~/.config/hypr/          Hyprland (Lua): modules/, scripts/
+quickshell/   ~/.config/quickshell/    the shell: bar, dock, launcher, menu, panels, lock, notifications
+theme/        ~/.config/hypr-theme/    themes, templates, engine, menu; ~/.local/bin/hypr-* tools
+kittyterminal/ alacritty/ nvim/ zsh/ starship/ gtk/    terminals, LazyVim, prompt, GTK css
+waybar/ rofi/ swaync/ wlogout/         classic fallback, used only if the shell isn't running
+sddm/                                  login screen (installed by install.sh)
 ```
 
----
+</details>
 
 ## Credits
 
-Built on [Hyprland](https://hyprland.org/) and the hypr\* ecosystem,
-[Quickshell](https://quickshell.org/), [LazyVim](https://www.lazyvim.org/),
-[Catppuccin](https://catppuccin.com/), Google's
-[Material Symbols](https://fonts.google.com/icons) (Apache 2.0) and
-[awww](https://codeberg.org/LGFae/awww). Plenty of ideas come from
+Built on [Hyprland](https://hyprland.org/), [Quickshell](https://quickshell.org/),
+[LazyVim](https://www.lazyvim.org/) and [Catppuccin](https://catppuccin.com/). Icons are Google's
+[Material Symbols](https://fonts.google.com/icons) (Apache 2.0). Plenty of ideas come from
 [Omarchy](https://omarchy.org/).
 
-**The wallpapers aren't mine and aren't covered by the licence.** HyprMono's mountain is Mount
-Ararat over Yerevan (photographer unknown), and *The Creation of Adam* is Michelangelo's (public
-domain; this photograph's source is unknown). The others came from wallpaper sites without a
-traceable author. If you hold the rights to one, open an issue and it will be credited or removed.
+**Wallpapers** aren't mine and aren't covered by the licence. HyprMono's is Mount Ararat over
+Yerevan (photographer unknown). The light and Catppuccin wallpapers came from wallpaper sites
+without a traceable author. If one is yours, open an issue and it will be credited or removed.
 
-## License
-
-The configuration is [MIT](LICENSE). The bundled wallpapers are excluded; see above.
+The configuration is [MIT](LICENSE).
