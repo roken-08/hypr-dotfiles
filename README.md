@@ -140,7 +140,8 @@ It's safe to run again, and it never deletes or overwrites your files.
 | `SUPER` `1`–`0` | Go to workspace (add `SHIFT` to move the window there) |
 | `SUPER` `L` · `M` | Lock screen · power menu |
 | `SUPER` `CTRL` `SHIFT` `SPACE` | Theme picker |
-| `SUPER` `X` · `Print` | Screenshot a region · the whole screen |
+| `Print` or `SUPER` `X` | Screenshot a region (Esc cancels) |
+| `SUPER` `SHIFT` `X` | Screenshot a window: click the one you want |
 
 <details>
 <summary><b>All keybinds</b></summary>
@@ -152,15 +153,17 @@ It's safe to run again, and it never deletes or overwrites your files.
 | `SUPER` `SHIFT` `B` | Bar style: Legacy → Floating → Minimal |
 | `SUPER` `CTRL` `I` | Caffeine: pause idle lock and suspend |
 | `SUPER` `SHIFT` `W` · `SUPER` `CTRL` `SPACE` | Wallpaper picker · next wallpaper |
-| `SUPER` `SHIFT` `CTRL` `A` | Launch the default coding agent |
-| `SUPER` `SHIFT` `F` · `P` · `J` | Maximize · pseudo-tile · toggle split |
+| `SUPER` `A` | Launch the default coding agent |
+| `SUPER` `SHIFT` `F` · `SUPER` `J` | Maximize · toggle split |
 | `SUPER` arrows | Move focus |
+| `SUPER` `SHIFT` arrows | Move the window |
+| `SUPER` `CTRL` arrows | Resize the window (hold to keep going) |
 | `SUPER` + drag with left / right mouse button | Move · resize a window |
 | `SUPER` scroll · 3-finger swipe | Cycle workspaces |
 | `SUPER` `S` · `SHIFT` `S` | Scratchpad · move a window to it |
-| `SUPER` `SHIFT` `Print` · `SHIFT` `X` | Active window · region, clipboard only |
+| `SUPER` `Print` · `SUPER` `SHIFT` `Print` | Screenshot the whole screen · the active window |
 
-Screenshots are saved to `~/Pictures/screenshot/`. Media, volume and brightness keys work too,
+Screenshots are saved to `~/Pictures/screenshot/` and copied to the clipboard. Media, volume and brightness keys work too,
 even on the lock screen. The full list is in
 [`modules/binds.lua`](hyprland/.config/hypr/modules/binds.lua) and under Menu › Learn.
 
