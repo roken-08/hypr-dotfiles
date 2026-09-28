@@ -63,3 +63,27 @@ is the known floor.
 
 Put the user's theme back (`hypr-theme set <the one from hypr-theme current at start>`)
 and close anything you opened.
+
+## Rating a look
+
+When asked to rate (or when making a theme), score 1–10 per surface and per
+criterion, from screenshots you took, and write the table:
+
+| | Contrast | Fits the wallpaper | Harmony | Accent use | Overall |
+
+Contrast is measured, not guessed. With `colors.toml` in `$T`:
+
+```python
+import tomllib; c = tomllib.load(open(T, "rb"))["colors"]
+def L(h):
+    v = [int(h[i:i+2], 16) / 255 for i in (1, 3, 5)]
+    v = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in v]
+    return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]
+cr = lambda a, b: (max(L(a), L(b)) + 0.05) / (min(L(a), L(b)) + 0.05)
+# targets: fg/bg0 ≥ 12, accent_light/bg0 ≥ 7, accent_mid/bg0 ≥ 4.5,
+# accent_dim/bg0 ≥ 3, accent_bright/bg2 ≥ 7, every hue/bg0 ≥ 4.5
+```
+
+Then change what scored lowest and do it again: at least three rounds, until
+Overall is 9 or more. Be honest in the scores; say what keeps it from a 10.
+

@@ -40,7 +40,7 @@ what ships) override this paragraph. It is not part of the published rice.
 
 | The request is about… | Guide | Typical words |
 |---|---|---|
-| a new theme, colours, dark/light, wallpaper, an app not following the theme | [`theming.md`](theming.md) | theme, palette, colors.toml, wallpaper, "make X follow the theme" |
+| a new theme, colours, dark/light, wallpaper, an app not following the theme (Thunar, Spotify…) | [`theming.md`](theming.md) | theme, palette, colors.toml, wallpaper, folder colour, Spotify, spicetify, "make X follow the theme" |
 | the bar, a widget, a panel, launcher/clipboard/picker/lock/power/notifications, IPC, shell.json | [`plugins.md`](plugins.md) | bar, widget, plugin, module, panel, popup, quickshell, qml |
 | keybindings, window/layer rules, monitors, gaps/borders/animations, autostart, idle | [`hyprland.md`](hyprland.md) | bind, key, rule, monitor, scale, gaps, blur, opacity, autostart |
 | something broken, slow, crashing, hot, draining, not showing; "diagnose my PC" | [`diagnose.md`](diagnose.md) | crash, error, log, freeze, lag, battery, wifi, sound, gpu, "why" |
@@ -115,8 +115,10 @@ Commands you will use (all `--help`/header-documented — read the script if uns
    theme back when done (`hypr-theme current` first). A template change is
    also checked on one hued theme (`catppuccin-mocha`). When the request *was*
    "make me theme X", leave X applied at the end.
-4. **Look at it.** Every visual change ends with a screenshot you actually
-   read (verify.md). "It should work" is not done.
+4. **Look at it, and rate it.** Every visual change ends with a screenshot you
+   actually read (verify.md). "It should work" is not done. For a new theme or
+   a visual redesign, score it out of 10 and iterate at least 3 rounds until it
+   reaches 9+ (theming.md step 5b); show the user the scores per round.
 5. **Do not break the session.** Never `pkill -f qs|quickshell|hypr` (matches
    your own shell); use `pkill -x`. Never run `hyprctl dispatch exit`,
    `loginctl terminate-*`, or a lock test you cannot unlock (`Lock.lock()`

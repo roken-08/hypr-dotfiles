@@ -24,6 +24,16 @@ plus any key from `[terminal]`, `[git]`, `[apps]`.
 
 ## Make a new theme
 
+A theme from a wallpaper ("extract the palette from this image and make a
+theme"): sample it first, don't eyeball. Cluster the pixels (k-means over a
+192x108 downscale, 8 clusters) and average named regions (the subject, its
+lit edge, the sky, any glow). Surfaces come from the darkest large cluster,
+tinted slightly toward the image's dominant hue so the bar and cards sit in
+the picture; the accent is the brightest distinctive colour (the "light" of
+the image); a warm/cool second colour and the hue keys come from the other
+regions, brightened until they pass the contrast targets below. Write the
+reasoning in the colors.toml header comment.
+
 1. `cp -r themes/hyprmono themes/<id>` (or `hyprmono-light` for a light one).
    `<id>` is lowercase-with-dashes; `name` in colors.toml is the display name.
 2. Edit `colors.toml`:
@@ -65,21 +75,78 @@ plus any key from `[terminal]`, `[git]`, `[apps]`.
    panels (audio/network/power/agents), picker, power menu, lock screen (careful —
    see SKILL rule 5; the SDDM Main.qml uses the same geometry, so a screenshot of
    the lock screen stands in), kitty + fastfetch, btop, nvim, Thunar (GTK3, restart it),
-   a Qt app (qt6ct-aware, restart it), VS Code. Fix any unreadable text by adjusting
-   the ramp, not one app.
+   a Qt app (qt6ct-aware, restart it), VS Code, Spotify if installed. Fix any
+   unreadable text by adjusting the ramp, not one app.
+   - **Thunar's folders:** pick the Papirus folder colour closest to the
+     accent (see *Folder colour* below) and set `icon_theme`; the stock blue
+     folders clash with any non-blue theme. Look at Thunar with a folder
+     *selected* too (click one), not just the grid.
+5b. **Rate it, then iterate — at least 3 rounds, aiming for 9+/10.** After
+   each round take the full set of screenshots (desktop with bar, dock,
+   fastfetch + btop; launcher; menu; a panel; a notification; Thunar), then
+   score 1–10 on four things and write the table down:
+   | | Contrast | Fits the wallpaper | Harmony | Accent use | Overall |
+   Contrast = run the contrast check (fg/bg0 ≥ 12, accent_mid ≥ 4.5,
+   accent_dim ≥ 3, each hue ≥ 4.5 on bg0); fits = do the surfaces and accent
+   read as part of the image or as grey on top of it; harmony = do the hues
+   belong together; accent use = is the accent where the eye should go
+   (active items, titles, progress) and nowhere else. Change what scored
+   lowest, re-render, re-shoot, re-score. Stop at 3 rounds only when Overall
+   is ≥ 9; otherwise keep going. Report each round's scores and what changed,
+   and say what keeps it from a 10 (often something shell-wide, not the
+   theme). Typical round-2/3 fixes: surfaces too neutral → tint them toward
+   the image; borders grey → tint `accent_light` toward the accent (borders
+   take it at 24%); a hue too loud → soften it toward the image.
 6. The theme is the user's: `themes/<id>/` is gitignored, so it stays on
    this machine. Don't commit it or `git add -f` it (MAINTAINER.md decides
    what ships). To share it, the user copies the folder.
 
-**Folder colour.** `icon_theme = "Papirus-Dark-<colour>"` (or `Papirus-Light-…`,
-`Papirus-…`) gives Thunar & co. folders in one of Papirus' colours (`ls
-/usr/share/icons/Papirus/48x48/places/folder-*.svg`: teal, darkcyan, violet,
-indigo, grey…); `hypr-theme` builds that variant in `~/.local/share/icons`
-without root. Starlink uses darkcyan to match its rings.
+**Folder colour (Thunar, file pickers).** `icon_theme = "Papirus-Dark-<colour>"`
+(or `Papirus-Light-<colour>` for a light theme) gives folders in one of
+Papirus' colours; `hypr-theme` builds that variant in `~/.local/share/icons`
+without root (`ensure_folder_icons`: links to the `folder-<colour>*` /
+`user-<colour>*` icons, including names that reach a blue icon through a chain
+of links, like `folder-publicshare`). Choose by rendering a row of candidates
+on the theme's bg2 and looking at it:
+`rsvg-convert -w 64 /usr/share/icons/Papirus/64x64/places/folder-<c>.svg`,
+colours: blue teal cyan darkcyan bluegrey grey black palebrown paleorange
+deeporange brown red carmine magenta pink violet indigo green yellow orange
+white. Mono themes use the default. After changing it, restart Thunar
+(`pkill -x thunar`), open a folder and check every folder is recoloured —
+one still blue means a missed link.
 
-**Spotify** follows through Spicetify (`templates/spicetify-color.ini.tpl`,
-`spicetify/user.css`) when `spicetify` is installed and configured; nothing to
-do per theme.
+Thunar selection: Thunar paints the selection box itself, solid in
+`theme_selected_bg_color`, and the label comes from `.cell:selected`;
+gtk/.config/gtk-3.0/gtk.css sets that to `theme_selected_fg_color`. If a theme
+makes selected labels hard to read, fix those two colours, not Thunar.
+
+## Spotify
+
+Spotify follows the theme through Spicetify: `templates/spicetify-color.ini.tpl`
+maps the palette onto Spicetify's slots (main/sidebar/player = the bg ramp,
+button/play-button/playback-bar = accent_bright, subtext = accent_mid) and
+`spicetify/user.css` adds the 4px corners. `apply_spotify` in `hypr-theme`
+installs them as the "hypr" theme on every switch — nothing to write per
+theme. It runs only when `spicetify` (on PATH or `~/.spicetify/spicetify`)
+is configured with a `spotify_path`.
+
+- Setup, once: `spicetify config spotify_path <dir>` (spotify-launcher:
+  `~/.local/share/spotify-launcher/install/usr/share/spotify`; the pacman
+  `spotify` package in /opt needs write access for the user first), then
+  `hypr-theme reload`; the first run does `spicetify backup apply`.
+- Spotify reads the colours only at start: `apply_spotify` restarts it when
+  playerctl says it isn't playing, and otherwise only notifies. Never stop
+  someone's music to show a theme.
+- Read spicetify config with `spicetify config <key>` (one key); two words
+  *set* the first to the second (`config current_theme color_scheme` wrote
+  "color_scheme" into current_theme once).
+- Spotify sets its window class late, so a window rule matching `^Spotify$`
+  doesn't catch the first map; to screenshot it, move the window with its
+  address after it appears (`hl.dsp.window.move({ window = "address:…",
+  workspace = "9 silent" })`).
+- After a Spotify update the patch is gone: `spicetify backup apply`.
+- Verify: a screenshot of Spotify in every shipped theme; the playing-view
+  accents (play button, progress bar) should be the theme's accent.
 
 ## Hued vs monochrome in templates
 
