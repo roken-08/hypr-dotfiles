@@ -133,6 +133,12 @@ From then on every theme switch recolours Spotify. It restarts Spotify if nothin
 otherwise the new colours show the next time it starts. After a Spotify update, run
 `spicetify backup apply` again.
 
+### Coding agents in the terminal
+
+Claude Code draws its own colours. Set it to follow the terminal once, with
+`/theme` → **Auto (match terminal)**; after that it switches with the rice's dark and light
+themes.
+
 ### First steps
 
 - Press **`SUPER SPACE`** to open the menu. Everything is in there: theme, wallpaper, bar,

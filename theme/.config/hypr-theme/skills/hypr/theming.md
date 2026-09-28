@@ -120,6 +120,14 @@ Thunar selection: Thunar paints the selection box itself, solid in
 gtk/.config/gtk-3.0/gtk.css sets that to `theme_selected_fg_color`. If a theme
 makes selected labels hard to read, fix those two colours, not Thunar.
 
+## Claude Code (and other TUIs with their own palette)
+
+Claude Code doesn't read the terminal's colours; with no theme set it draws its
+dark palette, which washes out on a light theme (white bullets, pale code). Its
+`auto` theme queries the terminal background (OSC 11, kitty answers) and
+follows light/dark live: tell the user to pick `/theme` → "Auto (match
+terminal)". Don't edit `~/.claude.json` from inside a running session.
+
 ## Spotify
 
 Spotify follows the theme through Spicetify: `templates/spicetify-color.ini.tpl`
