@@ -7,7 +7,7 @@ live there, never in the modules). Classic `.conf` syntax is rejected.
 ```
 modules/env.lua          hl.env(...), PATH prepend ~/.local/bin, Qt/GTK env
 modules/autostart.lua    hl.exec_cmd(...) at login: shell.sh start, polkit agent, cliphist watch
-modules/binds.lua        hl.bind("SUPER + X", hl.dsp.exec_cmd("cmd")) — one line per key, comment says what
+modules/binds.lua        hl.bind("SUPER + N", hl.dsp.exec_cmd("cmd")) — one line per key, comment says what
 modules/monitors.lua     hl.monitor({...})
 modules/decorations.lua  hl.config({ general = {...}, decoration = {...}, animations = {...}, input = {...} })
 modules/windowrules.lua  hl.window_rule({ match = {...}, ... }), hl.layer_rule({ match = { namespace = "^hypr-x$" }, blur = true, ignore_alpha = 0.5 })

@@ -477,7 +477,7 @@ fi
 step "Pre-flight checks"
 
 if [[ $DRY_RUN -eq 0 ]]; then
-  # Screenshot binds pipe through `tee`, which will not create the directory.
+  # Where screenshots are saved (scripts/screenshot.sh creates it too).
   mkdir -p "$HOME/Pictures/screenshot"
   # These must be REAL directories, not stow-folded symlinks.
   #

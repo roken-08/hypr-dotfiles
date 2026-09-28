@@ -56,9 +56,9 @@ hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("hypr-agent launch")) -- default codi
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd("qs ipc call menu toggle")) -- the menu
 hl.bind(mainMod .. " + CTRL + O", hl.dsp.exec_cmd("qs ipc call menu open toggle")) -- the menu: toggles
 
--- Screenshots: saved to ~/Pictures/screenshot and copied; Esc cancels a selection
+-- Screenshots (scripts/screenshot.sh): saved to ~/Pictures/screenshot and
+-- copied to the clipboard. Esc, or the same shortcut again, cancels a selection.
 local shot = "~/.config/hypr/scripts/screenshot.sh "
--- (press the same shortcut again to cancel a selection)
 hl.bind("Print", hl.dsp.exec_cmd(shot .. "region")) -- Screenshot a region
 hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(shot .. "screen")) -- Screenshot the whole screen
 hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd(shot .. "pick")) -- Screenshot a window (click it)
