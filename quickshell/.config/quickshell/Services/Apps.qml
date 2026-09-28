@@ -10,7 +10,7 @@ Singleton {
     property bool open: false
     property string query: ""
     property var history: ({})          // desktop id -> launch count
-    readonly property string histFile: Quickshell.env("HOME") + "/.local/state/hypr-theme/launcher.json"
+    readonly property string histFile: Quickshell.env("HOME") + "/.local/state/orrery/launcher.json"
 
     readonly property var all: DesktopEntries.applications.values.filter(e => !e.noDisplay)
     readonly property var results: {

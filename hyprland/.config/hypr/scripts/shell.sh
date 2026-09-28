@@ -4,10 +4,10 @@
 #   shell.sh start      at session start (autostart.lua)
 #   shell.sh restart    SUPER+R, and after a theme switch
 #
-# HYPR_SHELL picks the bar: "quickshell" (default) or "waybar" (the classic
+# ORRERY_SHELL picks the bar: "quickshell" (default) or "waybar" (the classic
 # config kept as a fallback). Set it in modules/autostart.lua.
 set -u
-which="${HYPR_SHELL:-quickshell}"
+which="${ORRERY_SHELL:-quickshell}"
 
 stop() {
     pkill -x hypridle 2>/dev/null
@@ -26,7 +26,7 @@ start() {
             setsid -f waybar >/dev/null 2>&1
             # the classic setup needs a wallpaper daemon; the shell draws its own
             pgrep -x awww-daemon >/dev/null 2>&1 || setsid -f awww-daemon >/dev/null 2>&1
-            (sleep 0.6; "$HOME/.local/bin/hypr-wall" apply) >/dev/null 2>&1 &
+            (sleep 0.6; "$HOME/.local/bin/orrery-wall" apply) >/dev/null 2>&1 &
             ;;
         *)
             pkill -x awww-daemon 2>/dev/null

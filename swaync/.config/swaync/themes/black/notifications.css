@@ -111,7 +111,7 @@
 
 /* Text colour on every notification element, explicitly: without this the
    cards inherit the GTK theme's label colour, which is wrong after a
-   light/dark switch (hypr-theme). */
+   light/dark switch (orrery-theme). */
 .notification-row .notification-background .notification,
 .notification-row .notification-background .notification .summary,
 .notification-row .notification-background .notification .body,

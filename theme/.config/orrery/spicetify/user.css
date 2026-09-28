@@ -1,0 +1,6 @@
+/* orrery-theme for Spotify (Spicetify): the rice's 4px corners and no
+   gradients behind the header, so the surfaces are the theme's own. */
+:root { --border-radius-1: 4px; --border-radius-2: 4px; }
+.main-entityHeader-backgroundColor, .main-actionBarBackground-background,
+.main-home-homeHeader, .main-topBar-background { background: none !important; background-color: transparent !important; }
+.main-card-card, .main-trackList-trackListRow, .x-categoryCard-CategoryCard { border-radius: 4px !important; }

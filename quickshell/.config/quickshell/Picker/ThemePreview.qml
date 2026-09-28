@@ -4,7 +4,7 @@ import Quickshell.Io
 import qs.Commons
 
 // A theme, previewed: its real screenshot (themes/<id>/preview.jpg, taken by
-// hypr-theme-preview) when there is one; otherwise its wallpaper with a mock
+// orrery-theme-preview) when there is one; otherwise its wallpaper with a mock
 // desktop drawn in its own colours — the bar, a kitty running fastfetch, a
 // Thunar window.
 Item {
@@ -166,7 +166,7 @@ Item {
         Grid {
             x: (parent.side + 16) * tp.k; y: 40 * tp.k; columns: 4; columnSpacing: 12 * tp.k; rowSpacing: 12 * tp.k
             Repeater {
-                model: ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Videos", "hypr-dotfiles", "Projects"]
+                model: ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Videos", "Orrery", "Projects"]
                 Column {
                     required property string modelData; required property int index
                     width: 52 * tp.k; spacing: 3 * tp.k

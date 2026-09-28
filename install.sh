@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Installer for thomasmartinoa/hypr-dotfiles
+# Installer for thomasmartinoa/Orrery-dotfiles
 # See usage() below, or run ./install.sh --help
 
 set -euo pipefail
@@ -48,12 +48,12 @@ STEP_TOTAL=10
 
 banner() {
   printf '%s\n' ""
-  printf '%s\n' "${C_HI}    ██╗  ██╗██╗   ██╗██████╗ ██████╗ ${C_RST}"
-  printf '%s\n' "${C_HI}    ██║  ██║╚██╗ ██╔╝██╔══██╗██╔══██╗${C_RST}"
-  printf '%s\n' "${C_HI}    ███████║ ╚████╔╝ ██████╔╝██████╔╝${C_RST}"
-  printf '%s\n' "${C_DIM}    ██╔══██║  ╚██╔╝  ██╔═══╝ ██╔══██╗${C_RST}"
-  printf '%s\n' "${C_DIM}    ██║  ██║   ██║   ██║     ██║  ██║${C_RST}"
-  printf '%s\n' "${C_DIM}    ╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝${C_RST}"
+  printf '%s\n' "${C_HI}     ██████╗ ██████╗ ██████╗ ███████╗██████╗ ██╗   ██╗${C_RST}"
+  printf '%s\n' "${C_HI}    ██╔═══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗╚██╗ ██╔╝${C_RST}"
+  printf '%s\n' "${C_HI}    ██║   ██║██████╔╝██████╔╝█████╗  ██████╔╝ ╚████╔╝${C_RST}"
+  printf '%s\n' "${C_DIM}    ██║   ██║██╔══██╗██╔══██╗██╔══╝  ██╔══██╗  ╚██╔╝${C_RST}"
+  printf '%s\n' "${C_DIM}    ╚██████╔╝██║  ██║██║  ██║███████╗██║  ██║   ██║${C_RST}"
+  printf '%s\n' "${C_DIM}     ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝${C_RST}"
   printf '%s\n' "${C_ACC}         d o t f i l e s${C_RST}${C_DIM}  ·  ${C_RST}${C_ACC}m a r t i n${C_RST}"
   printf '%s\n' ""
   printf '%s\n' "${C_DIM}    ────────────────────────────────────────────${C_RST}"
@@ -135,7 +135,7 @@ bootstrap_yay() {
 
 usage() {
   cat <<'EOF'
-Installer for thomasmartinoa/hypr-dotfiles
+Installer for thomasmartinoa/Orrery-dotfiles
 
   ./install.sh                install packages, then symlink configs with stow
   ./install.sh --stow-only    skip package installation
@@ -378,7 +378,7 @@ migratable_now() {
 
 do_migrate() {
   local backup rel f moved=0
-  backup="$HOME/.config/hypr-dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
+  backup="$HOME/.config/orrery-backup-$(date +%Y%m%d-%H%M%S)"
   while IFS= read -r f; do
     [[ -n "$f" ]] || continue
     # Preserve the path under $HOME, not just the basename: gtk-3.0/settings.ini
@@ -481,9 +481,9 @@ if [[ $DRY_RUN -eq 0 ]]; then
   mkdir -p "$HOME/Pictures/screenshot"
   # These must be REAL directories, not stow-folded symlinks.
   #
-  # gtk-3.0/gtk-4.0: gtk.css starts with `@import '../hypr-theme/palette.css'`.
+  # gtk-3.0/gtk-4.0: gtk.css starts with `@import '../orrery/palette.css'`.
   #   If the whole directory is a symlink into the repo, that relative import
-  #   resolves from inside the repo (~/hypr-dotfiles/gtk/.config/) rather than
+  #   resolves from inside the repo (~/Orrery-dotfiles/gtk/.config/) rather than
   #   ~/.config/, finds nothing, and EVERY @define-color below it collapses —
   #   silently, leaving the stock theme colours. Keeping the directory real
   #   makes stow link the files inside it, so ../ is ~/.config/ as intended.
@@ -592,47 +592,47 @@ chmod +x "$HOME/.config/rofi/launchers/launcher.sh" \
 # (qt*ct resolves it with QFile, which does not expand "~"), and the qt*ct GUIs
 # rewrite these files in place, which would push window geometry into git.
 step "Qt configuration"
-# qt5ct.conf / qt6ct.conf and the colour scheme are rendered by hypr-theme
+# qt5ct.conf / qt6ct.conf and the colour scheme are rendered by orrery-theme
 # (templates/qt*ct.conf.tpl) and installed by its Theme step below.
 mkdir -p "$HOME/.config/qt5ct/colors" "$HOME/.config/qt6ct/colors"
-ok "qt5ct/qt6ct directories ready (config comes from hypr-theme)."
+ok "qt5ct/qt6ct directories ready (config comes from orrery-theme)."
 
 # ============================================================================
 # 6. Root theming
 # ============================================================================
-# Theme. Everything colour-related is rendered from theme/.config/hypr-theme
-# into ~/.config/hypr-theme/current/ (gitignored) and applied to running apps.
+# Theme. Everything colour-related is rendered from theme/.config/orrery
+# into ~/.config/orrery/current/ (gitignored) and applied to running apps.
 # Without this step waybar/gtk/kitty/... import files that do not exist yet.
 step "Theme"
 if [[ $DRY_RUN -eq 1 ]]; then
-  info "Would run: hypr-theme set $(cat "$HOME/.config/hypr-theme/current/theme.name" 2>/dev/null || echo hyprmono)"
+  info "Would run: orrery-theme set $(cat "$HOME/.config/orrery/current/theme.name" 2>/dev/null || echo eclipse)"
 else
-  _theme="$(cat "$HOME/.config/hypr-theme/current/theme.name" 2>/dev/null || echo hyprmono)"
-  if "$HOME/.local/bin/hypr-theme" set "$_theme" >/dev/null; then
+  _theme="$(cat "$HOME/.config/orrery/current/theme.name" 2>/dev/null || echo eclipse)"
+  if "$HOME/.local/bin/orrery-theme" set "$_theme" >/dev/null; then
     ok "Theme '$_theme' rendered and applied."
   else
-    warn "hypr-theme failed — run: hypr-theme set hyprmono"
+    warn "orrery-theme failed — run: orrery-theme set eclipse"
   fi
 fi
 
 # ============================================================================
 # Shell odds and ends: the Quickshell shell owns notifications, so the
 # swaync user unit must not be D-Bus-activated behind its back (it is, on
-# every login, and then fails five times); and the /hypr agent skill is
+# every login, and then fails five times); and the /orrery agent skill is
 # linked into Claude Code / Codex / the generic ~/.agents dir so
-# `/hypr <request>` works in any coding agent.
+# `/orrery <request>` works in any coding agent.
 step "Shell"
 if [[ $DRY_RUN -eq 1 ]]; then
-  info "Would mask the swaync user unit and link the /hypr skill (hypr-agent skills install)."
+  info "Would mask the swaync user unit and link the /orrery skill (orrery-agent skills install)."
 else
   if command -v swaync >/dev/null 2>&1; then
     systemctl --user mask swaync.service >/dev/null 2>&1 && ok "swaync user unit masked (the shell is the notification daemon)."
   fi
-  "$HOME/.local/bin/hypr-text-size" reset >/dev/null 2>&1 || true   # writes the terminal font family/size overrides
-  if "$HOME/.local/bin/hypr-agent" skills install >/dev/null 2>&1; then
-    ok "/hypr skill linked for coding agents ($(ls -d "$HOME"/.claude/skills "$HOME"/.agents/skills 2>/dev/null | tr '\n' ' '))."
+  "$HOME/.local/bin/orrery-text-size" reset >/dev/null 2>&1 || true   # writes the terminal font family/size overrides
+  if "$HOME/.local/bin/orrery-agent" skills install >/dev/null 2>&1; then
+    ok "/orrery skill linked for coding agents ($(ls -d "$HOME"/.claude/skills "$HOME"/.agents/skills 2>/dev/null | tr '\n' ' '))."
   else
-    warn "Skill link failed — run: hypr-agent skills install"
+    warn "Skill link failed — run: orrery-agent skills install"
   fi
 fi
 
@@ -679,7 +679,7 @@ else
 fi
 
 # ============================================================================
-# SDDM login screen. The theme lives in sddm/hyprmono and mirrors hyprlock.
+# SDDM login screen. The theme lives in sddm/orrery and mirrors hyprlock.
 # Same approach as Omarchy: SDDM stays, gets a custom QML theme, and runs its
 # greeter under Hyprland (sddm/hyprland.lua) instead of X11. All of it is
 # plain files under /usr/share/sddm and /etc/sddm.conf.d — nothing is enabled
@@ -690,17 +690,17 @@ elif ! command -v sddm >/dev/null 2>&1; then
   skip "SDDM theme (sddm not installed)"
 else
   step "SDDM theme"
-  info "Installs the HyprMono login theme. sudo may prompt."
+  info "Installs the Orrery login theme. sudo may prompt."
   if sudo -v; then
     sudo mkdir -p /usr/share/sddm/themes /etc/sddm.conf.d
-    sudo rm -rf /usr/share/sddm/themes/hyprmono
-    sudo cp -r -- "$DOTFILES_DIR/sddm/hyprmono"        /usr/share/sddm/themes/hyprmono
+    sudo rm -rf /usr/share/sddm/themes/orrery
+    sudo cp -r -- "$DOTFILES_DIR/sddm/orrery"        /usr/share/sddm/themes/orrery
     sudo cp --    "$DOTFILES_DIR/sddm/hyprland.lua"    /usr/share/sddm/hyprland.lua
     sudo cp --    "$DOTFILES_DIR/sddm/sddm.conf.d/"*.conf /etc/sddm.conf.d/
-    sudo chmod -R a+rX /usr/share/sddm/themes/hyprmono /usr/share/sddm/hyprland.lua
+    sudo chmod -R a+rX /usr/share/sddm/themes/orrery /usr/share/sddm/hyprland.lua
     ok "SDDM theme installed. Takes effect on next logout / reboot."
     info "Preview without logging out:"
-    info "  sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/hyprmono"
+    info "  sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/orrery"
   else
     warn "Skipped — no sudo. Login screen keeps the current SDDM theme."
   fi
@@ -712,29 +712,29 @@ fi
 # run as root and read root's GTK config — without it they stay stock/dark)
 # and /usr/share/sddm/themes (the greeter runs as the sddm user).
 #
-# hypr-theme-root-sync copies only fixed files from ~/.config/hypr-theme/current
+# orrery-root-sync copies only fixed files from ~/.config/orrery/current
 # and is installed root-owned (a copy, never a symlink into $HOME), with a
-# sudoers rule for exactly that path so `hypr-theme set` can call it silently.
+# sudoers rule for exactly that path so `orrery-theme set` can call it silently.
 if [[ $SKIP_ROOT -eq 1 ]]; then
   skip "Root + SDDM sync"
 else
   step "Root + SDDM sync"
-  info "Installs /usr/local/bin/hypr-theme-root-sync and its sudoers rule. sudo may prompt."
+  info "Installs /usr/local/bin/orrery-root-sync and its sudoers rule. sudo may prompt."
   if sudo -v; then
-    sudo install -o root -g root -m 755 -- "$DOTFILES_DIR/theme/.config/hypr-theme/root-sync.sh" /usr/local/bin/hypr-theme-root-sync
-    _rule="$USER ALL=(root) NOPASSWD: /usr/local/bin/hypr-theme-root-sync"
-    printf '%s\n' "$_rule" | sudo tee /etc/sudoers.d/hypr-theme >/dev/null
-    sudo chmod 440 /etc/sudoers.d/hypr-theme
-    if sudo visudo -cf /etc/sudoers.d/hypr-theme >/dev/null 2>&1; then
+    sudo install -o root -g root -m 755 -- "$DOTFILES_DIR/theme/.config/orrery/root-sync.sh" /usr/local/bin/orrery-root-sync
+    _rule="$USER ALL=(root) NOPASSWD: /usr/local/bin/orrery-root-sync"
+    printf '%s\n' "$_rule" | sudo tee /etc/sudoers.d/orrery-theme >/dev/null
+    sudo chmod 440 /etc/sudoers.d/orrery-theme
+    if sudo visudo -cf /etc/sudoers.d/orrery-theme >/dev/null 2>&1; then
       ok "sudoers rule installed for $USER."
     else
-      sudo rm -f /etc/sudoers.d/hypr-theme
+      sudo rm -f /etc/sudoers.d/orrery-theme
       warn "sudoers rule failed validation and was removed."
     fi
-    if sudo /usr/local/bin/hypr-theme-root-sync >/dev/null 2>&1; then
+    if sudo /usr/local/bin/orrery-root-sync >/dev/null 2>&1; then
       ok "Theme synced to /root and SDDM."
     else
-      warn "Sync failed — is a theme applied? (hypr-theme set hyprmono)"
+      warn "Sync failed — is a theme applied? (orrery-theme set eclipse)"
     fi
   else
     warn "Skipped — no sudo. pkexec GUIs keep the default theme; login screen keeps its colours."
@@ -766,7 +766,7 @@ fi
 
 head2 "Live already"
 item "Configs are symlinked — Hyprland, the shell, theme engine, kitty, nvim, zsh."
-item "${C_TXT}SUPER+R${C_RST} restarts the shell; ${C_TXT}SUPER+SPACE${C_RST} is the menu; ${C_TXT}/hypr${C_RST} in Claude Code knows the rest."
+item "${C_TXT}SUPER+R${C_RST} restarts the shell; ${C_TXT}SUPER+SPACE${C_RST} is the menu; ${C_TXT}/orrery${C_RST} in Claude Code knows the rest."
 
 head2 "Needs a re-login"
 item "GTK and Qt apps read their theme once, at startup."
@@ -776,7 +776,7 @@ item "applications launched by a fresh session."
 head2 "Worth doing first"
 item "${C_TXT}monitors.lua${C_RST} is hardcoded to one eDP-1 at 2560x1440@165Hz, scale 1.6."
 item "Run ${C_TXT}hyprctl monitors${C_RST} and edit it to match your display."
-item "${C_TXT}hypr-theme set <name>${C_RST} re-renders and re-applies everything;"
+item "${C_TXT}orrery-theme set <name>${C_RST} re-renders and re-applies everything;"
 item "the picker (SUPER+CTRL+SHIFT+SPACE) switches themes. GTK3 and Qt apps need"
 item "a restart to follow a switch — the README has the live/restart table."
 

@@ -21,7 +21,7 @@ Variants {
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.keyboardFocus: Menu.open ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-        WlrLayershell.namespace: "hypr-menu"
+        WlrLayershell.namespace: "orrery-menu"
         color: "transparent"
 
         readonly property int rowH: 34

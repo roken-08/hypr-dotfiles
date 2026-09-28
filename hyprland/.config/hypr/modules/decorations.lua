@@ -9,7 +9,7 @@ hl.config({
 
         border_size = 1,
 
-        -- col.active_border / inactive_border: from hypr-theme (see hyprland.lua)
+        -- col.active_border / inactive_border: from orrery-theme (see hyprland.lua)
 
         resize_on_border = false,
         allow_tearing    = false,
@@ -29,7 +29,7 @@ hl.config({
             enabled      = true,
             range        = 4,
             render_power = 3,
-            -- color: from hypr-theme (see hyprland.lua)
+            -- color: from orrery-theme (see hyprland.lua)
         },
 
         blur = {

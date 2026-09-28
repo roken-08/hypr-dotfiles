@@ -22,7 +22,7 @@ Variants {
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Overlay
-        WlrLayershell.namespace: "hypr-osd"
+        WlrLayershell.namespace: "orrery-osd"
         mask: Region {}      // click-through
 
         Rectangle {

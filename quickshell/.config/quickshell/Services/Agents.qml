@@ -7,12 +7,12 @@ import qs.Commons
 // Coding agents (Claude Code, Codex, OpenCode, …), the Omarchy way: usage
 // of the default agent's account in the bar, a panel with plan, limits and
 // token counts, right-click to launch. Data comes from
-// `hypr-agent usage-update` (~/.local/state/hypr-theme/agents.json),
+// `orrery-agent usage-update` (~/.local/state/orrery/agents.json),
 // refreshed every 15 minutes and whenever the panel opens.
 Singleton {
     id: root
-    readonly property string bin: Quickshell.env("HOME") + "/.local/bin/hypr-agent"
-    readonly property string file: Quickshell.env("HOME") + "/.local/state/hypr-theme/agents.json"
+    readonly property string bin: Quickshell.env("HOME") + "/.local/bin/orrery-agent"
+    readonly property string file: Quickshell.env("HOME") + "/.local/state/orrery/agents.json"
 
     property var data: ({ updated: 0, accounts: [], tokens: { days: [], models: [] } })
     readonly property var accounts: data.accounts || []

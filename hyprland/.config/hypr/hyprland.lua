@@ -5,10 +5,10 @@ require("modules/monitors")
 require("modules/decorations")
 require("modules/windowrules")
 
--- Theme colours (borders, shadow) rendered by `hypr-theme set <name>`.
+-- Theme colours (borders, shadow) rendered by `orrery-theme set <name>`.
 -- Loaded last so they override anything in the modules. pcall: a fresh
 -- install has no current/ yet, and a missing theme must not break Hyprland.
-pcall(dofile, os.getenv("HOME") .. "/.config/hypr-theme/current/hyprland.lua")
+pcall(dofile, os.getenv("HOME") .. "/.config/orrery/current/hyprland.lua")
 
 -----------------
 ---- XWAYLAND ---

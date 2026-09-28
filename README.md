@@ -1,6 +1,6 @@
 <div align="center">
 
-# hypr-dotfiles
+<img src="Screenshots/cover.png" alt="Orrery: a Hyprland desktop where everything orbits one palette" width="100%">
 
 **A complete, themeable Hyprland desktop for Arch Linux.**<br>
 Lua-configured Hyprland · a hand-built Quickshell shell · one palette for every app
@@ -9,8 +9,6 @@ Lua-configured Hyprland · a hand-built Quickshell shell · one palette for ever
 ![Quickshell 0.3](https://img.shields.io/badge/Quickshell-0.3-0d0d0f?style=flat-square)
 ![Arch Linux](https://img.shields.io/badge/Arch-Linux-0d0d0f?style=flat-square&logo=archlinux&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/license-MIT-0d0d0f?style=flat-square)
-
-![Four themes](Screenshots/banner.jpg)
 
 [Themes](#themes) · [Features](#features) · [Install](#install) · [Keybinds](#keybinds) · [Customise](#make-it-yours) · [Help](#troubleshooting)
 
@@ -26,34 +24,34 @@ login screen.
 
 <table>
 <tr>
-<td width="25%" align="center"><b>HyprMono</b><br><sub>dark · greys only</sub></td>
-<td width="25%" align="center"><b>HyprMono Light</b><br><sub>the same design on white</sub></td>
+<td width="25%" align="center"><b>Eclipse</b><br><sub>dark · greys only</sub></td>
+<td width="25%" align="center"><b>Zenith</b><br><sub>the same design on white</sub></td>
 <td width="25%" align="center"><b>Catppuccin Mocha</b><br><sub>the official Mocha palette</sub></td>
-<td width="25%" align="center"><b>Starlink</b><br><sub>ringed giant · ice-teal on deep space</sub></td>
+<td width="25%" align="center"><b>Cassini</b><br><sub>ringed giant · ice-teal on deep space</sub></td>
 </tr>
 <tr>
-<td><img src="Screenshots/hyprmono.jpg" alt="HyprMono"></td>
-<td><img src="Screenshots/hyprmono-light.jpg" alt="HyprMono Light"></td>
+<td><img src="Screenshots/eclipse.jpg" alt="Eclipse"></td>
+<td><img src="Screenshots/zenith.jpg" alt="Zenith"></td>
 <td><img src="Screenshots/catppuccin-mocha.jpg" alt="Catppuccin Mocha"></td>
-<td><img src="Screenshots/starlink.jpg" alt="Starlink"></td>
+<td><img src="Screenshots/cassini.jpg" alt="Cassini"></td>
 </tr>
 <tr>
-<td><img src="Screenshots/launcher-hyprmono.jpg" alt="Launcher"></td>
-<td><img src="Screenshots/launcher-hyprmono-light.jpg" alt="Launcher, light"></td>
+<td><img src="Screenshots/launcher-eclipse.jpg" alt="Launcher"></td>
+<td><img src="Screenshots/launcher-zenith.jpg" alt="Launcher, light"></td>
 <td><img src="Screenshots/launcher-catppuccin-mocha.jpg" alt="Launcher, Catppuccin"></td>
-<td><img src="Screenshots/launcher-starlink.jpg" alt="Launcher, Starlink"></td>
+<td><img src="Screenshots/launcher-cassini.jpg" alt="Launcher, Cassini"></td>
 </tr>
 <tr>
-<td><img src="Screenshots/menu-hyprmono.jpg" alt="Menu"></td>
-<td><img src="Screenshots/menu-hyprmono-light.jpg" alt="Menu, light"></td>
+<td><img src="Screenshots/menu-eclipse.jpg" alt="Menu"></td>
+<td><img src="Screenshots/menu-zenith.jpg" alt="Menu, light"></td>
 <td><img src="Screenshots/menu-catppuccin-mocha.jpg" alt="Menu, Catppuccin"></td>
-<td><img src="Screenshots/menu-starlink.jpg" alt="Menu, Starlink"></td>
+<td><img src="Screenshots/menu-cassini.jpg" alt="Menu, Cassini"></td>
 </tr>
 <tr>
-<td><img src="Screenshots/panel-hyprmono.jpg" alt="Power panel"></td>
-<td><img src="Screenshots/panel-hyprmono-light.jpg" alt="Power panel, light"></td>
+<td><img src="Screenshots/panel-eclipse.jpg" alt="Power panel"></td>
+<td><img src="Screenshots/panel-zenith.jpg" alt="Power panel, light"></td>
 <td><img src="Screenshots/panel-catppuccin-mocha.jpg" alt="Power panel, Catppuccin"></td>
-<td><img src="Screenshots/panel-starlink.jpg" alt="Power panel, Starlink"></td>
+<td><img src="Screenshots/panel-cassini.jpg" alt="Power panel, Cassini"></td>
 </tr>
 </table>
 
@@ -73,7 +71,7 @@ login screen.
 | **Theme engine** | One `colors.toml` colours every app, dark or light. Make your own in minutes |
 | **Desktop extras** | Notifications with do-not-disturb, lock screen, power menu, volume and brightness OSD, night light, idle lock, caffeine |
 | **Login screen** | An SDDM theme that matches the lock screen |
-| **AI agents** | Claude Code usage in the bar, and a `/hypr` skill that lets an agent theme and fix the rice for you |
+| **AI agents** | Claude Code usage in the bar, and a `/orrery` skill that lets an agent theme and fix the rice for you |
 
 ---
 
@@ -85,8 +83,8 @@ login screen.
 
 ```bash
 sudo pacman -Syu --needed git
-git clone https://github.com/thomasmartinoa/hypr-dotfiles.git ~/hypr-dotfiles
-cd ~/hypr-dotfiles && ./install.sh
+git clone https://github.com/thomasmartinoa/Orrery-dotfiles.git ~/Orrery-dotfiles
+cd ~/Orrery-dotfiles && ./install.sh
 ```
 
 Reboot, choose **Hyprland** on the login screen, and you're in. Run `./install.sh --dry-run` first
@@ -126,7 +124,7 @@ the theme once:
 ```bash
 yay -S spotify-launcher spicetify-cli
 spicetify config spotify_path ~/.local/share/spotify-launcher/install/usr/share/spotify
-hypr-theme reload
+orrery-theme reload
 ```
 
 From then on every theme switch recolours Spotify. It restarts Spotify if nothing is playing;
@@ -150,7 +148,7 @@ themes.
   hl.monitor({ output = "eDP-1", mode = "2560x1440@165", position = "auto", scale = 1.6 })
   ```
   `hyprctl monitors all` lists your outputs. This file is yours; updates never touch it.
-- **Updating later:** run `cd ~/hypr-dotfiles && git pull && ./install.sh`.
+- **Updating later:** run `cd ~/Orrery-dotfiles && git pull && ./install.sh`.
 
 ---
 
@@ -199,21 +197,21 @@ even on the lock screen. The full list is in
 
 ## Make it yours
 
-- **Themes:** copy `theme/.config/hypr-theme/themes/hyprmono/`, edit its `colors.toml`, put a
-  wallpaper in `backgrounds/`, then run `hypr-theme set <name>` and `hypr-theme-preview <name>`
+- **Themes:** copy `theme/.config/orrery/themes/eclipse/`, edit its `colors.toml`, put a
+  wallpaper in `backgrounds/`, then run `orrery-theme set <name>` and `orrery-theme-preview <name>`
   (a real screenshot for the theme picker). Your themes stay private; git
   ignores them.
 - **Bar and dock:** use Menu › Appearance › Bar / Dock for the style, edge, transparency, widgets and
   pinned apps.
 - **Look and feel:** use Menu › Appearance for font, text size and display scale, and *Edit look &
   feel* for gaps, blur and animations.
-- **Your own menu entries** go in `~/.config/hypr-theme/menu.local.jsonc`.
+- **Your own menu entries** go in `~/.config/orrery/menu.local.jsonc`.
 
 <details>
 <summary><b>More: command modules, theme details, the agent skill</b></summary>
 
 **Command modules.** Any script that prints text can become a bar widget. Add it under
-`modules` in `~/.config/hypr-theme/shell.json` and put its id in a layout list:
+`modules` in `~/.config/orrery/shell.json` and put its id in a layout list:
 
 ```json
 "modules": { "vpn": { "exec": "~/bin/vpn-status", "interval": 5, "onClick": "nm-connection-editor" } }
@@ -222,11 +220,11 @@ even on the lock screen. The full list is in
 **Themes in depth.** In `colors.toml`, `mode = "light"` switches GTK, Qt and Neovim to their
 light variants, and `hued = true` gives apps their stock colours. The shell, kitty, Neovim,
 btop, GTK4 and VS Code follow a switch live. GTK3 apps, Qt apps, Alacritty and Firefox's UI pick
-it up the next time they start. Useful commands: `hypr-theme list`, `hypr-theme toggle`,
-`hypr-wall next`.
+it up the next time they start. Useful commands: `orrery-theme list`, `orrery-theme toggle`,
+`orrery-wall next`.
 
-**The `/hypr` skill.** If you use Claude Code, Codex, OpenCode or Gemini, the installer links a
-`/hypr` skill into them. Ask something like *"make a warm dark theme called ember"* or *"why is
+**The `/orrery` skill.** If you use Claude Code, Codex, OpenCode or Gemini, the installer links a
+`/orrery` skill into them. Ask something like *"make a warm dark theme called ember"* or *"why is
 my wifi dropping"*. It follows the rice's own guides, checks its work in both light and dark,
 and never commits anything for you.
 
@@ -238,7 +236,7 @@ and never commits anything for you.
 
 | Problem | Fix |
 |---|---|
-| Something looks wrong | `hypr-doctor --print` prints a full, no-sudo diagnostics report |
+| Something looks wrong | `orrery-doctor --print` prints a full, no-sudo diagnostics report |
 | Boxes instead of icons or text | `fc-list \| grep -i "JetBrainsMono Nerd Font Propo"` should print a line; if not, `sudo pacman -S ttf-jetbrains-mono-nerd` |
 | The login screen is black | From a TTY (`Ctrl` `Alt` `F3`): `sudo rm /etc/sddm.conf.d/10-wayland.conf`, then reboot |
 | The Wi-Fi panel is empty | Your network is run by something other than NetworkManager. The installer prints how to switch |
@@ -252,7 +250,7 @@ and never commits anything for you.
 ```
 hyprland/     ~/.config/hypr/          Hyprland (Lua): modules/, scripts/
 quickshell/   ~/.config/quickshell/    the shell: bar, dock, launcher, menu, panels, lock, notifications
-theme/        ~/.config/hypr-theme/    themes, templates, engine, menu; ~/.local/bin/hypr-* tools
+theme/        ~/.config/orrery/    themes, templates, engine, menu; ~/.local/bin/orrery-* tools
 kittyterminal/ alacritty/ nvim/ zsh/ starship/ gtk/    terminals, LazyVim, prompt, GTK css
 waybar/ rofi/ swaync/ wlogout/         classic fallback, used only if the shell isn't running
 sddm/                                  login screen (installed by install.sh)
@@ -267,8 +265,8 @@ Built on [Hyprland](https://hyprland.org/), [Quickshell](https://quickshell.org/
 [Material Symbols](https://fonts.google.com/icons) (Apache 2.0). Plenty of ideas come from
 [Omarchy](https://omarchy.org/).
 
-**Wallpapers** aren't mine and aren't covered by the licence. HyprMono's is Mount Ararat over
-Yerevan (photographer unknown). The light, Catppuccin and Starlink wallpapers came from
-wallpaper sites (Starlink's is wallhaven 7jeozo) without a traceable author. If one is yours, open an issue and it will be credited or removed.
+**Wallpapers** aren't mine and aren't covered by the licence. Eclipse's is Mount Ararat over
+Yerevan (photographer unknown). The light, Catppuccin and Cassini wallpapers came from
+wallpaper sites (Cassini's is wallhaven 7jeozo) without a traceable author. If one is yours, open an issue and it will be credited or removed.
 
 The configuration is [MIT](LICENSE).

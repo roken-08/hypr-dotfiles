@@ -14,7 +14,7 @@ Variants {
         anchors { top: true; bottom: true; left: true; right: true }
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Background
-        WlrLayershell.namespace: "hypr-wallpaper"
+        WlrLayershell.namespace: "orrery-wallpaper"
         color: Theme.c.bg0
 
         // two slots; `front` is the one showing, the other loads the next

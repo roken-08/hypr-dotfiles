@@ -4,7 +4,7 @@ import Quickshell
 import Quickshell.Io
 
 // Night light — a warm screen tint, run by hyprsunset. The daemon is the
-// state: it is either running (on) or not. hypr-nightlight does the work so
+// state: it is either running (on) or not. orrery-nightlight does the work so
 // the keybind, the menu and the bar widget all behave the same.
 Singleton {
     id: root
@@ -14,9 +14,9 @@ Singleton {
 
     function toggle() { run(["toggle"]) }
     function set(want) { run([want ? "on" : "off"]) }
-    function run(args) { proc.command = [Quickshell.env("HOME") + "/.local/bin/hypr-nightlight"].concat(args); proc.running = true }
+    function run(args) { proc.command = [Quickshell.env("HOME") + "/.local/bin/orrery-nightlight"].concat(args); proc.running = true }
 
-    Process { id: proc }   // hypr-nightlight reports the new state itself
+    Process { id: proc }   // orrery-nightlight reports the new state itself
     Process {
         id: poll
         command: ["bash", "-c", "command -v hyprsunset >/dev/null || { echo missing; exit 0; }; pgrep -x hyprsunset >/dev/null && echo on || echo off"]
@@ -29,7 +29,7 @@ Singleton {
             }
         }
     }
-    // hypr-nightlight reports its own changes; this only catches hyprsunset
+    // orrery-nightlight reports its own changes; this only catches hyprsunset
     // started or stopped some other way
     Timer { interval: 60000; running: true; repeat: true; onTriggered: poll.running = true }
 
@@ -38,7 +38,7 @@ Singleton {
         function toggle(): bool { root.toggle(); return !root.on }
         function on(): void { root.set(true) }
         function off(): void { root.set(false) }
-        // set by hypr-nightlight when it changes the state (no 10 s wait)
+        // set by orrery-nightlight when it changes the state (no 10 s wait)
         function state(s: string): void { if (s === "on" || s === "off") root.on = s === "on" }
         function status(): string { return !root.available ? "hyprsunset not installed" : root.on ? "on" : "off" }
     }

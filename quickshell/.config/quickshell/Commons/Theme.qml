@@ -3,17 +3,17 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// The rice's palette, live. hypr-theme renders ~/.config/hypr-theme/current/
+// The rice's palette, live. orrery-theme renders ~/.config/orrery/current/
 // colors.json on every switch; this watches it, so every shell surface
 // recolours the moment the theme changes. `qs ipc call theme reload` is the
-// explicit nudge hypr-theme sends (the file is replaced atomically, which
+// explicit nudge orrery-theme sends (the file is replaced atomically, which
 // can outrun the watcher).
 Singleton {
     id: root
 
-    readonly property string file: Quickshell.env("HOME") + "/.config/hypr-theme/current/colors.json"
+    readonly property string file: Quickshell.env("HOME") + "/.config/orrery/current/colors.json"
 
-    property string name: "HyprMono"
+    property string name: "Eclipse"
     property string mode: "dark"
     readonly property bool light: mode === "light"
 
@@ -38,7 +38,7 @@ Singleton {
     // themes keep telling state apart by shade only.
     property bool hued: false
 
-    // Defaults = HyprMono dark, so the shell renders before the file loads.
+    // Defaults = Eclipse dark, so the shell renders before the file loads.
     property var c: ({
         bg0: "#0a0a0a", bg1: "#141414", bg2: "#1e1e1e", bg3: "#282828", bg4: "#333333",
         fg: "#e8e8e8",
@@ -55,10 +55,10 @@ Singleton {
     // colours in `c` are strings (JSON); use this for translucent variants
     function alpha(col, a) { const q = Qt.color(col); return Qt.rgba(q.r, q.g, q.b, a) }
 
-    // `hypr-font set <family>` writes shell.json; "" keeps the rice's own
+    // `orrery-font set <family>` writes shell.json; "" keeps the rice's own
     readonly property string font: Config.fontFamily !== "" ? Config.fontFamily : "JetBrainsMono Nerd Font Propo"
     // GTK's "12px" in the old waybar css rendered at ~15 logical px; match it.
-    // one knob for text size: `hypr-text-size <px>` writes shell.json, this
+    // one knob for text size: `orrery-text-size <px>` writes shell.json, this
     // scales every size in the shell from the 12px design baseline
     readonly property int fontSize: Config.fontSize
     function fs(px) { return Math.max(6, Math.round(px * Config.fontSize / 12)) }

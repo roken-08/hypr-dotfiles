@@ -22,24 +22,24 @@ nvim/.config/nvim/spell/
 Screenshots/*-draft.png
 Screenshots/tmp*
 
-# hypr-theme output (rendered from theme/.config/hypr-theme/templates)
-theme/.config/hypr-theme/current/
-theme/.config/hypr-theme/current.next/
-theme/.config/hypr-theme/shell.json
-# more per-machine state that lives next to it (~/.config/hypr-theme is the stow link)
-theme/.config/hypr-theme/menu.local.jsonc
-theme/.config/hypr-theme/defaults/
-theme/.config/hypr-theme/ui/
+# orrery-theme output (rendered from theme/.config/orrery/templates)
+theme/.config/orrery/current/
+theme/.config/orrery/current.next/
+theme/.config/orrery/shell.json
+# more per-machine state that lives next to it (~/.config/orrery is the stow link)
+theme/.config/orrery/menu.local.jsonc
+theme/.config/orrery/defaults/
+theme/.config/orrery/ui/
 __pycache__/
 *.pyc
 
 # themes: the rice ships these four; any other folder under themes/ is the
 # user's own (made by hand or by an agent) and stays on their machine
-theme/.config/hypr-theme/themes/*
-!theme/.config/hypr-theme/themes/hyprmono/
-!theme/.config/hypr-theme/themes/hyprmono-light/
-!theme/.config/hypr-theme/themes/catppuccin-mocha/
-!theme/.config/hypr-theme/themes/starlink/
-# the maintainer's own rules for the /hypr skill (see SKILL.md); not published
-theme/.config/hypr-theme/skills/hypr/MAINTAINER.md
+theme/.config/orrery/themes/*
+!theme/.config/orrery/themes/eclipse/
+!theme/.config/orrery/themes/zenith/
+!theme/.config/orrery/themes/catppuccin-mocha/
+!theme/.config/orrery/themes/cassini/
+# the maintainer's own rules for the /orrery skill (see SKILL.md); not published
+theme/.config/orrery/skills/orrery/MAINTAINER.md
 hyprland/.config/hypr/modules/monitors.local.lua

@@ -11,7 +11,7 @@ set -u
 
 # a selection already on screen: this press cancels it (its slurp exits,
 # that run sees "cancelled" and stops) instead of starting a second one
-lock="${XDG_RUNTIME_DIR:-/tmp}/hypr-screenshot.pid"
+lock="${XDG_RUNTIME_DIR:-/tmp}/orrery-screenshot.pid"
 if [[ ${1:-} == region || ${1:-} == pick ]]; then
     if pid="$(cat "$lock" 2>/dev/null)" && [[ -n $pid ]] && kill -0 "$pid" 2>/dev/null; then
         pkill -x slurp 2>/dev/null

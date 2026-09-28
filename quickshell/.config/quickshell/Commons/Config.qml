@@ -3,13 +3,13 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
-// Shell settings — ~/.config/hypr-theme/shell.json. Written by the bar's
+// Shell settings — ~/.config/orrery/shell.json. Written by the bar's
 // gestures (drag to an edge, double-click for transparency), by
 // `qs ipc call bar ...`, or by hand; watched, so hand edits apply live.
 // Anything missing from the file falls back to the defaults below.
 Singleton {
     id: root
-    readonly property string file: Quickshell.env("HOME") + "/.config/hypr-theme/shell.json"
+    readonly property string file: Quickshell.env("HOME") + "/.config/orrery/shell.json"
 
     readonly property var defaults: ({
         version: 1,
@@ -36,7 +36,7 @@ Singleton {
             // user modules referenced by id from a layout:
             //   "vpn":   { "exec": "~/bin/vpn-status", "interval": 5, "onClick": "nm-connection-editor" }
             //            (prints text or waybar JSON: {"text":"󰌆","class":"active"})
-            //   "agent": { "qml": "~/.config/hypr-theme/plugins/agent.qml" }   (any QML Item; import qs.Bar for Pill)
+            //   "agent": { "qml": "~/.config/orrery/plugins/agent.qml" }   (any QML Item; import qs.Bar for Pill)
             modules: {}
         },
         // the dock (Services/Dock.qml): pinned = desktop ids, in order
@@ -48,10 +48,10 @@ Singleton {
             iconSize: 40,
             pinned: ["kitty", "thunar", "zen", "firefox", "code"]
         },
-        // apparent text size in px (hypr-text-size); every size in the shell
+        // apparent text size in px (orrery-text-size); every size in the shell
         // is derived from it through Theme.fs()
         font: { size: 12, family: "" },   // "" = the rice's own font
-        // coding agents (hypr-agent): which one SUPER+SHIFT+CTRL+A and the bar launch
+        // coding agents (orrery-agent): which one SUPER+SHIFT+CTRL+A and the bar launch
         agents: { default: "" }
     })
 

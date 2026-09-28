@@ -21,7 +21,7 @@ Variants {
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.keyboardFocus: Apps.open ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-        WlrLayershell.namespace: "hypr-launcher"
+        WlrLayershell.namespace: "orrery-launcher"
         color: "transparent"
 
         property int selected: 0

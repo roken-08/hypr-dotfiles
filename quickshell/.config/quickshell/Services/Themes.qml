@@ -4,8 +4,8 @@ import Quickshell
 import Quickshell.Io
 import qs.Commons
 
-// Theme catalogue from `hypr-theme json`, plus the picker's state.
-// A theme is any folder in ~/.config/hypr-theme/themes with a colors.toml,
+// Theme catalogue from `orrery-theme json`, plus the picker's state.
+// A theme is any folder in ~/.config/orrery/themes with a colors.toml,
 // so anything you or an agent drop there shows up.
 Singleton {
     id: root
@@ -16,8 +16,8 @@ Singleton {
     function refresh() { list.running = true }
     function openPicker(mode) { refresh(); pickerMode = mode }
     function close() { pickerMode = "" }
-    function apply(id) { Quickshell.execDetached([Quickshell.env("HOME") + "/.local/bin/hypr-theme", "set", id]); close() }
-    function applyWallpaper(path) { Quickshell.execDetached([Quickshell.env("HOME") + "/.local/bin/hypr-wall", "set", path]); close() }
+    function apply(id) { Quickshell.execDetached([Quickshell.env("HOME") + "/.local/bin/orrery-theme", "set", id]); close() }
+    function applyWallpaper(path) { Quickshell.execDetached([Quickshell.env("HOME") + "/.local/bin/orrery-wall", "set", path]); close() }
 
     readonly property var current: themes.find(t => t.current) || null
     readonly property var wallpapers: {
@@ -30,7 +30,7 @@ Singleton {
 
     Process {
         id: list
-        command: [Quickshell.env("HOME") + "/.local/bin/hypr-theme", "json"]
+        command: [Quickshell.env("HOME") + "/.local/bin/orrery-theme", "json"]
         stdout: StdioCollector { onStreamFinished: { try { root.themes = JSON.parse(text) } catch (e) { console.warn("Themes: " + e) } } }
     }
     Component.onCompleted: refresh()

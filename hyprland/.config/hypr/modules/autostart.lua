@@ -2,7 +2,7 @@
 
 -- Which bar: "quickshell" (the shell in ~/.config/quickshell) or "waybar"
 -- (the classic config, kept as a fallback). scripts/shell.sh reads this.
-hl.env("HYPR_SHELL", "quickshell")
+hl.env("ORRERY_SHELL", "quickshell")
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("~/.config/hypr/scripts/shell.sh start")

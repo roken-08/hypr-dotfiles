@@ -15,7 +15,7 @@ Pill {
     property int gpu: -1
     property var last: null
     property string gpuSource: ""      // "", "nvidia" or a sysfs file
-    onClicked: Quickshell.execDetached(["sh", "-c", 'exec "${TERMINAL:-$(cat "$HOME/.config/hypr-theme/defaults/terminal" 2>/dev/null || echo kitty)}" -e btop'])
+    onClicked: Quickshell.execDetached(["sh", "-c", 'exec "${TERMINAL:-$(cat "$HOME/.config/orrery/defaults/terminal" 2>/dev/null || echo kitty)}" -e btop'])
 
     FileView { id: stat; path: "/proc/stat"; blockLoading: true }
     FileView { id: meminfo; path: "/proc/meminfo"; blockLoading: true }

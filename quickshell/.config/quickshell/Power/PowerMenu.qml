@@ -11,7 +11,7 @@ import qs.Services
 // "-rest" on the dark button, dark "-hover" on the light hover fill, mode
 // aware like wlogout.css.tpl); first button focused; keys l o h r s,
 // arrows + Enter, Escape. The backdrop is blurred by the Hyprland layer
-// rule for the "hypr-powermenu" namespace, like wlogout's was.
+// rule for the "orrery-powermenu" namespace, like wlogout's was.
 Scope {
     id: scope
     property bool open: false
@@ -44,7 +44,7 @@ Scope {
             exclusionMode: ExclusionMode.Ignore
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.keyboardFocus: scope.open ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-            WlrLayershell.namespace: "hypr-powermenu"
+            WlrLayershell.namespace: "orrery-powermenu"
             // window { background-color: alpha(@bg0, 0.7) }
             color: Theme.alpha(Theme.c.bg0, 0.7)
 

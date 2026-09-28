@@ -15,7 +15,7 @@ PanelWindow {
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
     WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.namespace: "hypr-notifications"
+    WlrLayershell.namespace: "orrery-notifications"
 
     Column {
         id: stack

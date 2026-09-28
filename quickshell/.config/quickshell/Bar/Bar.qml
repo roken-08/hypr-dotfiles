@@ -107,7 +107,7 @@ Scope {
                 exclusionMode: ExclusionMode.Normal
                 exclusiveZone: thickness
                 color: "transparent"
-                WlrLayershell.namespace: "hypr-bar"
+                WlrLayershell.namespace: "orrery-bar"
 
                 // the visible bar, pinned to the anchored edge of the surface
                 Item {
@@ -262,7 +262,7 @@ Scope {
                     color: "transparent"
                     exclusionMode: ExclusionMode.Ignore
                     WlrLayershell.layer: WlrLayer.Overlay
-                    WlrLayershell.namespace: "hypr-bar-ghost"
+                    WlrLayershell.namespace: "orrery-bar-ghost"
                     mask: Region {}
                     Rectangle {
                         anchors.fill: parent

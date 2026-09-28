@@ -1,10 +1,10 @@
--- Colourscheme follows the hypr-theme engine (see config/hypr-theme.lua).
--- "hyprmono" is generated from the theme palette by lua/hyprmono/init.lua;
+-- Colourscheme follows the orrery-theme engine (see config/orrery.lua).
+-- "orrery" is generated from the theme palette by lua/orrery/init.lua;
 -- zenbones stays installed as the fallback family with real light/dark
 -- variants for themes that name it; gruvbox is a warm stock scheme a theme
 -- can name; aether.nvim is coloured from the palette (colorscheme "aether"),
 -- Aether/Omarchy style.
-local bridge = require("config.hypr-theme")
+local bridge = require("config.orrery")
 local theme = bridge.read()
 
 return {

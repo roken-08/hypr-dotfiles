@@ -2,10 +2,10 @@
 ---- MY PROGRAMS ----
 ---------------------
 
--- terminal and browser can be changed with `hypr-default terminal|browser <name>`
+-- terminal and browser can be changed with `orrery-default terminal|browser <name>`
 -- (Menu › Settings › Default apps); the files hold just the command name.
 local function default_app(kind, fallback)
-	local f = io.open(os.getenv("HOME") .. "/.config/hypr-theme/defaults/" .. kind)
+	local f = io.open(os.getenv("HOME") .. "/.config/orrery/defaults/" .. kind)
 	if not f then
 		return fallback
 	end
@@ -49,10 +49,10 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser)) -- Browser
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/shell.sh restart")) -- restart bar + notifications
 hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("qs ipc call bar toggle")) -- bar skin: Legacy -> floating -> minimal
 hl.bind(mainMod .. " + CTRL + I", hl.dsp.exec_cmd("~/.config/hypr/scripts/caffeine.sh toggle")) -- stay awake toggle
-hl.bind(mainMod .. " + CTRL + SHIFT + space", hl.dsp.exec_cmd("hypr-theme-menu theme")) -- theme picker
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("hypr-theme-menu wallpaper")) -- wallpaper picker
-hl.bind(mainMod .. " + CTRL + space", hl.dsp.exec_cmd("hypr-wall next")) -- next wallpaper
-hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("hypr-agent launch")) -- default coding agent
+hl.bind(mainMod .. " + CTRL + SHIFT + space", hl.dsp.exec_cmd("orrery-theme-menu theme")) -- theme picker
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("orrery-theme-menu wallpaper")) -- wallpaper picker
+hl.bind(mainMod .. " + CTRL + space", hl.dsp.exec_cmd("orrery-wall next")) -- next wallpaper
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("orrery-agent launch")) -- default coding agent
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd("qs ipc call menu toggle")) -- the menu
 hl.bind(mainMod .. " + CTRL + O", hl.dsp.exec_cmd("qs ipc call menu open toggle")) -- the menu: toggles
 

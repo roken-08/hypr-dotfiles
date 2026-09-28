@@ -17,7 +17,7 @@ case "${1:-}" in
         max=$(brightnessctl -d "$dev" max)
         floor=$(( max * 5 / 100 )); (( floor < 1 )) && floor=1   # never 0: that turns the panel off
         # a press during a glide starts from where that glide is heading
-        tfile="${XDG_RUNTIME_DIR:-/tmp}/hypr-brightness-target"
+        tfile="${XDG_RUNTIME_DIR:-/tmp}/orrery-brightness-target"
         from=$(brightnessctl -d "$dev" get); now=$(date +%s%N)
         read -r t when 2>/dev/null < "$tfile" || true   # "target nanoseconds"
         [[ ${t:-} =~ ^[0-9]+$ && ${when:-} =~ ^[0-9]+$ ]] && (( now - when < 400000000 )) && from=$t

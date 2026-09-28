@@ -22,7 +22,7 @@ Variants {
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.keyboardFocus: Themes.open ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
-        WlrLayershell.namespace: "hypr-picker"
+        WlrLayershell.namespace: "orrery-picker"
         color: Theme.alpha(Theme.c.bg0, 0.72)
 
         readonly property bool themeMode: Themes.pickerMode === "theme"

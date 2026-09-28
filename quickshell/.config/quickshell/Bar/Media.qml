@@ -15,7 +15,7 @@ Pill {
                                   || Mpris.players.values.find(p => p.trackTitle) || null
     readonly property bool playing: player && player.playbackState === MprisPlaybackState.Playing
     readonly property string text: player ? [player.trackArtist, player.trackTitle].filter(x => x).join(" – ") : ""
-    visible: player !== null
+    visible: player !== null && !Shot.on
     onClicked: Panels.toggle("media", media)
     onMiddleClicked: if (player && player.canTogglePlaying) player.togglePlaying()
     onScrolled: (d) => { if (!player) return; if (d > 0 && player.canGoPrevious) player.previous(); else if (d < 0 && player.canGoNext) player.next() }

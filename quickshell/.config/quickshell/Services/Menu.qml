@@ -7,14 +7,14 @@ import qs.Commons
 import qs.Services
 
 // The menu (SUPER+SPACE): a tree defined as data in
-// ~/.config/hypr-theme/menu.jsonc (+ menu.local.jsonc overlay, merged by id),
+// ~/.config/orrery/menu.jsonc (+ menu.local.jsonc overlay, merged by id),
 // searched flat from anywhere. Live ✓ state comes from the shell itself
-// (theme, bar, caffeine, dnd) and from `hypr-menu-data`, which also supplies
+// (theme, bar, caffeine, dnd) and from `orrery-menu-data`, which also supplies
 // the dynamic rows (agents, keybindings, packages, reminders, about) — one
 // process per open. Rendered by Menu/Menu.qml.
 Singleton {
     id: root
-    readonly property string dir: Quickshell.env("HOME") + "/.config/hypr-theme/"
+    readonly property string dir: Quickshell.env("HOME") + "/.config/orrery/"
 
     property bool open: false
     property string path: ""            // current submenu id ("" = root)
@@ -60,7 +60,7 @@ Singleton {
 
     Process {
         id: fetch
-        command: [Quickshell.env("HOME") + "/.local/bin/hypr-menu-data"]
+        command: [Quickshell.env("HOME") + "/.local/bin/orrery-menu-data"]
         stdout: StdioCollector { onStreamFinished: { try { root.data = JSON.parse(text) } catch (e) { console.warn("Menu: data: " + e) } } }
     }
     function refresh() { fetch.running = true }
@@ -168,7 +168,7 @@ Singleton {
                                                         || a.name.localeCompare(b.name))
                                         .map(a => ({ id: "dockpin." + a.id, icon: "push_pin", label: a.name, description: "", action: "", keep: true,
                                                      input: "", provider: "", sub: false, checked: Dock.isPinned(a.id), value: "", crumb: "", internal: "dockpin" }))
-        if (name === "agents.default") return (data.agents || []).map(a => ({ id: "agent." + a.id, icon: a.icon, label: a.label, description: "", action: "hypr-agent default " + a.id,
+        if (name === "agents.default") return (data.agents || []).map(a => ({ id: "agent." + a.id, icon: a.icon, label: a.label, description: "", action: "orrery-agent default " + a.id,
                                                                             keep: true, input: "", provider: "", sub: false, checked: a.checked, value: "", crumb: "" }))
         return (data[name] || []).map(r => ({ id: name + "." + r.id, icon: r.icon || "", label: r.label, description: r.description || "", action: r.action || "",
                                               keep: !!r.keep, input: "", provider: "", sub: false,

@@ -45,7 +45,7 @@ Variants {
         exclusionMode: ExclusionMode.Normal
         exclusiveZone: Dock.mode === "always" ? depth : 0
         color: "transparent"
-        WlrLayershell.namespace: "hypr-dock"
+        WlrLayershell.namespace: "orrery-dock"
         // Overlay, not Top: Hyprland reserves edges layer by layer from the bottom
         // up, so the bar (Top) always gets the edge first when both share one
         WlrLayershell.layer: WlrLayer.Overlay
@@ -96,7 +96,7 @@ Variants {
                 const o = t.lastIpcObject
                 if (!o || !o.at || !o.size || o.hidden) continue
                 // a few pixels don't count: a centred float that grazes the card
-                // (hypr-float is 82% tall) shouldn't hide it
+                // (orrery-float is 82% tall) shouldn't hide it
                 const slack = 10
                 if (o.at[0] < x1 - slack && o.at[0] + o.size[0] > x0 + slack && o.at[1] < y1 - slack && o.at[1] + o.size[1] > y0 + slack) { hit = true; break }
             }
