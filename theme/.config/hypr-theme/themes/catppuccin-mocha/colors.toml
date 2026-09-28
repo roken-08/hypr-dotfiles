@@ -24,7 +24,7 @@ fg            = "#cdd6f4"   # text
 accent_bright = "#b4befe"   # lavender — active / important
 accent_light  = "#bac2de"   # subtext1 — primary text
 accent_mid    = "#a6adc8"   # subtext0 — secondary text
-accent_dim    = "#6c7086"   # overlay0 — inactive
+accent_dim    = "#7f849c"   # overlay1 — inactive (overlay0 read too faint in the bar)
 
 # Semantic
 active   = "#b4befe"   # lavender
@@ -78,7 +78,7 @@ conflict  = "#fab387"
 
 [apps]
 gtk_theme       = "adw-gtk3-dark"
-icon_theme      = "Papirus-Dark"
+icon_theme      = "Papirus-Dark-indigo"   # folders closest to the lavender accent
 cursor_theme    = "default"
 qt_style        = "Adwaita-Dark"
 nvim_colorscheme = "catppuccin-mocha"

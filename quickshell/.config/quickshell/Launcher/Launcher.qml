@@ -115,7 +115,9 @@ Variants {
                     Rectangle {
                         width: parent.width - 10; height: 44
                         radius: Theme.radiusSm
-                        color: Theme.c.bg2
+                        // the selected row is filled a step brighter too: in a mono
+                        // theme the accent text alone barely differs from the rest
+                        color: row.sel ? Theme.c.bg3 : Theme.c.bg2
                         Rectangle { visible: row.sel; width: 3; height: parent.height; radius: 1; color: Theme.c.accentBright }
                         IconImage {
                             x: 16; anchors.verticalCenter: parent.verticalCenter
