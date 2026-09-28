@@ -140,8 +140,8 @@ It's safe to run again, and it never deletes or overwrites your files.
 | `SUPER` `1`–`0` | Go to workspace (add `SHIFT` to move the window there) |
 | `SUPER` `L` · `M` | Lock screen · power menu |
 | `SUPER` `CTRL` `SHIFT` `SPACE` | Theme picker |
-| `Print` or `SUPER` `X` | Screenshot a region (Esc cancels) |
-| `SUPER` `SHIFT` `X` | Screenshot a window: click the one you want |
+| `Print` | Screenshot a region (Esc or `Print` again cancels) |
+| `SUPER` `SHIFT` `Print` | Screenshot a window: click the one you want |
 
 <details>
 <summary><b>All keybinds</b></summary>
@@ -161,7 +161,7 @@ It's safe to run again, and it never deletes or overwrites your files.
 | `SUPER` + drag with left / right mouse button | Move · resize a window |
 | `SUPER` scroll · 3-finger swipe | Cycle workspaces |
 | `SUPER` `S` · `SHIFT` `S` | Scratchpad · move a window to it |
-| `SUPER` `Print` · `SUPER` `SHIFT` `Print` | Screenshot the whole screen · the active window |
+| `SUPER` `Print` | Screenshot the whole screen |
 
 Screenshots are saved to `~/Pictures/screenshot/` and copied to the clipboard. Media, volume and brightness keys work too,
 even on the lock screen. The full list is in

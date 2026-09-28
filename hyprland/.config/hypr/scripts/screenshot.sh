@@ -5,8 +5,21 @@
 #   window   the active window
 #   pick     click a window to capture it
 # Saved to ~/Pictures/screenshot/ and copied to the clipboard; a notification
-# shows it. Esc during a selection cancels cleanly: nothing is saved.
+# shows it. Esc, or pressing the shortcut again, cancels a selection: nothing
+# is saved.
 set -u
+
+# a selection already on screen: this press cancels it (its slurp exits,
+# that run sees "cancelled" and stops) instead of starting a second one
+lock="${XDG_RUNTIME_DIR:-/tmp}/hypr-screenshot.pid"
+if [[ ${1:-} == region || ${1:-} == pick ]]; then
+    if pid="$(cat "$lock" 2>/dev/null)" && [[ -n $pid ]] && kill -0 "$pid" 2>/dev/null; then
+        pkill -x slurp 2>/dev/null
+        exit 0
+    fi
+    echo $$ > "$lock"
+    trap 'rm -f "$lock"' EXIT
+fi
 dir="$HOME/Pictures/screenshot"
 mkdir -p "$dir"
 file="$dir/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png"
