@@ -113,6 +113,16 @@ Rules of the house:
   Quickshell.screens; PanelWindow { WlrLayershell.layer: Overlay; keyboardFocus:
   Exclusive when open; namespace: "orrery-<name>" } }`; give the namespace a
   blur `hl.layer_rule` in `modules/windowrules.lua` like the others.
+  An overlay that is hidden and shown again must not rebuild its content on
+  open: assign a Repeater's model only when the data really changed (a fresh
+  `JSON.parse` of the same text is a new array, and every delegate is torn
+  down), and don't key a `Loader` to state that resets when it closes (the
+  picker kept its mode in `Themes.lastMode` for this). A rebuild shows the
+  cards blank or half-drawn for a frame or two: the picker "flashed" its old
+  look on every open. Images in such cards: `cache: true` (a `?v=<mtime>` on
+  the URL when the file can change) and nothing drawn beneath that could
+  show while they load. Test by capturing ~12 frames 30 ms apart after `qs
+  ipc call …` and reading them as a strip.
 - **Config**: read `Config.data.<yours>`; defaults in `Config.defaults`; write with
   `Config.set("path", value)`. Never write shell.json from a script while the
   shell also writes it, except with `jq` on the whole file (orrery-agent does).

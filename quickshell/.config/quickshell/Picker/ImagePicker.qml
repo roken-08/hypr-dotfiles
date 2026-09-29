@@ -25,7 +25,7 @@ Variants {
         WlrLayershell.namespace: "orrery-picker"
         color: Theme.alpha(Theme.c.bg0, 0.72)
 
-        readonly property bool themeMode: Themes.pickerMode === "theme"
+        readonly property bool themeMode: Themes.lastMode === "theme"
         property string filter: ""
         property int selected: 0
         readonly property var items: {
@@ -132,6 +132,9 @@ Variants {
                                         asynchronous: true
                                         sourceSize: Qt.size(1024, 640)
                                         cache: true
+                                        // a first load fades in instead of popping over the empty card
+                                        opacity: status === Image.Ready ? 1 : 0
+                                        Behavior on opacity { NumberAnimation { duration: 120 } }
                                     }
                                 }
                             }

@@ -11,15 +11,20 @@ Item {
     id: tp
     required property var theme
     readonly property bool shot: !!theme.preview
+    // The screenshot, cached; ?v= changes when it is retaken, so a new one shows.
+    // With a screenshot the mock below is never drawn, so it can't flash while
+    // the picture loads (the card's own colour shows for that moment instead).
     Image {
         z: 10
         visible: tp.shot
         anchors.fill: parent
-        source: tp.shot ? "file://" + tp.theme.preview : ""
+        source: tp.shot ? "file://" + tp.theme.preview + "?v=" + (tp.theme.previewStamp || 0) : ""
         fillMode: Image.PreserveAspectCrop
         asynchronous: true
         sourceSize: Qt.size(1600, 900)
-        cache: false          // a retaken preview must show
+        cache: true
+        opacity: status === Image.Ready ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: 120 } }
     }
     readonly property var c: theme.colors
     readonly property bool light: theme.mode === "light"
@@ -28,8 +33,15 @@ Item {
     readonly property color onWall: light ? "#141414" : "#ffffff"
     readonly property string host: hostFile.text().trim() || "arch"
     FileView { id: hostFile; path: "/etc/hostname" }
+    readonly property int winY: 44
+    readonly property int winH: 475 - 44 - 10
+    readonly property int winW: (768 - 10 * 2 - 8) / 2
     clip: true
 
+    // the mock desktop: only for a theme without a screenshot
+    Item {
+        anchors.fill: parent
+        visible: !tp.shot
     Image {
         anchors.fill: parent
         source: tp.wall !== "" ? "file://" + tp.wall : ""
@@ -75,9 +87,6 @@ Item {
 
     // two tiled windows, like the rice's own screenshot: kitty running
     // fastfetch on the left, Thunar on the right, Hyprland border around each
-    readonly property int winY: 44
-    readonly property int winH: 475 - 44 - 10
-    readonly property int winW: (768 - 10 * 2 - 8) / 2
 
     // ---- kitty + fastfetch ----
     Rectangle {
@@ -186,5 +195,6 @@ Item {
             x: 1; y: parent.height - 19 * tp.k; width: parent.width - 2; height: 18 * tp.k; color: tp.c.bg1
             Text { x: 8 * tp.k; anchors.verticalCenter: parent.verticalCenter; text: "8 items, Free space: 178 GB"; color: tp.c.accent_mid; font.pixelSize: 6.5 * tp.k; font.family: Theme.font }
         }
+    }
     }
 }

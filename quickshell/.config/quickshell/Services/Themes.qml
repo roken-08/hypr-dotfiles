@@ -12,9 +12,12 @@ Singleton {
     property var themes: []
     property string pickerMode: ""      // "" | "theme" | "wallpaper"
     readonly property bool open: pickerMode !== ""
+    // the mode last opened, kept while closed: the picker's cards stay built
+    // for it, so reopening shows them at once instead of rebuilding them
+    property string lastMode: "theme"
 
     function refresh() { list.running = true }
-    function openPicker(mode) { refresh(); pickerMode = mode }
+    function openPicker(mode) { refresh(); lastMode = mode; pickerMode = mode }
     function close() { pickerMode = "" }
     function apply(id) { Quickshell.execDetached([Quickshell.env("HOME") + "/.local/bin/orrery-theme", "set", id]); close() }
     function applyWallpaper(path) { Quickshell.execDetached([Quickshell.env("HOME") + "/.local/bin/orrery-wall", "set", path]); close() }
@@ -31,7 +34,13 @@ Singleton {
     Process {
         id: list
         command: [Quickshell.env("HOME") + "/.local/bin/orrery-theme", "json"]
-        stdout: StdioCollector { onStreamFinished: { try { root.themes = JSON.parse(text) } catch (e) { console.warn("Themes: " + e) } } }
+        // Only a changed catalogue replaces `themes`: a new array rebuilds every
+        // picker card, and each would reload its picture (the picker flashed on open)
+        property string last: ""
+        stdout: StdioCollector { onStreamFinished: {
+            if (text === list.last) return
+            try { root.themes = JSON.parse(text); list.last = text } catch (e) { console.warn("Themes: " + e) }
+        } }
     }
     Component.onCompleted: refresh()
     // a theme switch re-renders colors.json (Theme reloads it) → re-read the catalogue
