@@ -36,12 +36,14 @@ Variants {
 
         MouseArea { anchors.fill: parent; onClicked: Menu.close() }
 
+        Arrive { target: card; when: win.visible }
+
         Rectangle {
             id: card
             anchors.centerIn: parent
             anchors.verticalCenterOffset: -40
             width: 520
-            height: 10 + 36 + 6 + win.rowsShown * win.rowH + 10 + 22
+            height: 10 + 36 + 6 + win.rowsShown * win.rowH + 10
             // grows and shrinks with the list, in the shell's own motion
             Behavior on height { NumberAnimation { duration: Motion.moveMs; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.moveCurve } }
             radius: Theme.radius
@@ -87,15 +89,29 @@ Variants {
                     }
                 }
             }
-            Label {
-                x: 16; anchors.bottom: parent.bottom; anchors.bottomMargin: 9
-                text: "↑↓  move    Enter  open    Esc  back"
-                font.pixelSize: Theme.fs(10.5); color: Theme.c.accentDim
-            }
             Rectangle { x: 10; y: bar.y + bar.height; width: parent.width - 20; height: 1; color: Theme.c.bg3 }
 
+            // a page change: the list comes in from the side you went (deeper
+            // from the right, back from the left) and fades up
+            property string lastPath: Menu.path
+            Connections {
+                target: Menu
+                function onPathChanged() {
+                    const deeper = Menu.path.length > card.lastPath.length
+                    card.lastPath = Menu.path
+                    pageAnim.stop(); list.opacity = 0; slide.x = deeper ? 14 : -14; pageAnim.start()
+                }
+            }
+            ParallelAnimation {
+                id: pageAnim
+                NumberAnimation { target: list; property: "opacity"; to: 1; duration: Motion.effectsMs
+                                  easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.fadeCurve }
+                NumberAnimation { target: slide; property: "x"; to: 0; duration: Motion.moveMs
+                                  easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.moveCurve }
+            }
             ListView {
                 id: list
+                transform: Translate { id: slide }
                 x: 10; y: bar.y + bar.height + 6
                 width: parent.width - 20
                 height: win.rowsShown * win.rowH

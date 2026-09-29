@@ -3,3 +3,4 @@ singleton Theme 1.0 Theme.qml
 singleton Config 1.0 Config.qml
 Icon 1.0 Icon.qml
 singleton Motion 1.0 Motion.qml
+Arrive 1.0 Arrive.qml

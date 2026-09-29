@@ -33,11 +33,13 @@ Variants {
 
         MouseArea { anchors.fill: parent; onClicked: Clip.open = false }
 
+        Arrive { target: card; when: win.visible }
+
         Rectangle {
             id: card
             anchors.centerIn: parent
             width: 620
-            height: 14 + 30 + 6 + win.rowsShown * 38 + (win.rowsShown - 1) * 2 + 8 + 20 + 12
+            height: 14 + 30 + 6 + win.rowsShown * 38 + (win.rowsShown - 1) * 2 + 14
             radius: Theme.radius
             color: Theme.alpha(Theme.c.bg0, 0.74)
             border.width: 1; border.color: Theme.alpha(Theme.c.accentLight, 0.17)
@@ -126,12 +128,6 @@ Variants {
                     Label { anchors.horizontalCenter: parent.horizontalCenter; text: input.text ? "Nothing matches" : "Nothing copied yet"
                             font.pixelSize: Theme.fs(12.5); color: Theme.c.accentLight }
                 }
-            }
-            // what the keys do
-            Label {
-                x: 20; anchors.bottom: parent.bottom; anchors.bottomMargin: 12
-                text: "Enter  copy    Del  remove    Esc  close"
-                font.pixelSize: Theme.fs(10.5); color: Theme.c.accentDim
             }
         }
     }

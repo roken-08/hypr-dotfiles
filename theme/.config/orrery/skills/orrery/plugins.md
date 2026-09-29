@@ -143,9 +143,15 @@ ghosts over the new one for ~300 ms. A panel with a `backdrop` fades it into
 the bar colour at the join. Test motion by grabbing ~16 frames 15 ms apart.
 
 Overlays share the look: the launcher, menu and clipboard mark the selected
-row with a 3 px accent bar and end with a quiet key-hint line; the power
-menu labels every action with its key; Hyprland lands overlays with the same
-Expressive curve (`orreryLand`, `popin 90%`). A QML property must not start
+row with a 3 px accent bar (no key-hint lines: the maintainer doesn't want
+them); the power menu labels every action (keys as in wlogout, not shown).
+Overlay motion: Hyprland only fades the full-screen layer (`animation =
+"fade"`; its popin scaled the dimmed backdrop and blur too, a wobble), and
+the card itself arrives with `Arrive { target: card; when: win.visible }`
+(Commons/Arrive.qml: 96% → 100% on the Expressive curve, plus a fade). The
+menu's pages slide in from the side you go. Sleep is `systemctl suspend`
+(this laptop's "deep" S3, slow to wake, easily taken for hibernation);
+Hibernate is its own action, shown only with a disk sleep state and swap. A QML property must not start
 with `on` + a capital (`onToday`): QML reads it as a signal handler and the
 value is never set.
 

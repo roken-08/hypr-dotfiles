@@ -32,6 +32,8 @@ Variants {
 
         MouseArea { anchors.fill: parent; onClicked: Apps.open = false }
 
+        Arrive { target: card; when: win.visible }
+
         Rectangle {
             id: card
             // 800 wide, 30px padding on every side, 42px inputbar, 10px gap,

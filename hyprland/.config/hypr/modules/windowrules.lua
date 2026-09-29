@@ -22,13 +22,15 @@ hl.layer_rule({
 })
 
 -- The Quickshell shell: same blur as the tools it replaced
-hl.layer_rule({ match = { namespace = "^orrery-powermenu$" },      blur = true, ignore_alpha = 0.7, animation = "popin 94%" })
+-- the shell's overlays only fade here: the shell scales their card itself
+-- (Commons/Arrive.qml), so the dimmed backdrop and its blur never zoom
+hl.layer_rule({ match = { namespace = "^orrery-powermenu$" },      blur = true, ignore_alpha = 0.7, animation = "fade" })
 hl.layer_rule({ match = { namespace = "^orrery-notifications$" },  blur = true, ignore_alpha = 0.4, animation = "slide right" })
 hl.layer_rule({ match = { namespace = "^orrery-control-center$" }, blur = true, ignore_alpha = 0.5 })
-hl.layer_rule({ match = { namespace = "^orrery-picker$" },         blur = true, ignore_alpha = 0.7, animation = "popin 94%" })
-hl.layer_rule({ match = { namespace = "^orrery-launcher$" },       blur = true, ignore_alpha = 0.5, animation = "popin 90%" })
-hl.layer_rule({ match = { namespace = "^orrery-clipboard$" },      blur = true, ignore_alpha = 0.5, animation = "popin 90%" })
-hl.layer_rule({ match = { namespace = "^orrery-menu$" },           blur = true, ignore_alpha = 0.5, animation = "popin 90%" })
+hl.layer_rule({ match = { namespace = "^orrery-picker$" },         blur = true, ignore_alpha = 0.7, animation = "fade" })
+hl.layer_rule({ match = { namespace = "^orrery-launcher$" },       blur = true, ignore_alpha = 0.5, animation = "fade" })
+hl.layer_rule({ match = { namespace = "^orrery-clipboard$" },      blur = true, ignore_alpha = 0.5, animation = "fade" })
+hl.layer_rule({ match = { namespace = "^orrery-menu$" },           blur = true, ignore_alpha = 0.5, animation = "fade" })
 -- the bar re-anchors when it moves to another edge; animated, that resize
 -- stretched it across the screen for a few frames
 hl.layer_rule({ match = { namespace = "^orrery-bar$" },            no_anim = true })

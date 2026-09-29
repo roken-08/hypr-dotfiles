@@ -11,7 +11,14 @@ import qs.Services
 Panel {
     id: p
     name: "power"
-    panelWidth: 340
+    panelWidth: 384
+    // hibernate only where the system can: a disk sleep state and swap
+    property bool canHibernate: false
+    Process {
+        running: true
+        command: ["sh", "-c", "grep -qw disk /sys/power/state && [ -n \"$(swapon --show --noheadings)\" ]"]
+        onExited: (code) => p.canHibernate = code === 0
+    }
 
     readonly property var dev: UPower.displayDevice
     readonly property bool laptop: dev && dev.isLaptopBattery
@@ -126,18 +133,20 @@ Panel {
     // session ----------------------------------------------------------
     Row {
         id: session
-        width: parent.width; spacing: 8
+        width: parent.width; spacing: 6
         Repeater {
             model: [
                 { label: "Lock",    icon: "lock",               act: "lock" },
-                { label: "Sleep",   icon: "bedtime",            act: "suspend" },
+                { label: "Sleep",     icon: "bedtime",            act: "suspend" },
+                { label: "Hibernate", icon: "ac_unit",            act: "hibernate" },
                 { label: "Restart", icon: "restart_alt",        act: "reboot" },
                 { label: "Off",     icon: "power_settings_new", act: "poweroff" }
-            ]
+            ].filter(t => t.act !== "hibernate" || p.canHibernate)
             Rectangle {
                 id: tile
                 required property var modelData
-                width: (session.width - 3 * session.spacing) / 4; height: 58
+                readonly property int n: p.canHibernate ? 5 : 4
+                width: (session.width - (n - 1) * session.spacing) / n; height: 58
                 radius: Theme.radius
                 readonly property bool risky: modelData.act === "reboot" || modelData.act === "poweroff"
                 color: tm.containsMouse ? Theme.c.bg2 : Theme.c.bg1
@@ -147,7 +156,7 @@ Panel {
                     anchors.centerIn: parent; spacing: 5
                     Icon { anchors.horizontalCenter: parent.horizontalCenter; icon: tile.modelData.icon; size: Theme.fs(19)
                            color: tile.risky && tm.containsMouse && Theme.hued ? Theme.c.critical : Theme.c.accentLight }
-                    Label { anchors.horizontalCenter: parent.horizontalCenter; text: tile.modelData.label; font.pixelSize: Theme.fs(11); color: Theme.c.fg }
+                    Label { anchors.horizontalCenter: parent.horizontalCenter; text: tile.modelData.label; font.pixelSize: Theme.fs(10.5); color: Theme.c.fg }
                 }
                 MouseArea {
                     id: tm

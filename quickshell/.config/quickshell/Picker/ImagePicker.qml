@@ -75,6 +75,7 @@ Variants {
                 if (e.text && e.text.length === 1 && e.text >= " ") { win.filter += e.text; win.selected = 0 }
             }
 
+            Arrive { target: carousel; when: win.visible; from: 0.97 }
             // carousel
             Item {
                 id: carousel

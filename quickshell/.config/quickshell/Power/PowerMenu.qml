@@ -25,13 +25,24 @@ Scope {
     }
 
     readonly property string icons: Quickshell.env("HOME") + "/.config/wlogout/icons/"
+    // keys as in wlogout: l lock, e log out, u sleep (suspend), h hibernate,
+    // r restart, s shut down. Hibernate only where the system can (a disk
+    // sleep state and swap to write memory to).
+    property bool canHibernate: false
+    Process {
+        running: true
+        command: ["sh", "-c", "grep -qw disk /sys/power/state && [ -n \"$(swapon --show --noheadings)\" ]"]
+        onExited: (code) => scope.canHibernate = code === 0
+    }
     readonly property var actions: [
-        { key: "l", icon: "lock",     label: "Lock",      run: () => { scope.open = false; Lock.lock() } },
-        { key: "o", icon: "exit",     label: "Log out",   run: () => Hyprland.dispatch(Hyprland.usingLua ? "hl.dsp.exit()" : "exit") },
-        { key: "h", icon: "sleep",    label: "Sleep",     run: () => { scope.open = false; Quickshell.execDetached(["systemctl", "suspend"]) } },
-        { key: "r", icon: "reboot",   label: "Restart",   run: () => Quickshell.execDetached(["systemctl", "reboot"]) },
-        { key: "s", icon: "shutdown", label: "Shut down", run: () => Quickshell.execDetached(["systemctl", "poweroff"]) }
-    ]
+        { key: "l", icon: "lock",      label: "Lock",      run: () => { scope.open = false; Lock.lock() } },
+        { key: "e", icon: "exit",      label: "Log out",   run: () => Hyprland.dispatch(Hyprland.usingLua ? "hl.dsp.exit()" : "exit") },
+        { key: "u", icon: "sleep",     label: "Sleep",     run: () => { scope.open = false; Quickshell.execDetached(["systemctl", "suspend"]) } },
+        { key: "h", icon: "hibernate", label: "Hibernate", run: () => { scope.open = false; Quickshell.execDetached(["systemctl", "hibernate"]) } },
+        { key: "r", icon: "reboot",    label: "Restart",   run: () => Quickshell.execDetached(["systemctl", "reboot"]) },
+        { key: "s", icon: "shutdown",  label: "Shut down", run: () => Quickshell.execDetached(["systemctl", "poweroff"]) }
+    ].filter(a => a.icon !== "hibernate" || scope.canHibernate)
+    readonly property int count: actions.length
 
     Variants {
         model: Quickshell.screens
@@ -55,8 +66,8 @@ Scope {
                 focus: scope.open
                 Keys.onPressed: (e) => {
                     if (e.key === Qt.Key_Escape) { scope.open = false; return }
-                    if (e.key === Qt.Key_Left || (e.key === Qt.Key_Tab && e.modifiers & Qt.ShiftModifier)) { scope.focused = (scope.focused + 4) % 5; return }
-                    if (e.key === Qt.Key_Right || e.key === Qt.Key_Tab) { scope.focused = (scope.focused + 1) % 5; return }
+                    if (e.key === Qt.Key_Left || (e.key === Qt.Key_Tab && e.modifiers & Qt.ShiftModifier)) { scope.focused = (scope.focused + scope.count - 1) % scope.count; return }
+                    if (e.key === Qt.Key_Right || e.key === Qt.Key_Tab) { scope.focused = (scope.focused + 1) % scope.count; return }
                     if (e.key === Qt.Key_Return || e.key === Qt.Key_Enter || e.key === Qt.Key_Space) { scope.actions[scope.focused].run(); return }
                     const a = scope.actions.find(x => x.key === e.text.toLowerCase())
                     if (a) a.run()
@@ -95,26 +106,16 @@ Scope {
                                     }
                                 }
                             }
-                            // the name and its key
-                            Column {
+                            Text {
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.bottom: parent.bottom; anchors.bottomMargin: 18
-                                spacing: 4
-                                Text { anchors.horizontalCenter: parent.horizontalCenter; text: btn.modelData.label
-                                       font.family: Theme.font; font.pixelSize: Theme.fs(13)
-                                       color: btn.hov ? Theme.c.bg0 : Theme.c.fg }
-                                Rectangle {
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    width: 20; height: 18; radius: Theme.radiusSm
-                                    color: "transparent"; border.width: 1
-                                    border.color: btn.hov ? Theme.alpha(Theme.c.bg0, 0.5) : Theme.c.border
-                                    Text { anchors.centerIn: parent; text: btn.modelData.key.toUpperCase(); font.family: Theme.font
-                                           font.pixelSize: Theme.fs(10); color: btn.hov ? Theme.c.bg0 : Theme.c.accentMid }
-                                }
+                                anchors.bottom: parent.bottom; anchors.bottomMargin: 26
+                                text: btn.modelData.label
+                                font.family: Theme.font; font.pixelSize: Theme.fs(13)
+                                color: btn.hov ? Theme.c.bg0 : btn.foc ? Theme.c.fg : Theme.c.accentLight
                             }
                             Image {
                                 anchors.centerIn: parent
-                                anchors.verticalCenterOffset: -18
+                                anchors.verticalCenterOffset: -14
                                 width: 52; height: 52
                                 sourceSize: Qt.size(96, 96)
                                 smooth: true
