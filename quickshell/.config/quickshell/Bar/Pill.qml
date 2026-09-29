@@ -36,7 +36,22 @@ Rectangle {
     bottomRightRadius: attached && (side === "top"    || side === "left")  ? 0 : radius
     color: attached ? Theme.c.bg0
          : pillMode ? (hovered && interactive ? Theme.c.bg2 : Theme.c.bg0)
-                    : (hovered && interactive ? Theme.c.bg2 : "transparent")
+                    : "transparent"      // floating / minimal: the inset highlight below
+    // floating / minimal: an inset, rounded tint instead of a block the height
+    // of the bar; accent-tinted while this widget's panel is out (it matches
+    // the line on the panel)
+    readonly property bool panelOut: !pillMode && Panels.item === pill && Panels.open !== ""
+    Rectangle {
+        z: -2
+        visible: !pill.pillMode
+        anchors.fill: parent
+        anchors.topMargin: pill.vertical ? -1 : 3; anchors.bottomMargin: pill.vertical ? -1 : 3
+        anchors.leftMargin: pill.vertical ? 3 : -2; anchors.rightMargin: pill.vertical ? 3 : -2
+        radius: Theme.radiusSm
+        color: pill.panelOut ? Theme.alpha(Theme.c.accentBright, 0.16)
+             : pill.hovered && pill.interactive ? Theme.alpha(Theme.c.fg, mouse.pressed ? 0.16 : 0.09) : Theme.alpha(Theme.c.fg, 0)
+        Behavior on color { ColorAnimation { duration: Motion.fadeMs; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.fadeCurve } }
+    }
     border.width: pillMode ? 1 : 0
     border.color: attached ? Theme.c.bg3
                 : pillMode ? (hovered && interactive ? Theme.c.bg4 : Theme.c.bg3)

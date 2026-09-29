@@ -121,10 +121,19 @@ PopupWindow {
         anim.stop()
         if (open) {
             place(); shown = true
-            anim.to = 1; anim.duration = Motion.inMs; anim.easing.bezierCurve = Motion.inCurve
+            if (Panels.swapping) {          // straight from another panel: pick up part-way, no long settle
+                progress = Math.max(progress, 0.45)
+                anim.to = 1; anim.duration = Motion.swapMs; anim.easing.bezierCurve = Motion.moveCurve
+            } else {
+                anim.to = 1; anim.duration = Motion.growMs; anim.easing.bezierCurve = Motion.growCurve
+            }
+        } else if (Panels.swapping) {       // handing over: gone at once, so two never overlap
+            shown = false; progress = 0
+            if (Panels.closing === anchorItem) Panels.closing = null
+            return
         } else {
             shown = false; Panels.closing = anchorItem
-            anim.to = 0; anim.duration = Motion.outMs; anim.easing.bezierCurve = Motion.outCurve
+            anim.to = 0; anim.duration = Motion.shrinkMs; anim.easing.bezierCurve = Motion.shrinkCurve
         }
         anim.start()
     }
@@ -148,9 +157,14 @@ PopupWindow {
         const k = 0.5523
         return " C " + pt(a1 + (ac - a1) * k, u1 + (uc - u1) * k) + " " + pt(a2 + (ac - a2) * k, u2 + (uc - u2) * k) + " " + pt(a2, u2)
     }
-    // the outline; `closed` adds the run along the bar that is filled but not stroked
+    // how deep the panel is drawn right now: it grows out of the bar
+    readonly property real drawD: Math.max(0, Math.min(1, progress)) * bodyD
+    // the outline at depth drawD, corners kept (smaller only while shallower
+    // than two corners); `closed` adds the run along the bar that is filled
+    // but not stroked
     function outline(closed) {
-        const D = bodyD, e = n0 + D, R = r
+        const D = drawD, e = n0 + D, R = Math.min(r, D / 2)
+        const f = Math.min(popup.f, Math.max(0, D - R))     // shoulders grow in with it
         let s = ""
         if (tab) {
             const fn = Math.min(f, n0)              // the neck may be shorter than a shoulder
@@ -181,7 +195,7 @@ PopupWindow {
         return closed ? s + " Z" : s
     }
 
-    // the drawer, clipped at the bar so it slides out from under it
+    // the panel, drawn at its current depth
     Item {
         id: clipper
         anchors.fill: parent
@@ -190,10 +204,6 @@ PopupWindow {
         Item {
             id: stage
             width: parent.width; height: parent.height
-            // slides in from under the bar: back by the body's depth when closed
-            readonly property real back: (1 - popup.progress) * (popup.bodyD + popup.f + 2)
-            x: popup.vertical ? (popup.flip ? back : -back) : 0
-            y: popup.vertical ? 0 : (popup.flip ? back : -back)
 
             Shape {
                 anchors.fill: parent
@@ -216,10 +226,20 @@ PopupWindow {
             // the body's own rectangle: backdrop and content live here
             Item {
                 id: body
-                x: popup.vertical ? (popup.flip ? popup.popD - popup.n0 - popup.bodyD : popup.n0) : popup.bx0
-                y: popup.vertical ? popup.bx0 : (popup.flip ? popup.popD - popup.n0 - popup.bodyD : popup.n0)
-                width: popup.vertical ? popup.bodyD : popup.bodyL
-                height: popup.vertical ? popup.bodyL : popup.bodyD
+                x: popup.vertical ? (popup.flip ? popup.popD - popup.n0 - popup.drawD : popup.n0) : popup.bx0
+                y: popup.vertical ? popup.bx0 : (popup.flip ? popup.popD - popup.n0 - popup.drawD : popup.n0)
+                width: popup.vertical ? popup.drawD : popup.bodyL
+                height: popup.vertical ? popup.bodyL : popup.drawD
+                clip: true
+
+                // the content at its full size, pinned to the bar's side: the
+                // panel grows over it rather than squeezing it
+                Item {
+                    id: holder
+                    width: popup.vertical ? popup.bodyD : popup.bodyL
+                    height: popup.vertical ? popup.bodyL : popup.bodyD
+                    x: popup.vertical && popup.flip ? popup.drawD - popup.bodyD : 0
+                    y: !popup.vertical && popup.flip ? popup.drawD - popup.bodyD : 0
 
                 ClippingRectangle {
                     id: backdropItem
@@ -228,6 +248,22 @@ PopupWindow {
                     radius: Math.max(0, popup.r - 1)
                     color: "transparent"
                     visible: children.length > 0
+                }
+
+                // a backdrop fades into the bar's colour where the panel meets
+                // the bar, so it grows out of the bar rather than sitting under it
+                Rectangle {
+                    visible: backdropItem.visible && !popup.detached
+                    readonly property real depth: 56
+                    x: popup.vertical && popup.flip ? parent.width - depth : 0
+                    y: !popup.vertical && popup.flip ? parent.height - depth : 0
+                    width: popup.vertical ? depth : parent.width
+                    height: popup.vertical ? parent.height : depth
+                    gradient: Gradient {
+                        orientation: popup.vertical ? Gradient.Horizontal : Gradient.Vertical
+                        GradientStop { position: 0; color: popup.flip ? Theme.alpha(popup.fill, 0) : popup.fill }
+                        GradientStop { position: 1; color: popup.flip ? popup.fill : Theme.alpha(popup.fill, 0) }
+                    }
                 }
 
                 // which widget this panel belongs to (floating / minimal bar)
@@ -246,13 +282,14 @@ PopupWindow {
 
                 Item {
                     anchors.fill: parent
-                    opacity: Math.min(1, Math.max(0, (popup.progress - 0.15) / 0.6))
+                    opacity: Math.min(1, Math.max(0, (popup.progress - 0.25) / 0.55))
                     Column {
                         id: column
                         x: popup.pad; y: popup.pad
                         width: parent.width - popup.pad * 2
                         spacing: 10
                     }
+                }
                 }
                 focus: popup.open
                 Keys.onEscapePressed: Panels.close()

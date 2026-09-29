@@ -133,6 +133,14 @@ Rules of the house:
   `Config.set("path", value)`. Never write shell.json from a script while the
   shell also writes it, except with `jq` on the whole file (orrery-agent does).
 
+Panel motion: a panel grows out of the bar (Motion.growMs, M3 "emphasized",
+drawn at depth `drawD` with its corners kept) and shrinks back; a click on
+another bar widget hands over (Panels.swapping: the old one goes at once,
+the new one grows from 45%). Hyprland's own popup fade must stay off for
+closing (`fadePopupsOut` disabled in decorations.lua), or the old panel
+ghosts over the new one for ~300 ms. A panel with a `backdrop` fades it into
+the bar colour at the join. Test motion by grabbing ~16 frames 15 ms apart.
+
 Panels, the way they are built now: a new panel is a `Panel { name; anchorItem;
 panelWidth }` of those parts, never its own card or animation. Spacing is
 16 px padding, 10 px between parts, rows 40 px (48 with a subtitle). A list

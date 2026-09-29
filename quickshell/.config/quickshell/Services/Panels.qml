@@ -12,10 +12,15 @@ Singleton {
     // the widget whose panel is still sliding shut (its pill stays a tab until then)
     property Item closing: null
 
+    // true while one panel hands over to another (a click on the next bar
+    // widget): the old one goes at once, the new one grows from part-way
+    property bool swapping: false
     function toggle(name, anchor) {
         if (open === name && item === anchor) { close(); return }
+        swapping = open !== ""
         item = anchor
         open = name
+        swapping = false
     }
     function close() { open = ""; item = null }
 

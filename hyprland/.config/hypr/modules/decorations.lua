@@ -76,6 +76,11 @@ hl.animation({ leaf = "layersIn",      enabled = true, speed = 3.2,  bezier = "o
 hl.animation({ leaf = "layersOut",     enabled = true, speed = 1.8,  bezier = "orreryOut",    style = "fade" })
 hl.animation({ leaf = "fadeLayersIn",  enabled = true, speed = 2,    bezier = "orreryIn" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.8,  bezier = "orreryOut" })
+-- popups (the bar's panels, app menus): the shell animates its panels itself,
+-- so Hyprland only fades them in briefly and removes them at once; with its
+-- default 300 ms fade the old panel ghosted over the new one on a switch
+hl.animation({ leaf = "fadePopupsIn",  enabled = true, speed = 1.5,  bezier = "orreryIn" })
+hl.animation({ leaf = "fadePopupsOut", enabled = false })
 hl.animation({ leaf = "workspaces",    enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 1.21, bezier = "almostLinear", style = "fade" })
 hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })

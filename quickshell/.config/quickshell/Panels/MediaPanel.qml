@@ -458,6 +458,24 @@ Panel {
         }
     }
 
+    // player volume (when the player lets us set it) -----------------
+    Item {
+        visible: p.player !== null && p.player.volumeSupported && p.player.canControl
+        width: parent.width; height: 28
+        Icon { id: pv; x: 2; anchors.verticalCenter: parent.verticalCenter
+               icon: p.player && p.player.volume <= 0.001 ? "volume_off" : "volume_up"; size: Theme.fs(15); color: Theme.c.accentMid }
+        Slider {
+            anchors.left: pv.right; anchors.leftMargin: 12; anchors.right: pvl.left; anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+            width: undefined
+            value: p.player ? p.player.volume : 0
+            onMoved: (v) => { if (p.player) p.player.volume = v }
+        }
+        Label { id: pvl; anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter; width: 36
+                horizontalAlignment: Text.AlignRight; text: p.player ? Math.round(p.player.volume * 100) + "%" : ""
+                font.pixelSize: Theme.fs(11); color: Theme.c.accentMid }
+    }
+
     // player switcher --------------------------------------------------
     Flow {
         width: parent.width
