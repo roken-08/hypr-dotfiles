@@ -83,9 +83,12 @@ reasoning in the colors.toml header comment.
    **A shipped theme** (one of the four in README) also has README shots:
    copy its preview to `Screenshots/<id>.jpg`, retake `menu-<id>.jpg` (menu's
    Appearance page, `qs ipc call menu open appearance`, on an empty workspace,
-   cropped to the card) whenever a name or value on it changes, and rebuild
-   the cover with `python3 Screenshots/make-cover.py` (the four previews under
-   the ORRERY wordmark; a new shipped theme needs an entry in its `SHOTS`).
+   cropped to the card) and `launcher-<id>.jpg` whenever something on them
+   changes, then run `python3 Screenshots/make-cover.py`: it rebuilds the
+   cover, the 1280x640 social preview (uploaded by hand in the repo's
+   settings) and `themes.webp`, the README's crossfading theme tour. A new
+   shipped theme needs an entry in its `SHOTS` and `BLURB`, and a
+   `<details>` block in README's Themes section.
 5. **Verify in every surface** (verify.md). For btop use `orrery-float btop`
    (a tiled kitty next to other windows is < 80×24 and btop only prints "Terminal size too
    small"). `orrery-wall next` cycles to the theme's other backgrounds. Verify: bar (every skin: `qs ipc call bar toggle` cycles them),

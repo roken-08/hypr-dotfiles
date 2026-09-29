@@ -3,83 +3,93 @@
 <img src="Screenshots/cover.png" alt="Orrery: a Hyprland desktop where everything orbits one palette" width="100%">
 
 **A complete, themeable Hyprland desktop for Arch Linux.**<br>
-Lua-configured Hyprland · a hand-built Quickshell shell · one palette for every app
+Switch the theme and everything follows: the shell, terminals, GTK and Qt apps, Neovim,
+VS Code, Firefox, Spotify and the login screen.
 
 ![Hyprland 0.56](https://img.shields.io/badge/Hyprland-0.56-0d0d0f?style=flat-square&logo=hyprland&logoColor=white)
 ![Quickshell 0.3](https://img.shields.io/badge/Quickshell-0.3-0d0d0f?style=flat-square)
 ![Arch Linux](https://img.shields.io/badge/Arch-Linux-0d0d0f?style=flat-square&logo=archlinux&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/license-MIT-0d0d0f?style=flat-square)
 
-[Themes](#themes) · [Features](#features) · [Install](#install) · [Keybinds](#keybinds) · [Customise](#make-it-yours) · [Help](#troubleshooting)
+[Themes](#themes) · [Features](#features) · [Install](#install) · [Make it yours](#make-it-yours) · [Keybinds](#keybinds) · [Help](#troubleshooting)
 
 </div>
 
----
+<!-- DEMO VIDEO: open this file in GitHub's web editor and drag the MP4 onto this line.
+     GitHub uploads it and puts its link here; it plays inline in the README. -->
 
 ## Themes
 
-Four themes ship with it. Switch live with **`SUPER` `CTRL` `SHIFT` `SPACE`**. Every app changes
-with it: the shell, terminals, GTK and Qt apps, Neovim, btop, VS Code, Firefox, Spotify and the
-login screen.
+<img src="Screenshots/themes.webp" alt="The four themes in turn: Eclipse, Zenith, Catppuccin Mocha and Cassini" width="100%">
 
+Four themes ship with it. Switch live with **`SUPER` `CTRL` `SHIFT` `SPACE`**, or make your own
+([below](#make-it-yours)). Open one for a closer look:
+
+<details>
+<summary><b>Eclipse</b> · dark · greys only</summary>
+<br>
+<img src="Screenshots/eclipse.jpg" alt="Eclipse: the desktop" width="100%">
 <table>
 <tr>
-<td width="25%" align="center"><b>Eclipse</b><br><sub>dark · greys only</sub></td>
-<td width="25%" align="center"><b>Zenith</b><br><sub>the same design on white</sub></td>
-<td width="25%" align="center"><b>Catppuccin Mocha</b><br><sub>the official Mocha palette</sub></td>
-<td width="25%" align="center"><b>Cassini</b><br><sub>ringed giant · ice-teal on deep space</sub></td>
-</tr>
-<tr>
-<td><img src="Screenshots/eclipse.jpg" alt="Eclipse"></td>
-<td><img src="Screenshots/zenith.jpg" alt="Zenith"></td>
-<td><img src="Screenshots/catppuccin-mocha.jpg" alt="Catppuccin Mocha"></td>
-<td><img src="Screenshots/cassini.jpg" alt="Cassini"></td>
-</tr>
-<tr>
-<td><img src="Screenshots/launcher-eclipse.jpg" alt="Launcher"></td>
-<td><img src="Screenshots/launcher-zenith.jpg" alt="Launcher, light"></td>
-<td><img src="Screenshots/launcher-catppuccin-mocha.jpg" alt="Launcher, Catppuccin"></td>
-<td><img src="Screenshots/launcher-cassini.jpg" alt="Launcher, Cassini"></td>
-</tr>
-<tr>
-<td><img src="Screenshots/menu-eclipse.jpg" alt="Menu"></td>
-<td><img src="Screenshots/menu-zenith.jpg" alt="Menu, light"></td>
-<td><img src="Screenshots/menu-catppuccin-mocha.jpg" alt="Menu, Catppuccin"></td>
-<td><img src="Screenshots/menu-cassini.jpg" alt="Menu, Cassini"></td>
-</tr>
-<tr>
-<td><img src="Screenshots/panel-eclipse.jpg" alt="Power panel"></td>
-<td><img src="Screenshots/panel-zenith.jpg" alt="Power panel, light"></td>
-<td><img src="Screenshots/panel-catppuccin-mocha.jpg" alt="Power panel, Catppuccin"></td>
-<td><img src="Screenshots/panel-cassini.jpg" alt="Power panel, Cassini"></td>
+<td width="50%"><img src="Screenshots/launcher-eclipse.jpg" alt="Eclipse: the launcher"></td>
+<td width="50%"><img src="Screenshots/menu-eclipse.jpg" alt="Eclipse: the menu"></td>
 </tr>
 </table>
-
-<sub>Top to bottom: the desktop, the launcher (<code>SUPER D</code>), the menu (<code>SUPER SPACE</code>) and the power panel (click the battery).</sub>
-
----
+</details>
+<details>
+<summary><b>Zenith</b> · the same design on white</summary>
+<br>
+<img src="Screenshots/zenith.jpg" alt="Zenith: the desktop" width="100%">
+<table>
+<tr>
+<td width="50%"><img src="Screenshots/launcher-zenith.jpg" alt="Zenith: the launcher"></td>
+<td width="50%"><img src="Screenshots/menu-zenith.jpg" alt="Zenith: the menu"></td>
+</tr>
+</table>
+</details>
+<details>
+<summary><b>Catppuccin Mocha</b> · the official Mocha palette</summary>
+<br>
+<img src="Screenshots/catppuccin-mocha.jpg" alt="Catppuccin Mocha: the desktop" width="100%">
+<table>
+<tr>
+<td width="50%"><img src="Screenshots/launcher-catppuccin-mocha.jpg" alt="Catppuccin Mocha: the launcher"></td>
+<td width="50%"><img src="Screenshots/menu-catppuccin-mocha.jpg" alt="Catppuccin Mocha: the menu"></td>
+</tr>
+</table>
+</details>
+<details>
+<summary><b>Cassini</b> · ringed giant · ice-teal on deep space</summary>
+<br>
+<img src="Screenshots/cassini.jpg" alt="Cassini: the desktop" width="100%">
+<table>
+<tr>
+<td width="50%"><img src="Screenshots/launcher-cassini.jpg" alt="Cassini: the launcher"></td>
+<td width="50%"><img src="Screenshots/menu-cassini.jpg" alt="Cassini: the menu"></td>
+</tr>
+</table>
+</details>
 
 ## Features
 
-| | |
-|---|---|
-| **Bar** | Three styles (Legacy, Floating, Minimal) on any screen edge. Drag it to move it; show or hide each widget from the menu |
-| **Dock** | Pinned and running apps: always visible, auto-hide, or hidden while a window covers it |
-| **Menu** | `SUPER SPACE`: every setting in one searchable list |
-| **Launcher** | Fuzzy app search that learns what you use, plus clipboard history with image previews |
-| **Panels** | Sound, Wi-Fi, Bluetooth and power profiles, dropping down from the bar |
-| **Theme engine** | One `colors.toml` colours every app, dark or light. Make your own in minutes |
-| **Desktop extras** | Notifications with do-not-disturb, lock screen, power menu, volume and brightness OSD, night light, idle lock, caffeine |
-| **Login screen** | An SDDM theme that matches the lock screen |
-| **AI agents** | Claude Code usage in the bar, and a `/orrery` skill that lets an agent theme and fix the rice for you |
-
----
+- **One palette, every app.** A theme colours the shell, kitty, Neovim, btop, GTK and Qt apps,
+  VS Code, Firefox, Spotify and the login screen, dark or light. Most follow a switch instantly.
+- **An AI skill that knows the rice.** Claude Code, Codex, OpenCode and Gemini get an `/orrery`
+  skill: ask for a new theme, a bar widget or a fix in plain words.
+- **A hand-built shell** on [Quickshell](https://quickshell.org/): a bar in three styles on any
+  screen edge, a dock, notifications, lock screen, power menu and on-screen volume and brightness.
+- **One menu for everything.** `SUPER` `SPACE` opens a searchable menu: theme, wallpaper, bar,
+  dock, fonts, Wi-Fi, Bluetooth, keybindings.
+- **Launcher and clipboard.** Fuzzy app search that learns what you use, and clipboard history
+  with image previews.
+- **Panels** for sound, Wi-Fi, Bluetooth and power profiles, dropping down from the bar.
+- **A careful installer.** It backs up anything in the way, is safe to run again, and has a
+  `--dry-run`.
 
 ## Install
 
-> **You need:** Arch Linux or an Arch-based distro (CachyOS, EndeavourOS…), a user with `sudo`,
-> and a GPU that runs Wayland. In a VM, turn on 3D acceleration (virt-manager: Virtio GPU with
-> OpenGL).
+> **You need** Arch Linux or an Arch-based distro (CachyOS, EndeavourOS…), a user with `sudo`
+> and a GPU that runs Wayland. In a VM, turn on 3D acceleration.
 
 ```bash
 sudo pacman -Syu --needed git
@@ -87,8 +97,8 @@ git clone https://github.com/thomasmartinoa/Orrery-dotfiles.git ~/Orrery-dotfile
 cd ~/Orrery-dotfiles && ./install.sh
 ```
 
-Reboot, choose **Hyprland** on the login screen, and you're in. Run `./install.sh --dry-run` first
-if you'd like to see the plan without changing anything.
+Reboot, choose **Hyprland** on the login screen, and press **`SUPER` `SPACE`** to find
+everything. To update later: `cd ~/Orrery-dotfiles && git pull && ./install.sh`.
 
 <details>
 <summary><b>What the installer does</b></summary>
@@ -116,10 +126,18 @@ It's safe to run again, and it never deletes or overwrites your files.
 
 </details>
 
-### Optional: Spotify
+<details>
+<summary><b>Your monitor, Spotify and Claude Code</b></summary>
 
-Spotify follows the theme through [Spicetify](https://spicetify.app/). Install both, then apply
-the theme once:
+**Monitor.** Every screen starts at its preferred resolution with an automatic scale. Pick a
+scale in Menu › Appearance › Display scale, or add an exact rule to
+`~/.config/hypr/modules/monitors.local.lua` (yours; updates never touch it):
+
+```lua
+hl.monitor({ output = "eDP-1", mode = "2560x1440@165", position = "auto", scale = 1.6 })
+```
+
+**Spotify** follows the theme through [Spicetify](https://spicetify.app/):
 
 ```bash
 yay -S spotify-launcher spicetify-cli
@@ -127,28 +145,53 @@ spicetify config spotify_path ~/.local/share/spotify-launcher/install/usr/share/
 orrery-theme reload
 ```
 
-From then on every theme switch recolours Spotify. It restarts Spotify if nothing is playing;
-otherwise the new colours show the next time it starts. After a Spotify update, run
-`spicetify backup apply` again.
+After a Spotify update, run `spicetify backup apply` again.
 
-### Coding agents in the terminal
+**Claude Code** draws its own colours: run `/theme` in it once and pick **Auto (match
+terminal)**, and it switches with the rice's dark and light themes.
 
-Claude Code draws its own colours. Set it to follow the terminal once, with
-`/theme` → **Auto (match terminal)**; after that it switches with the rice's dark and light
-themes.
+</details>
 
-### First steps
+## Make it yours
 
-- Press **`SUPER SPACE`** to open the menu. Everything is in there: theme, wallpaper, bar,
-  dock, fonts, Wi-Fi, keybindings.
-- **Monitor:** every screen starts at its preferred resolution, with the scale picked
-  automatically. To choose your own, use Menu › Appearance › Display scale, or add a rule to
-  `~/.config/hypr/modules/monitors.local.lua`, for example:
-  ```lua
-  hl.monitor({ output = "eDP-1", mode = "2560x1440@165", position = "auto", scale = 1.6 })
+### A theme of your own, by asking
+
+If you use Claude Code, Codex, OpenCode or Gemini CLI, the installer links the `/orrery` skill
+into it. Describe what you want:
+
+> make a warm dark theme called ember from my wallpaper ~/Pictures/forest.jpg
+
+The agent picks a palette from the image, colours every app, checks that text stays readable
+everywhere, screenshots the result for the theme picker and switches to it. It never commits or
+pushes anything. The same skill takes requests like *"add a CPU temperature widget to the bar"*
+or *"why is my Wi-Fi dropping?"*.
+
+### A theme of your own, by hand
+
+```bash
+cd ~/.config/orrery/themes
+cp -r eclipse ember && rm ember/backgrounds/* ember/preview.jpg
+cp ~/Pictures/forest.jpg ember/backgrounds/1-forest.jpg
+$EDITOR ember/colors.toml        # the name, mode = "dark"|"light", and the colours
+orrery-theme set ember
+orrery-theme-preview ember       # a real screenshot for the theme picker
+```
+
+Set `hued = true` for coloured apps (btop, Neovim, battery and warnings) instead of greys. Themes
+you make stay on your machine: git ignores them.
+
+### Everything else
+
+- **Bar, dock, fonts, text size, display scale:** Menu › Appearance. *Edit look & feel* there
+  opens gaps, blur and animations.
+- **Your own keybinds** go in `~/.config/hypr/modules/binds.local.lua`, and **your own menu
+  entries** in `~/.config/orrery/menu.local.jsonc`. Updates never touch either.
+- **Any script can be a bar widget:** add it under `bar.modules` in
+  `~/.config/orrery/shell.json`, then put its id in one of the lists under `bar.layout`:
+
+  ```json
+  "bar": { "modules": { "vpn": { "exec": "~/bin/vpn-status", "interval": 5, "onClick": "nm-connection-editor" } } }
   ```
-  `hyprctl monitors all` lists your outputs. This file is yours; updates never touch it.
-- **Updating later:** run `cd ~/Orrery-dotfiles && git pull && ./install.sh`.
 
 ---
 
@@ -195,43 +238,6 @@ even on the lock screen. The full list is in
 
 ---
 
-## Make it yours
-
-- **Themes:** copy `theme/.config/orrery/themes/eclipse/`, edit its `colors.toml`, put a
-  wallpaper in `backgrounds/`, then run `orrery-theme set <name>` and `orrery-theme-preview <name>`
-  (a real screenshot for the theme picker). Your themes stay private; git
-  ignores them.
-- **Bar and dock:** use Menu › Appearance › Bar / Dock for the style, edge, transparency, widgets and
-  pinned apps.
-- **Look and feel:** use Menu › Appearance for font, text size and display scale, and *Edit look &
-  feel* for gaps, blur and animations.
-- **Your own menu entries** go in `~/.config/orrery/menu.local.jsonc`.
-
-<details>
-<summary><b>More: command modules, theme details, the agent skill</b></summary>
-
-**Command modules.** Any script that prints text can become a bar widget. Add it under
-`modules` in `~/.config/orrery/shell.json` and put its id in a layout list:
-
-```json
-"modules": { "vpn": { "exec": "~/bin/vpn-status", "interval": 5, "onClick": "nm-connection-editor" } }
-```
-
-**Themes in depth.** In `colors.toml`, `mode = "light"` switches GTK, Qt and Neovim to their
-light variants, and `hued = true` gives apps their stock colours. The shell, kitty, Neovim,
-btop, GTK4 and VS Code follow a switch live. GTK3 apps, Qt apps, Alacritty and Firefox's UI pick
-it up the next time they start. Useful commands: `orrery-theme list`, `orrery-theme toggle`,
-`orrery-wall next`.
-
-**The `/orrery` skill.** If you use Claude Code, Codex, OpenCode or Gemini, the installer links a
-`/orrery` skill into them. Ask something like *"make a warm dark theme called ember"* or *"why is
-my wifi dropping"*. It follows the rice's own guides, checks its work in both light and dark,
-and never commits anything for you.
-
-</details>
-
----
-
 ## Troubleshooting
 
 | Problem | Fix |
@@ -243,20 +249,6 @@ and never commits anything for you.
 | The bar or dock is missing | `SUPER` `R` restarts the shell; `qs log` shows why it stopped |
 
 ---
-
-<details>
-<summary><b>Repository layout</b></summary>
-
-```
-hyprland/     ~/.config/hypr/          Hyprland (Lua): modules/, scripts/
-quickshell/   ~/.config/quickshell/    the shell: bar, dock, launcher, menu, panels, lock, notifications
-theme/        ~/.config/orrery/    themes, templates, engine, menu; ~/.local/bin/orrery-* tools
-kittyterminal/ alacritty/ nvim/ zsh/ starship/ gtk/    terminals, LazyVim, prompt, GTK css
-waybar/ rofi/ swaync/ wlogout/         classic fallback, used only if the shell isn't running
-sddm/                                  login screen (installed by install.sh)
-```
-
-</details>
 
 ## Credits
 

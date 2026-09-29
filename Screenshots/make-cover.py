@@ -6,9 +6,11 @@ wordmark with orbits, the tagline and the four shipped themes' real previews
     Screenshots/cover.png    README header, rounded card
     Screenshots/social.png   1280x640 repo social preview (Settings > Social
                              preview); everything inside GitHub's 40pt border
+    Screenshots/themes.webp  the README's theme tour: each desktop with its
+                             name, crossfading to the next, looping
 
 Rerun after retaking a preview:
-    python3 Screenshots/make-cover.py        (needs rsvg-convert, Inter, JetBrains Mono)"""
+    python3 Screenshots/make-cover.py        (needs rsvg-convert, ffmpeg with libwebp, Inter, JetBrains Mono)"""
 import math, os, random, shutil, subprocess, tempfile
 
 OUT = os.path.dirname(os.path.abspath(__file__))
@@ -17,6 +19,14 @@ BG, BG2 = "#09090c", "#14141a"
 FG, MUTED = "#ededf0", "#9a9aa4"
 TAGLINE = "a Hyprland desktop where everything orbits one palette"
 TILT = -9
+
+# one line under each name in the theme tour
+BLURB = {
+    "eclipse": "dark · greys only",
+    "zenith": "the same design on white",
+    "catppuccin-mocha": "the official Mocha palette",
+    "cassini": "ringed giant · ice-teal on deep space",
+}
 
 # (id, label, planet colour, planet radius, orbit index, angle on orbit in deg)
 SHOTS = [
@@ -134,9 +144,47 @@ def build(name, L, tmp):
     print(f"{OUT}/{name}.png")
 
 
+def tour(tmp, hold=2.4, fade=0.6, fps=24, width=1600):
+    """themes.webp: every preview with a name tag, crossfading in a loop."""
+    frames = []
+    for tid, label, col, *_ in SHOTS:
+        # the tag: a dark chip in the bottom-left corner, clear of the dock
+        shutil.copy(f"{THEMES}/{tid}/preview.jpg", f"{tmp}/{tid}.jpg")   # rsvg reads only beside the SVG
+        w = 68 + max(len(label) * 15.5, len(BLURB[tid]) * 9.7)
+        svg = f"""<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="900">
+  <image width="1600" height="900" xlink:href="{tid}.jpg"/>
+  <rect x="40" y="788" width="{w:.0f}" height="82" rx="10" fill="#0a0a0c" fill-opacity="0.78"
+        stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.5"/>
+  <circle cx="70" cy="818" r="7" fill="{col}"/>
+  <text x="88" y="828" font-family="Inter" font-weight="600" font-size="27" fill="#ededf0">{label}</text>
+  <text x="88" y="856" font-family="Inter" font-weight="400" font-size="19" fill="#a4a4ae">{BLURB[tid]}</text>
+</svg>"""
+        with open(f"{tmp}/tour-{tid}.svg", "w") as fh:
+            fh.write(svg)
+        png = f"{tmp}/tour-{tid}.png"
+        subprocess.run(["rsvg-convert", "-w", str(width), "-o", png, f"{tmp}/tour-{tid}.svg"], check=True)
+        frames.append(png)
+    frames.append(frames[0])                 # fade back into the first: a seamless loop
+    args, chain, last = [], [], "0:v"
+    for f in frames:
+        args += ["-loop", "1", "-t", str(hold + 2 * fade), "-framerate", str(fps), "-i", f]
+    for i in range(1, len(frames)):
+        out = f"x{i}"
+        chain.append(f"[{last}][{i}:v]xfade=transition=fade:duration={fade}:offset={i * hold + (i - 1) * fade:.2f}[{out}]")
+        last = out
+    # drop the tail that repeats the first frame, so the loop doesn't stall on it
+    total = (len(frames) - 1) * (hold + fade)
+    chain.append(f"[{last}]trim=duration={total:.2f},format=yuv420p[v]")
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *args, "-filter_complex", ";".join(chain),
+                    "-map", "[v]", "-c:v", "libwebp_anim", "-lossless", "0", "-quality", "80",
+                    "-compression_level", "6", "-loop", "0", f"{OUT}/themes.webp"], check=True)
+    print(f"{OUT}/themes.webp")
+
+
 tmp = tempfile.mkdtemp()       # the SVGs and the copies they link to
 try:
     for name, L in LAYOUTS.items():
         build(name, L, tmp)
+    tour(tmp)
 finally:
     shutil.rmtree(tmp)
