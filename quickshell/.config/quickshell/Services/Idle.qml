@@ -37,7 +37,8 @@ Singleton {
     IdleMonitor {
         enabled: !root.paused; respectInhibitors: true; timeout: root.screenAfter
         onIsIdleChanged: {
-            Quickshell.execDetached(["hyprctl", "dispatch", isIdle ? 'hl.dsp.dpms("off")' : 'hl.dsp.dpms("on")'])
+            // explicit action: dpms("on") without a table toggles instead
+            Quickshell.execDetached(["hyprctl", "dispatch", isIdle ? 'hl.dsp.dpms({action = "off"})' : 'hl.dsp.dpms({action = "on"})'])
             if (!isIdle) root.sh("brightnessctl -r")
         }
     }

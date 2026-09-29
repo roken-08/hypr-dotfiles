@@ -62,6 +62,7 @@ to file it upstream; do not "fix" it by disabling half the rice.
 | icons are boxes | font: `fc-list | grep -i "JetBrainsMono Nerd Font Propo"` |
 | keybind does nothing | `hyprctl configerrors`; `hyprctl binds -j | grep`; the script has `+x` and is on PATH (`~/.local/bin` is added in env.lua) |
 | lock screen wrong size / tiny box | monitor scale: fractional scale rounding — see plugins.md pitfalls |
+| screen shows for ~2 s after waking, then goes black; keys don't help, lid close/open does | a DPMS command that toggles instead of setting: with the Lua config, `hl.dsp.dpms("on")` ignores the string and toggles, and old-style `dispatch dpms on` is a Lua syntax error. `git grep -n dpms` in the repo, then use `hyprctl dispatch 'hl.dsp.dpms({action = "on"})'` / `{action = "off"}` everywhere (hypridle.conf, hypridle-classic.conf, Services/Idle.qml). Check: dispatch `{action = "on"}` twice and `hyprctl monitors -j | jq '.[0].dpmsStatus'` stays `true` |
 | no sleep / lock | caffeine on (`qs ipc call caffeine status`), `systemd-inhibit --list`, hypridle running twice |
 | `~/.local` or `~/.config/x` is a symlink into the repo (stow folded) | install.sh pre-flight; `stow -D` the package, recreate the dir, `stow -R` |
 | high battery drain | `powerprofilesctl`, `powertop --html` (asks sudo — user runs it), GPU on (`cat /sys/class/drm/card*/device/power_state`), a runaway process in `orrery-doctor` top list |
