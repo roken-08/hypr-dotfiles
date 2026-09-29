@@ -15,8 +15,11 @@ VS Code, Firefox, Spotify and the login screen.
 
 </div>
 
-<!-- DEMO VIDEO: open this file in GitHub's web editor and drag the MP4 onto this line.
-     GitHub uploads it and puts its link here; it plays inline in the README. -->
+
+
+https://github.com/user-attachments/assets/bca03a37-9a24-44df-8d53-7d81c05d9180
+
+
 
 ## Themes
 
