@@ -52,8 +52,12 @@ Item {
         renderType: Text.CurveRendering
     }
 
-    Component.onCompleted: if (material && !Paths.small[icon])
-        console.warn("Icon: \"" + icon + "\" is not in Commons/icons/names.txt — add it and run Commons/icons/build.py")
-    onIconChanged: if (material && !Paths.small[icon])
-        console.warn("Icon: \"" + icon + "\" is not in Commons/icons/names.txt — add it and run Commons/icons/build.py")
+    // tests the name itself: in onIconChanged the `material` binding can still
+    // hold the previous icon's answer (a reused menu row), and warn for a glyph
+    function check() {
+        if (/^[a-z0-9_]+$/.test(icon) && !Paths.small[icon])
+            console.warn("Icon: \"" + icon + "\" is not in Commons/icons/names.txt — add it and run Commons/icons/build.py")
+    }
+    Component.onCompleted: check()
+    onIconChanged: check()
 }
