@@ -133,13 +133,21 @@ Rules of the house:
   `Config.set("path", value)`. Never write shell.json from a script while the
   shell also writes it, except with `jq` on the whole file (orrery-agent does).
 
-Panel motion: a panel grows out of the bar (Motion.growMs, M3 "emphasized",
-drawn at depth `drawD` with its corners kept) and shrinks back; a click on
+Panel motion: a panel grows out of the bar (Motion.growMs 500 ms, Material 3
+Expressive "default spatial", a slight overshoot then settle; drawn at depth
+`drawD` with its corners kept) and shrinks back (M3 emphasized accelerate); a click on
 another bar widget hands over (Panels.swapping: the old one goes at once,
 the new one grows from 45%). Hyprland's own popup fade must stay off for
 closing (`fadePopupsOut` disabled in decorations.lua), or the old panel
 ghosts over the new one for ~300 ms. A panel with a `backdrop` fades it into
 the bar colour at the join. Test motion by grabbing ~16 frames 15 ms apart.
+
+Overlays share the look: the launcher, menu and clipboard mark the selected
+row with a 3 px accent bar and end with a quiet key-hint line; the power
+menu labels every action with its key; Hyprland lands overlays with the same
+Expressive curve (`orreryLand`, `popin 90%`). A QML property must not start
+with `on` + a capital (`onToday`): QML reads it as a signal handler and the
+value is never set.
 
 Panels, the way they are built now: a new panel is a `Panel { name; anchorItem;
 panelWidth }` of those parts, never its own card or animation. Spacing is

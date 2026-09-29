@@ -26,11 +26,11 @@ Scope {
 
     readonly property string icons: Quickshell.env("HOME") + "/.config/wlogout/icons/"
     readonly property var actions: [
-        { key: "l", icon: "lock",     run: () => { scope.open = false; Lock.lock() } },
-        { key: "o", icon: "exit",     run: () => Hyprland.dispatch(Hyprland.usingLua ? "hl.dsp.exit()" : "exit") },
-        { key: "h", icon: "sleep",    run: () => { scope.open = false; Quickshell.execDetached(["systemctl", "suspend"]) } },
-        { key: "r", icon: "reboot",   run: () => Quickshell.execDetached(["systemctl", "reboot"]) },
-        { key: "s", icon: "shutdown", run: () => Quickshell.execDetached(["systemctl", "poweroff"]) }
+        { key: "l", icon: "lock",     label: "Lock",      run: () => { scope.open = false; Lock.lock() } },
+        { key: "o", icon: "exit",     label: "Log out",   run: () => Hyprland.dispatch(Hyprland.usingLua ? "hl.dsp.exit()" : "exit") },
+        { key: "h", icon: "sleep",    label: "Sleep",     run: () => { scope.open = false; Quickshell.execDetached(["systemctl", "suspend"]) } },
+        { key: "r", icon: "reboot",   label: "Restart",   run: () => Quickshell.execDetached(["systemctl", "reboot"]) },
+        { key: "s", icon: "shutdown", label: "Shut down", run: () => Quickshell.execDetached(["systemctl", "poweroff"]) }
     ]
 
     Variants {
@@ -80,8 +80,41 @@ Scope {
                             border.color: hov ? Theme.c.fg : foc ? Theme.c.borderStrong : Theme.c.border
                             Behavior on color { ColorAnimation { duration: 200; easing.type: Easing.OutCubic } }
                             Behavior on border.color { ColorAnimation { duration: 200; easing.type: Easing.OutCubic } }
+                            // rises in on open, one after another (Motion.effects stagger)
+                            opacity: 0
+                            transform: Translate { id: rise; y: 16 }
+                            states: State { when: scope.open
+                                PropertyChanges { btn.opacity: 1 } PropertyChanges { rise.y: 0 } }
+                            transitions: Transition { to: "*"
+                                SequentialAnimation {
+                                    PauseAnimation { duration: scope.open ? btn.index * 35 : 0 }
+                                    ParallelAnimation {
+                                        NumberAnimation { target: btn; property: "opacity"; duration: Motion.effectsMs }
+                                        NumberAnimation { target: rise; property: "y"; duration: Motion.growMs
+                                                          easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.growCurve }
+                                    }
+                                }
+                            }
+                            // the name and its key
+                            Column {
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom; anchors.bottomMargin: 18
+                                spacing: 4
+                                Text { anchors.horizontalCenter: parent.horizontalCenter; text: btn.modelData.label
+                                       font.family: Theme.font; font.pixelSize: Theme.fs(13)
+                                       color: btn.hov ? Theme.c.bg0 : Theme.c.fg }
+                                Rectangle {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    width: 20; height: 18; radius: Theme.radiusSm
+                                    color: "transparent"; border.width: 1
+                                    border.color: btn.hov ? Theme.alpha(Theme.c.bg0, 0.5) : Theme.c.border
+                                    Text { anchors.centerIn: parent; text: btn.modelData.key.toUpperCase(); font.family: Theme.font
+                                           font.pixelSize: Theme.fs(10); color: btn.hov ? Theme.c.bg0 : Theme.c.accentMid }
+                                }
+                            }
                             Image {
                                 anchors.centerIn: parent
+                                anchors.verticalCenterOffset: -18
                                 width: 52; height: 52
                                 sourceSize: Qt.size(96, 96)
                                 smooth: true

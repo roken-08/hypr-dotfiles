@@ -37,7 +37,7 @@ Variants {
             id: card
             anchors.centerIn: parent
             width: 620
-            height: 14 + 30 + 6 + win.rowsShown * 38 + (win.rowsShown - 1) * 2 + 14
+            height: 14 + 30 + 6 + win.rowsShown * 38 + (win.rowsShown - 1) * 2 + 8 + 20 + 12
             radius: Theme.radius
             color: Theme.alpha(Theme.c.bg0, 0.74)
             border.width: 1; border.color: Theme.alpha(Theme.c.accentLight, 0.17)
@@ -45,14 +45,16 @@ Variants {
             Item {
                 id: bar
                 x: 14; y: 14; width: parent.width - 28; height: 30
-                Label { id: prompt; anchors.verticalCenter: parent.verticalCenter; x: 6; text: "clip"; font.pixelSize: Theme.fs(13); color: Theme.c.accentBright }
+                Icon { id: prompt; anchors.verticalCenter: parent.verticalCenter; x: 6; icon: "search"; size: Theme.fs(17); color: Theme.c.accentMid }
+                Label { id: count; anchors.right: parent.right; anchors.rightMargin: 6; anchors.verticalCenter: parent.verticalCenter
+                        text: win.items.length + (win.items.length === 1 ? " item" : " items"); font.pixelSize: Theme.fs(11); color: Theme.c.accentDim }
                 TextInput {
                     id: input
                     anchors.left: prompt.right; anchors.leftMargin: 14
-                    anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter
+                    anchors.right: count.left; anchors.rightMargin: 10; anchors.verticalCenter: parent.verticalCenter
                     font.family: Theme.font; font.pixelSize: Theme.fs(13); color: Theme.c.accentBright
                     focus: true
-                    Label { visible: !input.text; anchors.verticalCenter: parent.verticalCenter; text: "search clipboard"; font.pixelSize: Theme.fs(13); color: Theme.c.accentMid }
+                    Label { visible: !input.text; anchors.verticalCenter: parent.verticalCenter; text: "Search clipboard"; font.pixelSize: Theme.fs(13); color: Theme.c.accentMid }
                     Keys.onPressed: (e) => {
                         const n = win.items.length
                         if (e.key === Qt.Key_Escape) { Clip.open = false; e.accepted = true; return }
@@ -82,18 +84,31 @@ Variants {
                     readonly property bool sel: index === win.selected
                     width: list.width; height: 38
                     radius: Theme.radius
-                    color: sel ? Theme.c.bg2 : "transparent"
-                    Image {
-                        id: thumb
-                        visible: row.modelData.image
-                        x: 8; anchors.verticalCenter: parent.verticalCenter
-                        width: 26; height: 26
-                        fillMode: Image.PreserveAspectFit
-                        source: row.modelData.image && row.modelData.thumb ? "file://" + row.modelData.thumb : ""
-                        asynchronous: true
+                    color: sel ? Theme.c.bg2 : rm.containsMouse ? Theme.c.bg1 : "transparent"
+                    Behavior on color { ColorAnimation { duration: Motion.fadeMs } }
+                    readonly property bool isLink: !modelData.image && /^\s*(https?:\/\/|www\.)\S+\s*$/i.test(modelData.preview)
+                    // the selected row's accent bar, as in the launcher
+                    Rectangle { visible: row.sel; width: 3; height: parent.height - 12; anchors.verticalCenter: parent.verticalCenter
+                                radius: 1.5; color: Theme.c.accentBright }
+                    // what kind of entry: a thumbnail for an image, a chip otherwise
+                    Rectangle {
+                        id: kind
+                        x: 10; anchors.verticalCenter: parent.verticalCenter
+                        width: 26; height: 26; radius: Theme.radiusSm
+                        color: row.modelData.image ? "transparent" : Theme.c.bg2
+                        clip: true
+                        Image {
+                            anchors.fill: parent
+                            visible: row.modelData.image
+                            fillMode: Image.PreserveAspectCrop
+                            source: row.modelData.image && row.modelData.thumb ? "file://" + row.modelData.thumb : ""
+                            asynchronous: true
+                        }
+                        Icon { anchors.centerIn: parent; visible: !row.modelData.image; icon: row.isLink ? "link" : "notes"
+                               size: Theme.fs(14); color: row.sel ? Theme.c.accentBright : Theme.c.accentMid }
                     }
                     Label {
-                        x: row.modelData.image ? 44 : 8
+                        x: 46
                         anchors.verticalCenter: parent.verticalCenter
                         width: parent.width - x - 8; elide: Text.ElideRight
                         text: row.modelData.preview.replace(/\s+/g, " ")
@@ -101,10 +116,22 @@ Variants {
                         color: row.sel ? Theme.c.accentBright : Theme.c.fg
                     }
                     // click only: hovering never moves the selection
-                    MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor
+                    MouseArea { id: rm; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
                                 onClicked: Clip.copy(row.modelData) }
                 }
-                Label { visible: win.items.length === 0; anchors.centerIn: parent; text: "clipboard is empty"; font.pixelSize: Theme.fs(12); color: Theme.c.accentMid }
+                Column {
+                    visible: win.items.length === 0
+                    anchors.centerIn: parent; spacing: 6
+                    Icon { anchors.horizontalCenter: parent.horizontalCenter; icon: "content_paste"; size: Theme.fs(26); color: Theme.c.accentDim }
+                    Label { anchors.horizontalCenter: parent.horizontalCenter; text: input.text ? "Nothing matches" : "Nothing copied yet"
+                            font.pixelSize: Theme.fs(12.5); color: Theme.c.accentLight }
+                }
+            }
+            // what the keys do
+            Label {
+                x: 20; anchors.bottom: parent.bottom; anchors.bottomMargin: 12
+                text: "Enter  copy    Del  remove    Esc  close"
+                font.pixelSize: Theme.fs(10.5); color: Theme.c.accentDim
             }
         }
     }

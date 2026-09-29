@@ -50,8 +50,12 @@ def claude():
     try:
         with urllib.request.urlopen(req, timeout=15) as r:
             d = json.load(r)
-    except Exception as e:  # network, 401, …
-        acct["error"] = f"usage unavailable: {getattr(e, 'code', '') or e}"
+    except Exception as e:  # network, 401, 429, …
+        code = getattr(e, "code", None)
+        acct["error"] = ("Usage is rate-limited for a moment; it refreshes on its own" if code == 429
+                         else "Sign-in expired: run claude once to refresh it" if code in (401, 403)
+                         else f"Couldn't reach the usage service ({code})" if code
+                         else "Couldn't reach the usage service (offline?)")
         return acct
     names = {"five_hour": "Session (5h)", "seven_day": "Weekly", "seven_day_opus": "Weekly · Opus",
              "seven_day_sonnet": "Weekly · Sonnet", "seven_day_oauth_apps": "Weekly · apps"}

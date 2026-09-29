@@ -62,6 +62,8 @@ hl.curve("quick",          { type = "bezier", points = { {0.15, 0},    {0.1, 1} 
 -- shell opens uses these, with the same 320 ms in / 180 ms out as its panels
 hl.curve("orreryIn",       { type = "bezier", points = { {0.05, 0.7},  {0.1, 1} } })
 hl.curve("orreryOut",      { type = "bezier", points = { {0.3, 0},     {0.8, 0.15} } })
+-- Material 3 Expressive "default spatial": a small overshoot, then settle
+hl.curve("orreryLand",     { type = "bezier", points = { {0.38, 1.21}, {0.22, 1} } })
 
 hl.animation({ leaf = "global",        enabled = true, speed = 10,   bezier = "default" })
 hl.animation({ leaf = "border",        enabled = true, speed = 5.39, bezier = "easeOutQuint" })
@@ -72,7 +74,7 @@ hl.animation({ leaf = "fadeIn",        enabled = true, speed = 1.73, bezier = "a
 hl.animation({ leaf = "fadeOut",       enabled = true, speed = 1.46, bezier = "almostLinear" })
 hl.animation({ leaf = "fade",          enabled = true, speed = 3.03, bezier = "quick" })
 hl.animation({ leaf = "layers",        enabled = true, speed = 3.81, bezier = "easeOutQuint" })
-hl.animation({ leaf = "layersIn",      enabled = true, speed = 3.2,  bezier = "orreryIn",     style = "fade" })
+hl.animation({ leaf = "layersIn",      enabled = true, speed = 5,    bezier = "orreryLand",   style = "fade" })
 hl.animation({ leaf = "layersOut",     enabled = true, speed = 1.8,  bezier = "orreryOut",    style = "fade" })
 hl.animation({ leaf = "fadeLayersIn",  enabled = true, speed = 2,    bezier = "orreryIn" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true, speed = 1.8,  bezier = "orreryOut" })

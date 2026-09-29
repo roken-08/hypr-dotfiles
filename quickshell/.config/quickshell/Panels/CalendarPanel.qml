@@ -12,7 +12,7 @@ Panel {
     property date shown: new Date()
     property date today: new Date()
     function step(n) { shown = new Date(shown.getFullYear(), shown.getMonth() + n, 1) }
-    readonly property bool onToday: shown.getFullYear() === today.getFullYear() && shown.getMonth() === today.getMonth()
+    readonly property bool thisMonth: shown.getFullYear() === today.getFullYear() && shown.getMonth() === today.getMonth()
     onOpenChanged: if (open) { today = new Date(); shown = new Date() }
 
     // today, in words
@@ -31,7 +31,7 @@ Panel {
         Row {
             anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter
             spacing: 2
-            PanelButton { visible: !p.onToday; text: "Today"; implicitHeight: 26; onClicked: p.shown = new Date() }
+            PanelButton { visible: !p.thisMonth; text: "Today"; implicitHeight: 26; onClicked: p.shown = new Date() }
             IconButton { icon: "chevron_left"; onClicked: p.step(-1) }
             IconButton { icon: "chevron_right"; onClicked: p.step(1) }
         }
@@ -66,7 +66,7 @@ Panel {
                     readonly property bool inMonth: day >= 1 && day <= days.count
                     readonly property int shownDay: day < 1 ? days.prevCount + day : day > days.count ? day - days.count : day
                     readonly property bool weekend: index % 7 >= 5
-                    readonly property bool isToday: inMonth && p.onToday && p.today.getDate() === day
+                    readonly property bool isToday: inMonth && p.thisMonth && p.today.getDate() === day
                     width: parent.parent.cell; height: 32
                     Rectangle {
                         anchors.centerIn: parent; width: 30; height: 30

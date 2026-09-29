@@ -84,6 +84,18 @@ and close anything you opened. Save it *before* the first switch
 (`T0=$(orrery-theme current)`): the engine keeps no history, so once you have
 switched there is no way to find out which theme it was.
 
+## All themes at once
+
+For a UI change, capture every panel (`qs ipc call panels open <name>`) and
+overlay (menu, launcher, clipboard, power menu, picker, OSD) in all four
+shipped themes on a spare workspace, at full resolution (`grim` without
+`-s`; the screen is 2560 px, crop in those pixels), and read them as sheets
+per theme. Save the theme first and put it back; clear the notifications the
+theme switches leave. An edit that hot-reloads mid-capture can leave the
+shell "Not ready to accept queries": `shell.sh restart` before capturing.
+Opening the agents panel fetches usage (throttled to 2 min); many opens in a
+row used to hit the API's rate limit (429).
+
 ## Rating a look
 
 When asked to rate (or when making a theme), score 1–10 per surface and per

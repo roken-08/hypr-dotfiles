@@ -22,13 +22,13 @@ hl.layer_rule({
 })
 
 -- The Quickshell shell: same blur as the tools it replaced
-hl.layer_rule({ match = { namespace = "^orrery-powermenu$" },      blur = true, ignore_alpha = 0.7 })
+hl.layer_rule({ match = { namespace = "^orrery-powermenu$" },      blur = true, ignore_alpha = 0.7, animation = "popin 94%" })
 hl.layer_rule({ match = { namespace = "^orrery-notifications$" },  blur = true, ignore_alpha = 0.4, animation = "slide right" })
 hl.layer_rule({ match = { namespace = "^orrery-control-center$" }, blur = true, ignore_alpha = 0.5 })
-hl.layer_rule({ match = { namespace = "^orrery-picker$" },         blur = true, ignore_alpha = 0.7 })
-hl.layer_rule({ match = { namespace = "^orrery-launcher$" },       blur = true, ignore_alpha = 0.5, animation = "popin 65%" })
-hl.layer_rule({ match = { namespace = "^orrery-clipboard$" },      blur = true, ignore_alpha = 0.5, animation = "popin 65%" })
-hl.layer_rule({ match = { namespace = "^orrery-menu$" },           blur = true, ignore_alpha = 0.5, animation = "popin 65%" })
+hl.layer_rule({ match = { namespace = "^orrery-picker$" },         blur = true, ignore_alpha = 0.7, animation = "popin 94%" })
+hl.layer_rule({ match = { namespace = "^orrery-launcher$" },       blur = true, ignore_alpha = 0.5, animation = "popin 90%" })
+hl.layer_rule({ match = { namespace = "^orrery-clipboard$" },      blur = true, ignore_alpha = 0.5, animation = "popin 90%" })
+hl.layer_rule({ match = { namespace = "^orrery-menu$" },           blur = true, ignore_alpha = 0.5, animation = "popin 90%" })
 -- the bar re-anchors when it moves to another edge; animated, that resize
 -- stretched it across the screen for a few frames
 hl.layer_rule({ match = { namespace = "^orrery-bar$" },            no_anim = true })
@@ -40,7 +40,7 @@ hl.layer_rule({ match = { namespace = "^orrery-dock$" },           blur = true, 
 hl.layer_rule({
 	match = { namespace = "^rofi$" },
 	blur = true,
-	animation = "popin 65%",
+	animation = "popin 90%",
 })
 
 --------------------

@@ -41,8 +41,9 @@ Variants {
             anchors.centerIn: parent
             anchors.verticalCenterOffset: -40
             width: 520
-            height: 10 + 36 + 6 + win.rowsShown * win.rowH + 10
-            Behavior on height { NumberAnimation { duration: 120; easing.type: Easing.OutCubic } }
+            height: 10 + 36 + 6 + win.rowsShown * win.rowH + 10 + 22
+            // grows and shrinks with the list, in the shell's own motion
+            Behavior on height { NumberAnimation { duration: Motion.moveMs; easing.type: Easing.BezierSpline; easing.bezierCurve: Motion.moveCurve } }
             radius: Theme.radius
             color: Theme.alpha(Theme.c.bg0, 0.8)
             border.width: 1; border.color: Theme.c.border
@@ -86,6 +87,11 @@ Variants {
                     }
                 }
             }
+            Label {
+                x: 16; anchors.bottom: parent.bottom; anchors.bottomMargin: 9
+                text: "↑↓  move    Enter  open    Esc  back"
+                font.pixelSize: Theme.fs(10.5); color: Theme.c.accentDim
+            }
             Rectangle { x: 10; y: bar.y + bar.height; width: parent.width - 20; height: 1; color: Theme.c.bg3 }
 
             ListView {
@@ -120,6 +126,10 @@ Variants {
                     width: list.width; height: win.rowH
                     radius: Theme.radiusSm
                     color: sel ? Theme.c.bg2 : "transparent"
+                    Behavior on color { ColorAnimation { duration: Motion.fadeMs } }
+                    // the selected row's accent bar, as in the launcher and clipboard
+                    Rectangle { visible: row.sel; width: 3; height: parent.height - 10; anchors.verticalCenter: parent.verticalCenter
+                                radius: 1.5; color: Theme.c.accentBright }
                     Icon {
                         id: ic
                         x: 10; anchors.verticalCenter: parent.verticalCenter; width: 18
@@ -151,7 +161,7 @@ Variants {
                     MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor
                                 onClicked: list.activate(row.index) }
                 }
-                Label { visible: win.rows.length === 0 && !Menu.inputRow; anchors.centerIn: parent; text: "nothing found"; font.pixelSize: Theme.fs(12); color: Theme.c.accentDim }
+                Label { visible: win.rows.length === 0 && !Menu.inputRow; anchors.centerIn: parent; text: "Nothing found"; font.pixelSize: Theme.fs(12); color: Theme.c.accentDim }
                 Label { visible: !!Menu.inputRow; anchors.centerIn: parent; text: "Enter to set"; font.pixelSize: Theme.fs(12); color: Theme.c.accentDim }
             }
         }

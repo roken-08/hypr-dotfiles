@@ -154,3 +154,10 @@ shuffle
 repeat
 repeat_one
 radio_button_unchecked
+content_paste
+link
+image
+search
+notes
+subject
+keyboard_return

@@ -158,7 +158,8 @@ PopupWindow {
         return " C " + pt(a1 + (ac - a1) * k, u1 + (uc - u1) * k) + " " + pt(a2 + (ac - a2) * k, u2 + (uc - u2) * k) + " " + pt(a2, u2)
     }
     // how deep the panel is drawn right now: it grows out of the bar
-    readonly property real drawD: Math.max(0, Math.min(1, progress)) * bodyD
+    // (past 1 while the spring overshoots: the panel runs a little long, then settles)
+    readonly property real drawD: Math.max(0, Math.min(1.06, progress)) * bodyD
     // the outline at depth drawD, corners kept (smaller only while shallower
     // than two corners); `closed` adds the run along the bar that is filled
     // but not stroked

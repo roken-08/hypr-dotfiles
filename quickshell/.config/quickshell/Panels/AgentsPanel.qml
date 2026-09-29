@@ -11,7 +11,8 @@ Panel {
     id: p
     name: "agents"
     panelWidth: 340
-    onOpenChanged: if (open) Agents.refresh()
+    // on open, but not more than every 2 minutes: the usage API rate-limits
+    onOpenChanged: if (open && Date.now() / 1000 - Agents.updated > 120) Agents.refresh()
 
     // ticks the countdowns while open
     property int now: 0

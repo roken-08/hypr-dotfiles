@@ -12,12 +12,16 @@ import Quickshell
 //   fade: colour and opacity alongside a move (M3 Expressive "effects")
 // Curves are cubic beziers for Easing.BezierSpline (x1 y1 x2 y2 1 1).
 Singleton {
-    // a panel growing out of the bar: Material 3's container motion,
-    // "emphasized" (a two-part curve: quick start, very long settle)
-    readonly property int growMs: 450
+    // a panel growing out of the bar: Material 3 Expressive's "default
+    // spatial" spring, as a curve: it runs a touch past its size (y 1.21)
+    // and settles back, so a panel lands instead of stopping. Closing is
+    // plain M3 "emphasized accelerate": leaving never bounces.
+    readonly property int growMs: 500
     readonly property int shrinkMs: 200
-    readonly property var growCurve: [0.05, 0, 2 / 15, 0.06, 1 / 6, 0.4, 5 / 24, 0.82, 0.25, 1, 1, 1]
+    readonly property var growCurve: [0.38, 1.21, 0.22, 1, 1, 1]
     readonly property var shrinkCurve: [0.3, 0, 0.8, 0.15, 1, 1]
+    // colour and opacity next to a spatial move: Expressive "default effects"
+    readonly property int effectsMs: 200
     // switching straight from one panel to another: shorter, no bounce
     readonly property int swapMs: 260
 
