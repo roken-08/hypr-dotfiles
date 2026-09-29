@@ -44,7 +44,7 @@ else
 fi
 
 STEP_N=0
-STEP_TOTAL=10
+STEP_TOTAL=11
 
 banner() {
   printf '%s\n' ""
@@ -755,6 +755,30 @@ else
     fi
   else
     warn "Skipped — no sudo. pkexec GUIs keep the default theme; login screen keeps its colours."
+  fi
+fi
+
+# ============================================================================
+# Headset mic after sleep. Some laptops (Realtek codec behind Intel SOF) stop
+# detecting a wired headset mic after suspend, so apps fall back to the
+# built-in mic until the sound card is re-probed. orrery-fix-mic knows which
+# models do this; on those, install its systemd-sleep hook. Everyone else can
+# run `orrery-fix-mic` by hand, or `orrery-fix-mic enable` if they need it.
+_fixmic="$DOTFILES_DIR/theme/.local/bin/orrery-fix-mic"
+if [[ $SKIP_ROOT -eq 1 ]]; then
+  skip "Headset mic after sleep"
+elif [[ $DRY_RUN -eq 1 ]]; then
+  skip "Headset mic after sleep (dry run)"
+elif ! "$_fixmic" known; then
+  skip "Headset mic after sleep (not needed on this model)"
+else
+  step "Headset mic after sleep"
+  info "This laptop loses the headset mic on resume. Installs a sleep hook. sudo may prompt."
+  if sudo -v; then
+    sudo install -o root -g root -m 755 -- "$_fixmic" /usr/lib/systemd/system-sleep/orrery-headset-mic
+    ok "Headset mic is re-detected after every sleep (orrery-fix-mic disable to undo)."
+  else
+    warn "Skipped — no sudo. Run orrery-fix-mic after waking if the headset mic is missing."
   fi
 fi
 

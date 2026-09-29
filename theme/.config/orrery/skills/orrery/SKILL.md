@@ -90,6 +90,7 @@ Commands you will use (all `--help`/header-documented — read the script if uns
 | `hyprctl reload && hyprctl configerrors` | after ANY Hyprland change; must print nothing |
 | `orrery-agent list / default / launch / usage / skills install` | coding agents |
 | `orrery-doctor [--print]` | diagnostics bundle (see diagnose.md) |
+| `orrery-fix-mic [status\|enable\|disable]` | re-detect a wired headset mic that stopped working (after sleep); `enable` = do it on every resume |
 | `orrery-font set <family>` · `orrery-text-size <px>` · `orrery-scale <n>` | desktop font, apparent text size (shell + GTK + terminals) and monitor scale |
 | `orrery-terminal [path]` | open the default terminal (`orrery-default terminal`), in that folder; Thunar's "Open Terminal Here" uses it |
 | `orrery-border radius <px>` · `width <px>` · `reset` | corners (windows + shell; 0 = square) and window border thickness |

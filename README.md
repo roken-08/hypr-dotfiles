@@ -262,6 +262,7 @@ even on the lock screen. The full list is in
 | The login screen is black | From a TTY (`Ctrl` `Alt` `F3`): `sudo rm /etc/sddm.conf.d/10-wayland.conf`, then reboot |
 | The Wi-Fi panel is empty | Your network is run by something other than NetworkManager. The installer prints how to switch |
 | The bar or dock is missing | `SUPER` `R` restarts the shell; `qs log` shows why it stopped |
+| Earphones play sound but apps use the laptop mic (often after sleep) | `orrery-fix-mic` re-detects the headset mic. `orrery-fix-mic enable` runs it after every sleep; the installer does this on laptops known to need it |
 
 ---
 
