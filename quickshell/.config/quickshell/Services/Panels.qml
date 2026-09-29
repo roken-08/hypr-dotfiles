@@ -9,6 +9,8 @@ Singleton {
     id: root
     property string open: ""
     property Item item: null
+    // the widget whose panel is still sliding shut (its pill stays a tab until then)
+    property Item closing: null
 
     function toggle(name, anchor) {
         if (open === name && item === anchor) { close(); return }

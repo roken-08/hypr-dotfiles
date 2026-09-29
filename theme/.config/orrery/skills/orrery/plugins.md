@@ -18,7 +18,13 @@ Bar/Pill.qml              the module container: pill skin (bordered) / floating 
 Bar/WidgetLoader.qml      id → widget map (add new built-in widgets here)
 Bar/<Widget>.qml          Clock Workspaces Tray Audio Network Bluetooth Battery Caffeine Bell
                           ActiveWindow Media SysMon NetSpeed KeyboardLayout Agents NightLight CommandWidget Label
-Panels/Panel.qml          popup under a widget; PanelHeader PanelRow PanelButton Slider Toggle
+Panels/Panel.qml          a drawer that slides out of the bar under its widget (Motion in/out);
+                          PanelHeader (title, detail, `actions: [IconButton…]`, switch)
+                          PanelSection PanelDivider PanelRow (icon chip, `strength` bars, check)
+                          PanelButton IconButton Segmented Slider Toggle EmptyState
+                          VolumeLine DeviceList (current + "N more")
+Commons/Motion.qml        the one motion language: inMs/outMs/moveMs/fadeMs + bezier curves;
+                          Hyprland's layer animations use the same (orreryIn / orreryOut)
 Panels/<X>Panel.qml       Audio Network Bluetooth Power Calendar Agents Media · TrayMenu
 Dock/DockWindow.qml       the dock: Services/Dock.qml holds shell.json › dock, pins and the items
                           (pinned, then running via ToplevelManager); intellihide reads window
@@ -127,7 +133,23 @@ Rules of the house:
   `Config.set("path", value)`. Never write shell.json from a script while the
   shell also writes it, except with `jq` on the whole file (orrery-agent does).
 
+Panels, the way they are built now: a new panel is a `Panel { name; anchorItem;
+panelWidth }` of those parts, never its own card or animation. Spacing is
+16 px padding, 10 px between parts, rows 40 px (48 with a subtitle). A list
+that can grow shows the current item and folds the rest ("3 more devices").
+Every panel has an empty state (EmptyState), a header action instead of a
+footer button where one icon says it, and a Legacy (pill) bar turns the
+clicked pill into the drawer's tab (Pill.qml `attached`). Check new panel
+work in the floating and pill skins, dark and light.
+
 QML pitfalls learned here (don't relearn them):
+A component whose root has a `default property alias x: inner.data` also
+sends its OWN declared children into `inner` (PanelHeader did: "Row will not
+function"); make such slots explicit (`actions: [ … ]`). Pipewire: a playback
+stream (an app's audio) is `isStream && isSink`, and a node's properties and
+volume are only filled once a PwObjectTracker holds it. Material Symbols
+`network_wifi_*_bar` in the filled style all draw a full fan: draw signal
+strength yourself (PanelRow `strength`).
 `id` is reserved (use `widgetId`); `var` arrays come back as copies — update by
 id and reassign; `Theme.c.x` are strings, use `Theme.alpha()` for translucency;
 `Grid` pads implicit size for declared rows/columns; flipping `anchors` at

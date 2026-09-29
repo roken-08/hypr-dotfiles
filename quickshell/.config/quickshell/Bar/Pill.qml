@@ -1,5 +1,6 @@
 import QtQuick
 import qs.Commons
+import qs.Services
 
 // One bar module. Draws itself as a bordered pill in the "pill" skin
 // (the classic waybar look) and as flat text in "minimal". Widgets put
@@ -25,10 +26,20 @@ Rectangle {
     implicitHeight: vertical ? inner.implicitHeight + (pillMode ? 14 : 8) : (pillMode ? 31 : 26)
     // pill skin keeps the waybar css values exactly (6px, 12px tray, bg3 border)
     radius: pillMode ? (round ? 12 : 6) : Theme.radius
-    color: pillMode ? (hovered && interactive ? Theme.c.bg2 : Theme.c.bg0)
+    // while its panel is out, a Legacy pill is the drawer's tab: square on the
+    // side the panel hangs from, in the panel's colour (Panels/Panel.qml)
+    readonly property bool attached: pillMode && (Panels.item === pill || Panels.closing === pill)
+    readonly property string side: Config.position
+    topLeftRadius:     attached && (side === "bottom" || side === "right") ? 0 : radius
+    topRightRadius:    attached && (side === "bottom" || side === "left")  ? 0 : radius
+    bottomLeftRadius:  attached && (side === "top"    || side === "right") ? 0 : radius
+    bottomRightRadius: attached && (side === "top"    || side === "left")  ? 0 : radius
+    color: attached ? Theme.c.bg0
+         : pillMode ? (hovered && interactive ? Theme.c.bg2 : Theme.c.bg0)
                     : (hovered && interactive ? Theme.c.bg2 : "transparent")
     border.width: pillMode ? 1 : 0
-    border.color: pillMode ? (hovered && interactive ? Theme.c.bg4 : Theme.c.bg3)
+    border.color: attached ? Theme.c.bg3
+                : pillMode ? (hovered && interactive ? Theme.c.bg4 : Theme.c.bg3)
                            : (hovered && interactive ? Theme.c.borderStrong : Theme.c.border)
     Behavior on color { ColorAnimation { duration: 150 } }
     Behavior on border.color { ColorAnimation { duration: 150 } }

@@ -31,7 +31,7 @@ Panel {
                 Rectangle {
                     id: plan
                     visible: modelData.plan !== ""
-                    width: planLbl.implicitWidth + 12; height: 18; radius: 3
+                    width: planLbl.implicitWidth + 12; height: 18; radius: Theme.radiusSm
                     color: Theme.c.bg2; border.width: 1; border.color: Theme.c.border
                     Label { id: planLbl; anchors.centerIn: parent; text: modelData.plan; font.pixelSize: Theme.fs(10); color: Theme.c.accentMid }
                 }
@@ -107,7 +107,7 @@ Panel {
                         }
                     }
                     Label { anchors.horizontalCenter: parent.horizontalCenter; text: Qt.formatDate(new Date(modelData.date + "T12:00:00"), "ddd").slice(0, 2)
-                            font.pixelSize: Theme.fs(9); color: index === chart.parent.days.length - 1 ? Theme.c.fg : Theme.c.accentDim }
+                            font.pixelSize: Theme.fs(10.5); color: index === chart.parent.days.length - 1 ? Theme.c.fg : Theme.c.accentMid }
                 }
             }
         }

@@ -11,8 +11,12 @@ Rectangle {
     id: card
     required property var entry
     property bool compact: false
+    property bool showApp: true       // the centre groups by app, so its cards leave the name out
     readonly property var n: entry.n || ({ summary: "", body: "", appName: "", appIcon: "", image: "", actions: [], urgency: 1 })
     readonly property bool critical: n.urgency === NotificationUrgency.Critical
+    // actions worth a button: apps also send a hidden "default" one (a click on
+    // the card runs it) and some send none with a label, which drew empty buttons
+    readonly property var buttons: (n.actions || []).filter(a => a && a.text && a.text.trim() !== "" && a.identifier !== "default")
 
     width: parent.width
     implicitHeight: col.implicitHeight + 24
@@ -51,20 +55,28 @@ Rectangle {
             width: parent.width - 42
             spacing: 3
             Row {
+                visible: card.showApp
                 width: parent.width
                 Label { text: card.n.appName; font.pixelSize: Theme.fs(11); color: Theme.c.accentMid; width: parent.width - 60; elide: Text.ElideRight }
                 Label { text: card.ago(); font.pixelSize: Theme.fs(11); color: Theme.c.accentDim; width: 60; rightPadding: 16; horizontalAlignment: Text.AlignRight }
             }
-            Label { width: parent.width; text: card.n.summary; font.pixelSize: Theme.fs(13); font.weight: Font.Bold
-                    color: Theme.c.accentBright; wrapMode: Text.WordWrap; maximumLineCount: 2; elide: Text.ElideRight }
+            // without the app line the time rides on the title's line
+            Item {
+                width: parent.width
+                height: sum.implicitHeight
+                Label { id: sum; width: parent.width - (card.showApp ? 0 : 64); text: card.n.summary; font.pixelSize: Theme.fs(13); font.weight: Font.Bold
+                        color: Theme.c.accentBright; wrapMode: Text.WordWrap; maximumLineCount: 2; elide: Text.ElideRight }
+                Label { visible: !card.showApp; anchors.right: parent.right; anchors.rightMargin: 16; y: 1
+                        text: card.ago(); font.pixelSize: Theme.fs(11); color: Theme.c.accentDim }
+            }
             Label { visible: card.n.body !== ""; width: parent.width; text: card.n.body; textFormat: Text.StyledText
                     font.pixelSize: Theme.fs(12); color: Theme.c.fg; wrapMode: Text.WordWrap; maximumLineCount: card.compact ? 3 : 6; elide: Text.ElideRight }
             Row {
-                visible: card.n.actions.length > 0
+                visible: card.buttons.length > 0
                 spacing: 6
                 topPadding: 4
                 Repeater {
-                    model: card.n.actions
+                    model: card.buttons
                     Rectangle {
                         required property var modelData
                         implicitWidth: al.implicitWidth + 20; implicitHeight: 24; radius: Theme.radius

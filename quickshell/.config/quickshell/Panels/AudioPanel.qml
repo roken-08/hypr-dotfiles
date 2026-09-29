@@ -1,89 +1,126 @@
 import QtQuick
 import Quickshell
+import Quickshell.Widgets
 import Quickshell.Services.Pipewire
 import qs.Commons
 import qs.Bar
 
+// Sound: output and input, each a volume line and a short device picker,
+// then the apps playing right now with their own volume.
 Panel {
     id: p
     name: "audio"
+    panelWidth: 340
 
     readonly property var sink: Pipewire.defaultAudioSink
     readonly property var source: Pipewire.defaultAudioSource
     readonly property var sinks: Pipewire.nodes.values.filter(n => n.isSink && !n.isStream && n.audio)
     readonly property var sources: Pipewire.nodes.values.filter(n => !n.isSink && !n.isStream && n.audio && n.type === PwNodeType.AudioSource)
-    PwObjectTracker { objects: [p.sink, p.source] }
+    // every playback stream is tracked (a node's properties and volume are
+    // only filled in once tracked); the list shows the apps, not the plumbing
+    // (echo cancellation, speech-dispatcher's dummy)
+    // (a playback stream is isSink in Quickshell: it flows into a sink)
+    readonly property var streams: Pipewire.nodes.values.filter(n => n.isStream && n.isSink)
+    readonly property var appStreams: streams.filter(n => n.audio && p.appName(n) !== "" && !/echo-cancel|speech-dispatcher|dummy/i.test(n.name))
+    // one row per app, whatever number of streams it has open (a browser has several)
+    readonly property var apps: {
+        const out = [], at = {}
+        for (const n of appStreams) {
+            const a = p.appName(n)
+            if (at[a] === undefined) { at[a] = out.length; out.push({ name: a, streams: [], node: n }) }
+            out[at[a]].streams.push(n)
+        }
+        return out
+    }
+    PwObjectTracker { objects: [p.sink, p.source].concat(p.streams) }
 
     function label(n) { return n ? (n.nickname || n.description || n.name) : "—" }
-
-    PanelHeader { title: "Sound" }
-
-    // output --------------------------------------------------------
-    Column {
-        width: parent.width; spacing: 6
-        Row {
-            width: parent.width; spacing: 8
-            Icon { icon: p.sink && p.sink.audio.muted ? "volume_off" : "volume_up"; width: 20; size: Theme.fs(18)
-                    color: p.sink && p.sink.audio.muted ? Theme.c.accentDim : Theme.c.accentLight
-                    MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                                onClicked: if (p.sink) p.sink.audio.muted = !p.sink.audio.muted } }
-            Label { text: "Output"; font.pixelSize: Theme.fs(12); color: Theme.c.accentMid; width: parent.width - 100 }
-            Label { text: p.sink ? Math.round(p.sink.audio.volume * 100) + "%" : ""; font.pixelSize: Theme.fs(12); color: Theme.c.accentMid
-                    width: 40; horizontalAlignment: Text.AlignRight }
-        }
-        Slider { value: p.sink ? p.sink.audio.volume : 0; dimmed: p.sink && p.sink.audio.muted
-                 onMoved: (v) => { if (p.sink) p.sink.audio.volume = v } }
+    function appName(n) { return (n.properties && n.properties["application.name"]) || "" }
+    // what kind of device it is, from its name
+    function devIcon(n, input) {
+        const s = ((n && n.name) || "") + " " + ((n && n.description) || "")
+        if (/bluez/i.test(s)) return input ? "headset_mic" : "headphones"
+        if (/hdmi|displayport/i.test(s)) return "tv"
+        if (/headphone|headset/i.test(s)) return input ? "headset_mic" : "headphones"
+        if (/usb/i.test(s)) return "usb"
+        return input ? "mic" : "speaker"
     }
-    Column {
-        width: parent.width; spacing: 2
-        Repeater {
-            model: p.sinks
-            PanelRow {
-                required property var modelData
-                icon: "speaker"
-                title: p.label(modelData)
-                active: modelData === p.sink
-                trailing: active ? "default" : ""
-                onClicked: Pipewire.preferredDefaultAudioSink = modelData
+
+    PanelHeader {
+        title: "Sound"
+        actions: [ IconButton { icon: "tune"; onClicked: { Quickshell.execDetached(["pavucontrol"]); Panels.close() } } ]
+    }
+
+    PanelSection { text: "Output" }
+    VolumeLine { node: p.sink }
+    DeviceList {
+        model: p.sinks; current: p.sink
+        icon: (n) => p.devIcon(n, false); label: (n) => p.label(n)
+        onPicked: (n) => Pipewire.preferredDefaultAudioSink = n
+    }
+
+    PanelDivider {}
+    PanelSection { text: "Input" }
+    VolumeLine { node: p.source; input: true }
+    DeviceList {
+        model: p.sources; current: p.source
+        icon: (n) => p.devIcon(n, true); label: (n) => p.label(n)
+        onPicked: (n) => Pipewire.preferredDefaultAudioSource = n
+    }
+
+    PanelDivider { visible: p.apps.length > 0 }
+    PanelSection { visible: p.apps.length > 0; text: "Apps" }
+    Repeater {
+        model: p.apps
+        Item {
+            id: app
+            required property var modelData
+            width: parent.width; height: 32
+            readonly property var lead: modelData.node
+            readonly property real level: lead && lead.audio ? lead.audio.volume : 0
+            readonly property bool muted: lead && lead.audio ? lead.audio.muted : false
+            // the app's icon: its own hint, else its desktop entry, else a note
+            readonly property string iconName: {
+                const pr = lead.properties || {}
+                if (pr["application.icon-name"]) return pr["application.icon-name"]
+                const e = DesktopEntries.heuristicLookup(pr["application.process.binary"] || modelData.name)
+                          || DesktopEntries.heuristicLookup(modelData.name)
+                return e ? e.icon : ""
+            }
+            function setAll(v) { for (const n of modelData.streams) if (n.audio) n.audio.volume = v }
+            Item {
+                id: appIcon
+                anchors.left: parent.left; anchors.leftMargin: 6; anchors.verticalCenter: parent.verticalCenter
+                width: 28; height: 28
+                IconImage {
+                    id: img
+                    anchors.centerIn: parent; implicitSize: 20
+                    source: app.iconName !== "" ? Quickshell.iconPath(app.iconName, true) : ""
+                    visible: source.toString() !== ""
+                }
+                Icon { anchors.centerIn: parent; visible: !img.visible; icon: "music_note"; size: Theme.fs(16); color: Theme.c.accentLight }
+            }
+            Label {
+                id: appLabel
+                anchors.left: appIcon.right; anchors.leftMargin: 8; anchors.verticalCenter: parent.verticalCenter
+                width: 84; elide: Text.ElideRight
+                text: app.modelData.name; font.pixelSize: Theme.fs(12); color: Theme.c.fg
+            }
+            Slider {
+                anchors.left: appLabel.right; anchors.leftMargin: 8
+                anchors.right: appPct.left; anchors.rightMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+                width: undefined
+                value: app.level; dimmed: app.muted
+                onMoved: (x) => app.setAll(x)
+            }
+            Label {
+                id: appPct
+                anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter
+                width: 38; horizontalAlignment: Text.AlignRight
+                text: Math.round(app.level * 100) + "%"
+                font.pixelSize: Theme.fs(12); color: Theme.c.accentLight
             }
         }
-    }
-
-    Rectangle { width: parent.width; height: 1; color: Theme.c.bg3 }
-
-    // input ---------------------------------------------------------
-    Column {
-        width: parent.width; spacing: 6
-        Row {
-            width: parent.width; spacing: 8
-            Icon { icon: p.source && p.source.audio.muted ? "mic_off" : "mic"; width: 20; size: Theme.fs(18)
-                    color: p.source && p.source.audio.muted ? Theme.c.accentDim : Theme.c.accentLight
-                    MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor
-                                onClicked: if (p.source) p.source.audio.muted = !p.source.audio.muted } }
-            Label { text: "Input"; font.pixelSize: Theme.fs(12); color: Theme.c.accentMid; width: parent.width - 100 }
-            Label { text: p.source ? Math.round(p.source.audio.volume * 100) + "%" : ""; font.pixelSize: Theme.fs(12); color: Theme.c.accentMid
-                    width: 40; horizontalAlignment: Text.AlignRight }
-        }
-        Slider { value: p.source ? p.source.audio.volume : 0; dimmed: p.source && p.source.audio.muted
-                 onMoved: (v) => { if (p.source) p.source.audio.volume = v } }
-    }
-    Column {
-        width: parent.width; spacing: 2
-        Repeater {
-            model: p.sources
-            PanelRow {
-                required property var modelData
-                icon: "mic"
-                title: p.label(modelData)
-                active: modelData === p.source
-                trailing: active ? "default" : ""
-                onClicked: Pipewire.preferredDefaultAudioSource = modelData
-            }
-        }
-    }
-
-    Row {
-        width: parent.width; spacing: 8; layoutDirection: Qt.RightToLeft
-        PanelButton { text: "Mixer"; icon: "tune"; onClicked: { Quickshell.execDetached(["pavucontrol"]); Panels.close() } }
     }
 }

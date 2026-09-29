@@ -331,7 +331,7 @@ Panel {
             readonly property bool hot: seekArea.containsMouse || dragging
             Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
-                width: parent.width; height: seek.hot ? 5 : 3; radius: height / 2
+                width: parent.width; height: seek.hot ? 6 : 4; radius: height / 2
                 color: Theme.alpha(Theme.c.fg, 0.15)
                 Behavior on height { NumberAnimation { duration: 120 } }
                 Rectangle {

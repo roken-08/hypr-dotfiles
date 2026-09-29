@@ -23,7 +23,7 @@ hl.layer_rule({
 
 -- The Quickshell shell: same blur as the tools it replaced
 hl.layer_rule({ match = { namespace = "^orrery-powermenu$" },      blur = true, ignore_alpha = 0.7 })
-hl.layer_rule({ match = { namespace = "^orrery-notifications$" },  blur = true, ignore_alpha = 0.4 })
+hl.layer_rule({ match = { namespace = "^orrery-notifications$" },  blur = true, ignore_alpha = 0.4, animation = "slide right" })
 hl.layer_rule({ match = { namespace = "^orrery-control-center$" }, blur = true, ignore_alpha = 0.5 })
 hl.layer_rule({ match = { namespace = "^orrery-picker$" },         blur = true, ignore_alpha = 0.7 })
 hl.layer_rule({ match = { namespace = "^orrery-launcher$" },       blur = true, ignore_alpha = 0.5, animation = "popin 65%" })

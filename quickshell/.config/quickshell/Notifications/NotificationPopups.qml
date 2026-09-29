@@ -7,7 +7,8 @@ import qs.Services
 // Popup stack, top-right, under the bar.
 PanelWindow {
     id: win
-    visible: Notifs.popups.length > 0
+    // out of the way while a bar panel is open (they sat over its top corner)
+    visible: Notifs.popups.length > 0 && Panels.open === ""
     anchors { top: true; right: true }
     margins { top: Theme.barStyle === "pill" ? 44 : Theme.barStyle === "floating" ? 37 : 32; right: 8 }
     implicitWidth: 380
