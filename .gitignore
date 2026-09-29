@@ -45,3 +45,4 @@ theme/.config/orrery/skills/orrery/MAINTAINER.md
 hyprland/.config/hypr/modules/monitors.local.lua
 hyprland/.config/hypr/modules/binds.local.lua
 hyprland/.config/hypr/modules/look.local.lua
+hyprland/.config/hypr/hyprland.local.lua

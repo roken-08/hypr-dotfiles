@@ -129,7 +129,19 @@ It's safe to run again, and it never deletes or overwrites your files.
 </details>
 
 <details>
-<summary><b>Your monitor, Spotify and Claude Code</b></summary>
+<summary><b>Keyboard, browser, monitor, Spotify and Claude Code</b></summary>
+
+**Keyboard layout** is US. Put your own in `~/.config/hypr/hyprland.local.lua` (yours;
+updates never touch it), then `hyprctl reload`:
+
+```lua
+hl.config({ input = { kb_layout = "de" } })
+```
+
+Any other Hyprland setting can go in that file too; it's loaded last, so it wins.
+
+**A browser** isn't installed for you. `SUPER` `B` opens the first one it finds of Zen, Firefox,
+Chromium and Brave; pick another in Menu › Settings › Default apps.
 
 **Monitor.** Every screen starts at its preferred resolution with an automatic scale. Pick a
 scale in Menu › Appearance › Display scale, or add an exact rule to

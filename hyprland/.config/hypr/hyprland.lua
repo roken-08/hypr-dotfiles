@@ -49,3 +49,10 @@ hl.gesture({
 })
 
 -- hl.device({ name = "epic-mouse-v1", sensitivity = -0.5 })
+
+-- Your own Hyprland settings (keyboard layout, touchpad, anything above), in
+-- ~/.config/hypr/hyprland.local.lua: loaded last, so it wins, and not part of
+-- the repo, so updates never touch it. For example:
+--   hl.config({ input = { kb_layout = "de" } })
+local own = io.open(os.getenv("HOME") .. "/.config/hypr/hyprland.local.lua")
+if own then own:close(); pcall(dofile, os.getenv("HOME") .. "/.config/hypr/hyprland.local.lua") end

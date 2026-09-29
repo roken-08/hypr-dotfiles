@@ -84,6 +84,11 @@ at the end of decorations.lua, so reloads keep it) plus `look` in
 shell.json for the shell, and applies with `hyprctl eval`. Don't edit the
 defaults in decorations.lua for a user's taste; use the command.
 
+A user's own settings (keyboard layout, touchpad, any `hl.config`) go in
+`~/.config/hypr/hyprland.local.lua`: gitignored, loaded at the very end of
+hyprland.lua, so it overrides everything and `git pull` never conflicts.
+Don't edit the repo's hyprland.lua for one person's taste.
+
 Startup: `misc` turns off Hyprland's stock wallpaper, logo and splash, and
 the theme sets `misc.background_color` to its `bg0` (current/hyprland.lua).
 Until the shell's wallpaper layer fades in, a second or two after login, the
