@@ -89,6 +89,12 @@ reasoning in the colors.toml header comment.
    settings) and `themes.webp`, the README's crossfading theme tour. A new
    shipped theme needs an entry in its `SHOTS` and `BLURB`, and a
    `<details>` block in README's Themes section.
+   Check `themes.webp` frame by frame, not only its first frame (the Read
+   tool shows just that one): decode it with Pillow and compare each still
+   to its preview. Encoded by ffmpeg, the WebP stored frames as lossy patches
+   over earlier ones, and after three fades the dark Cassini wallpaper was
+   blocky with Catppuccin's blues; the script now encodes with Pillow, every
+   frame a keyframe (needs `python-pillow`).
 5. **Verify in every surface** (verify.md). For btop use `orrery-float btop`
    (a tiled kitty next to other windows is < 80×24 and btop only prints "Terminal size too
    small"). `orrery-wall next` cycles to the theme's other backgrounds. Verify: bar (every skin: `qs ipc call bar toggle` cycles them),

@@ -10,8 +10,8 @@ wordmark with orbits, the tagline and the four shipped themes' real previews
                              name, crossfading to the next, looping
 
 Rerun after retaking a preview:
-    python3 Screenshots/make-cover.py        (needs rsvg-convert, ffmpeg with libwebp, Inter, JetBrains Mono)"""
-import math, os, random, shutil, subprocess, tempfile
+    python3 Screenshots/make-cover.py        (needs rsvg-convert, ffmpeg, python-pillow, Inter, JetBrains Mono)"""
+import math, os, random, shutil, subprocess, sys, tempfile
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 THEMES = os.path.join(OUT, "..", "theme", ".config", "orrery", "themes")
@@ -146,38 +146,71 @@ def build(name, L, tmp):
 
 def tour(tmp, hold=2.4, fade=0.6, fps=24, width=1600):
     """themes.webp: every preview with a name tag, crossfading in a loop."""
-    frames = []
+    desks, tags = [], []
     for tid, label, col, *_ in SHOTS:
-        # the tag: a dark chip in the bottom-left corner, clear of the dock
-        shutil.copy(f"{THEMES}/{tid}/preview.jpg", f"{tmp}/{tid}.jpg")   # rsvg reads only beside the SVG
+        shutil.copy(f"{THEMES}/{tid}/preview.jpg", f"{tmp}/{tid}.jpg")
+        desks.append(f"{tmp}/{tid}.jpg")
+        # the tag, on its own transparent layer: a dark chip in the
+        # bottom-left corner, clear of the dock
         w = 68 + max(len(label) * 15.5, len(BLURB[tid]) * 9.7)
-        svg = f"""<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="900">
-  <image width="1600" height="900" xlink:href="{tid}.jpg"/>
+        svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900">
   <rect x="40" y="788" width="{w:.0f}" height="82" rx="10" fill="#0a0a0c" fill-opacity="0.78"
         stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.5"/>
   <circle cx="70" cy="818" r="7" fill="{col}"/>
   <text x="88" y="828" font-family="Inter" font-weight="600" font-size="27" fill="#ededf0">{label}</text>
   <text x="88" y="856" font-family="Inter" font-weight="400" font-size="19" fill="#a4a4ae">{BLURB[tid]}</text>
 </svg>"""
-        with open(f"{tmp}/tour-{tid}.svg", "w") as fh:
+        with open(f"{tmp}/tag-{tid}.svg", "w") as fh:
             fh.write(svg)
-        png = f"{tmp}/tour-{tid}.png"
-        subprocess.run(["rsvg-convert", "-w", str(width), "-o", png, f"{tmp}/tour-{tid}.svg"], check=True)
-        frames.append(png)
-    frames.append(frames[0])                 # fade back into the first: a seamless loop
+        subprocess.run(["rsvg-convert", "-w", str(width), "-o", f"{tmp}/tag-{tid}.png", f"{tmp}/tag-{tid}.svg"], check=True)
+        tags.append(f"{tmp}/tag-{tid}.png")
+    desks.append(desks[0])                   # fade back into the first: a seamless loop
+    tags.append(tags[0])
+    n, step = len(SHOTS), hold + fade
+    total = n * step                         # theme k is still from k*step to k*step + hold
+
+    # the desktops crossfade into each other
     args, chain, last = [], [], "0:v"
-    for f in frames:
+    for f in desks:
         args += ["-loop", "1", "-t", str(hold + 2 * fade), "-framerate", str(fps), "-i", f]
-    for i in range(1, len(frames)):
-        out = f"x{i}"
-        chain.append(f"[{last}][{i}:v]xfade=transition=fade:duration={fade}:offset={i * hold + (i - 1) * fade:.2f}[{out}]")
-        last = out
-    # drop the tail that repeats the first frame, so the loop doesn't stall on it
-    total = (len(frames) - 1) * (hold + fade)
-    chain.append(f"[{last}]trim=duration={total:.2f},format=yuv420p[v]")
+    for i in range(1, len(desks)):
+        chain.append(f"[{last}][{i}:v]xfade=transition=fade:duration={fade}:offset={i * hold + (i - 1) * fade:.2f},scale={width}:-2[x{i}]")
+        last = f"x{i}"
+    # the tags don't overlap: the old one fades out in the first half of a
+    # crossfade, the new one fades in during the second half
+    for k, f in enumerate(tags):
+        idx = len(desks) + k
+        args += ["-loop", "1", "-t", f"{total:.2f}", "-framerate", str(fps), "-i", f]
+        fx = ["format=rgba"]
+        if k > 0:
+            fx.append(f"fade=t=in:st={k * step - fade / 2:.2f}:d={fade / 2:.2f}:alpha=1")
+        if k < n:
+            fx.append(f"fade=t=out:st={k * step + hold:.2f}:d={fade / 2:.2f}:alpha=1")
+        chain.append(f"[{idx}:v]{','.join(fx)}[t{k}]")
+        chain.append(f"[{last}][t{k}]overlay=format=auto[o{k}]")
+        last = f"o{k}"
+    # end where the loop begins again, so it doesn't stall on the repeat
+    chain.append(f"[{last}]trim=duration={total:.2f}[v]")
+    os.makedirs(f"{tmp}/fr")
     subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *args, "-filter_complex", ";".join(chain),
-                    "-map", "[v]", "-c:v", "libwebp_anim", "-lossless", "0", "-quality", "80",
-                    "-compression_level", "6", "-loop", "0", f"{OUT}/themes.webp"], check=True)
+                    "-map", "[v]", "-pix_fmt", "rgb24", f"{tmp}/fr/%04d.png"], check=True)
+    # Encode with Pillow, every frame a keyframe. ffmpeg's encoder stores most
+    # frames as lossy patches over the one before, and over a fade the errors
+    # pile up: dark wallpapers came out blocky with the previous theme's colours.
+    try:
+        from PIL import Image, ImageChops
+    except ImportError:
+        sys.exit("themes.webp needs Pillow: sudo pacman -S python-pillow")
+    shots, durs = [], []
+    for f in sorted(os.listdir(f"{tmp}/fr")):
+        im = Image.open(f"{tmp}/fr/{f}").convert("RGB")
+        if shots and ImageChops.difference(im, shots[-1]).getbbox() is None:
+            durs[-1] += 1000 / fps           # a still: one frame, shown longer
+        else:
+            shots.append(im)
+            durs.append(1000 / fps)
+    shots[0].save(f"{OUT}/themes.webp", save_all=True, append_images=shots[1:],
+                  duration=[round(d) for d in durs], loop=0, quality=88, method=4, kmin=0, kmax=1)
     print(f"{OUT}/themes.webp")
 
 
