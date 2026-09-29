@@ -81,7 +81,10 @@ Four themes ship with it. Switch live with **`SUPER` `CTRL` `SHIFT` `SPACE`**, o
   dock, fonts, Wi-Fi, Bluetooth, keybindings.
 - **Launcher and clipboard.** Fuzzy app search that learns what you use, and clipboard history
   with image previews.
-- **Panels** for sound, Wi-Fi, Bluetooth and power profiles, dropping down from the bar.
+- **Panels that grow out of the bar**: sound with per-app volume, Wi-Fi, Bluetooth pairing,
+  power (battery, brightness, profiles), notifications, calendar and media, all in one
+  Material 3 motion.
+- **A power menu** (`SUPER` `M`) with lock, log out, sleep, hibernate, restart and shut down.
 - **A careful installer.** It backs up anything in the way, is safe to run again, and has a
   `--dry-run`.
 

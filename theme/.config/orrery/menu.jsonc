@@ -144,9 +144,9 @@
 
   // Power
   "power.lock": {"icon":"lock","label":"Lock","action":"~/.config/hypr/scripts/lock.sh"},
-  "power.suspend": {"icon":"bedtime","label":"Suspend","description":"sleep","action":"systemctl suspend"},
-  "power.hibernate": {"icon":"mode_standby","label":"Hibernate","when":"hibernate","action":"systemctl hibernate"},
+  "power.suspend": {"icon":"bedtime","label":"Sleep","description":"suspend","action":"systemctl suspend"},
+  "power.hibernate": {"icon":"ac_unit","label":"Hibernate","when":"hibernate","action":"systemctl hibernate"},
   "power.logout": {"icon":"logout","label":"Log out","action":"hyprctl dispatch 'hl.dsp.exit()'"},
-  "power.reboot": {"icon":"restart_alt","label":"Reboot","action":"systemctl reboot"},
+  "power.reboot": {"icon":"restart_alt","label":"Restart","description":"reboot","action":"systemctl reboot"},
   "power.shutdown": {"icon":"power_settings_new","label":"Shut down","description":"power off","action":"systemctl poweroff"}
 }

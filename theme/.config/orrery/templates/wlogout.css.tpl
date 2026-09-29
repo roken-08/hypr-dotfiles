@@ -42,18 +42,21 @@ button:active {
 /* rest: icon that contrasts with @bg1; hover/active: icon that contrasts with @fg */
 #lock            { background-image: url("{{ home }}/.config/wlogout/icons/lock-{{ dark "rest" "hover" }}.png"); }
 #logout          { background-image: url("{{ home }}/.config/wlogout/icons/exit-{{ dark "rest" "hover" }}.png"); }
-#hibernate       { background-image: url("{{ home }}/.config/wlogout/icons/sleep-{{ dark "rest" "hover" }}.png"); }
+#suspend         { background-image: url("{{ home }}/.config/wlogout/icons/sleep-{{ dark "rest" "hover" }}.png"); }
+#hibernate       { background-image: url("{{ home }}/.config/wlogout/icons/hibernate-{{ dark "rest" "hover" }}.png"); }
 #reboot          { background-image: url("{{ home }}/.config/wlogout/icons/reboot-{{ dark "rest" "hover" }}.png"); }
 #shutdown        { background-image: url("{{ home }}/.config/wlogout/icons/shutdown-{{ dark "rest" "hover" }}.png"); }
 
 #lock:focus      { background-image: url("{{ home }}/.config/wlogout/icons/lock-{{ dark "focus" "hover" }}.png"); }
 #logout:focus    { background-image: url("{{ home }}/.config/wlogout/icons/exit-{{ dark "focus" "hover" }}.png"); }
-#hibernate:focus { background-image: url("{{ home }}/.config/wlogout/icons/sleep-{{ dark "focus" "hover" }}.png"); }
+#suspend:focus { background-image: url("{{ home }}/.config/wlogout/icons/sleep-{{ dark "focus" "hover" }}.png"); }
+#hibernate:focus { background-image: url("{{ home }}/.config/wlogout/icons/hibernate-{{ dark "focus" "hover" }}.png"); }
 #reboot:focus    { background-image: url("{{ home }}/.config/wlogout/icons/reboot-{{ dark "focus" "hover" }}.png"); }
 #shutdown:focus  { background-image: url("{{ home }}/.config/wlogout/icons/shutdown-{{ dark "focus" "hover" }}.png"); }
 
 #lock:hover,      #lock:active      { background-image: url("{{ home }}/.config/wlogout/icons/lock-{{ dark "hover" "rest" }}.png"); }
 #logout:hover,    #logout:active    { background-image: url("{{ home }}/.config/wlogout/icons/exit-{{ dark "hover" "rest" }}.png"); }
-#hibernate:hover, #hibernate:active { background-image: url("{{ home }}/.config/wlogout/icons/sleep-{{ dark "hover" "rest" }}.png"); }
+#suspend:hover, #suspend:active   { background-image: url("{{ home }}/.config/wlogout/icons/sleep-{{ dark "hover" "rest" }}.png"); }
+#hibernate:hover, #hibernate:active { background-image: url("{{ home }}/.config/wlogout/icons/hibernate-{{ dark "hover" "rest" }}.png"); }
 #reboot:hover,    #reboot:active    { background-image: url("{{ home }}/.config/wlogout/icons/reboot-{{ dark "hover" "rest" }}.png"); }
 #shutdown:hover,  #shutdown:active  { background-image: url("{{ home }}/.config/wlogout/icons/shutdown-{{ dark "hover" "rest" }}.png"); }
