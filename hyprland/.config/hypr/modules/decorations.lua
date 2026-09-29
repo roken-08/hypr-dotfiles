@@ -112,3 +112,9 @@ hl.config({
         disable_hyprland_logo   = false,
     },
 })
+
+-- Corners and border thickness chosen in Menu > Appearance > Corners & borders
+-- (orrery-border): look.local.lua, next to this file, is loaded after it and
+-- is not part of the repo.
+local look = io.open(os.getenv("HOME") .. "/.config/hypr/modules/look.local.lua")
+if look then look:close(); pcall(dofile, os.getenv("HOME") .. "/.config/hypr/modules/look.local.lua") end

@@ -185,8 +185,9 @@ you make stay on your machine: git ignores them.
 
 ### Everything else
 
-- **Bar, dock, fonts, text size, display scale:** Menu › Appearance. *Edit look & feel* there
-  opens gaps, blur and animations.
+- **Bar, dock, fonts, text size, display scale:** Menu › Appearance. *Corners & borders* there
+  makes windows and the shell square or rounded and sets the window border thickness
+  (`orrery-border` from a terminal). *Edit look & feel* opens gaps, blur and animations.
 - **Your own keybinds** go in `~/.config/hypr/modules/binds.local.lua`, and **your own menu
   entries** in `~/.config/orrery/menu.local.jsonc`. Updates never touch either.
 - **Any script can be a bar widget:** add it under `bar.modules` in

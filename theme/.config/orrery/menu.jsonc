@@ -19,7 +19,7 @@
   // append). Whole-line // comments only.
 
   "apps": {"icon":"apps","label":"Apps","description":"launcher applications","action":"qs ipc call launcher toggle"},
-  "appearance": {"icon":"palette","label":"Appearance","description":"style look theme wallpaper bar dock font"},
+  "appearance": {"icon":"palette","label":"Appearance","description":"style look theme wallpaper bar dock font corners border"},
   "toggle": {"icon":"toggle_on","label":"Quick toggles","description":"switches on off"},
   "devices": {"icon":"devices","label":"Devices","description":"hardware wifi bluetooth sound monitors"},
   "settings": {"icon":"settings","label":"Settings","description":"setup config defaults"},
@@ -74,6 +74,20 @@
   "appearance.scale.16": {"icon":"fit_screen","label":"1.6×","checked":"scale:1.6","action":"orrery-scale 1.6","keep":true},
   "appearance.scale.2": {"icon":"fit_screen","label":"2×","checked":"scale:2","action":"orrery-scale 2","keep":true},
   "appearance.scale.reset": {"icon":"fit_screen","label":"Back to the monitor rules","action":"orrery-scale reset","keep":true,"description":"monitors.local.lua"},
+  "appearance.shape": {"icon":"rounded_corner","label":"Corners & borders","description":"border radius rounded square corners thickness width","value":"shape"},
+  "appearance.shape.corners": {"icon":"rounded_corner","label":"Corners","description":"border radius rounded square windows panels","value":"radiusLabel"},
+  "appearance.shape.corners.0": {"icon":"crop_square","label":"Square","checked":"radius:0","action":"orrery-border radius 0","keep":true},
+  "appearance.shape.corners.4": {"icon":"rounded_corner","label":"4 px  (default)","checked":"radius:4","action":"orrery-border radius 4","keep":true},
+  "appearance.shape.corners.8": {"icon":"rounded_corner","label":"8 px","checked":"radius:8","action":"orrery-border radius 8","keep":true},
+  "appearance.shape.corners.12": {"icon":"rounded_corner","label":"12 px","checked":"radius:12","action":"orrery-border radius 12","keep":true},
+  "appearance.shape.corners.16": {"icon":"rounded_corner","label":"16 px","checked":"radius:16","action":"orrery-border radius 16","keep":true},
+  "appearance.shape.border": {"icon":"line_weight","label":"Border thickness","description":"window border width size","value":"borderLabel"},
+  "appearance.shape.border.0": {"icon":"line_weight","label":"None","checked":"border:0","action":"orrery-border width 0","keep":true},
+  "appearance.shape.border.1": {"icon":"line_weight","label":"1 px  (default)","checked":"border:1","action":"orrery-border width 1","keep":true},
+  "appearance.shape.border.2": {"icon":"line_weight","label":"2 px","checked":"border:2","action":"orrery-border width 2","keep":true},
+  "appearance.shape.border.3": {"icon":"line_weight","label":"3 px","checked":"border:3","action":"orrery-border width 3","keep":true},
+  "appearance.shape.border.4": {"icon":"line_weight","label":"4 px","checked":"border:4","action":"orrery-border width 4","keep":true},
+  "appearance.shape.reset": {"icon":"restart_alt","label":"Reset to default","description":"4 px corners 1 px border","action":"orrery-border reset","keep":true},
   "appearance.look": {"icon":"tune","label":"Edit look & feel","description":"gaps borders blur rounding shadows animations","action":"orrery-edit ~/.config/hypr/modules/decorations.lua"},
 
   // Quick toggles (SUPER+CTRL+O opens this page)

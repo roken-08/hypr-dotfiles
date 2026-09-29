@@ -80,7 +80,9 @@ the numbers match; a 1px text-height difference between GTK and Qt hinting
 is the known floor.
 
 Put the user's theme back (`orrery-theme set <the one from orrery-theme current at start>`)
-and close anything you opened.
+and close anything you opened. Save it *before* the first switch
+(`T0=$(orrery-theme current)`): the engine keeps no history, so once you have
+switched there is no way to find out which theme it was.
 
 ## Rating a look
 

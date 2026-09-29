@@ -91,6 +91,7 @@ Commands you will use (all `--help`/header-documented — read the script if uns
 | `orrery-agent list / default / launch / usage / skills install` | coding agents |
 | `orrery-doctor [--print]` | diagnostics bundle (see diagnose.md) |
 | `orrery-font set <family>` · `orrery-text-size <px>` · `orrery-scale <n>` | desktop font, apparent text size (shell + GTK + terminals) and monitor scale |
+| `orrery-border radius <px>` · `width <px>` · `reset` | corners (windows + shell; 0 = square) and window border thickness |
 | `qs ipc call menu open|run|search <id>` · `orrery-float <cmd>` · `orrery-edit <file>` · `orrery-toggle gaps|opacity` · `orrery-nightlight` · `orrery-remind` · `orrery-default` · `orrery-pkg` | menu actions, usable from anywhere |
 
 ## 3. Rules that keep the rice intact
@@ -109,8 +110,10 @@ Commands you will use (all `--help`/header-documented — read the script if uns
    red. Templates branch with `{{ hued <colour> <grey> }}` and QML with
    `Theme.hued ? Theme.c.good|warning|critical : <shade>`, so the mono themes
    stay pixel-identical (diff `render.py` output). Grey in a hued theme where
-   a stock theme has colour is a bug, not restraint. Corners 4px
-   (`Theme.radius`), 1px border (`Theme.c.border`) everywhere, in every theme.
+   a stock theme has colour is a bug, not restraint. Corners come from
+   `Theme.radius` / `Theme.radiusSm` (4px by default; `orrery-border` changes
+   them for windows and shell alike), never a literal, so a surface follows
+   the user's choice; 1px border (`Theme.c.border`) everywhere, in every theme.
 3. **Both modes, always.** Anything visual is checked on `eclipse` (dark)
    and `zenith` — `orrery-theme set <id>` swaps live; put the user's
    theme back when done (`orrery-theme current` first). A template change is

@@ -48,9 +48,12 @@ Singleton {
         border: "#3de0e0e0", borderStrong: "#abffffff"
     })
 
-    // The rice's corner: squarish, 4px (Hyprland rounding = 4, rofi 4px).
-    property int radius: 4
-    readonly property int radiusSm: 3
+    // The rice's corner: squarish, 4px (Hyprland rounding = 4, rofi 4px). The
+    // theme can set its own; orrery-border (Config.radius) overrides both, for
+    // the shell and Hyprland alike. radiusSm is for small things inside a surface.
+    property int themeRadius: 4
+    readonly property int radius: Config.radius >= 0 ? Config.radius : themeRadius
+    readonly property int radiusSm: Math.round(radius * 0.75)
 
     // colours in `c` are strings (JSON); use this for translucent variants
     function alpha(col, a) { const q = Qt.color(col); return Qt.rgba(q.r, q.g, q.b, a) }
@@ -71,7 +74,7 @@ Singleton {
             root.hued = j.hued === true
             if (j.name) root.name = j.name
             if (j.bar === "pill" || j.bar === "floating" || j.bar === "minimal") root.themeBarStyle = j.bar
-            if (j.radius !== undefined) root.radius = j.radius
+            if (j.radius !== undefined) root.themeRadius = j.radius
         } catch (e) {
             console.warn("Theme: could not parse " + root.file + ": " + e)
         }

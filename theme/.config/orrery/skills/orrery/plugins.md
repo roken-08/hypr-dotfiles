@@ -8,7 +8,7 @@ shell.qml                 mounts everything: WallpaperWindow Bar OsdWindow Notif
                           LockScreen PowerMenu ImagePicker Launcher Clipboard MenuWindow DockWindow
 Commons/Theme.qml         colours from current/colors.json: Theme.c.bg0..bg4, fg, accentBright,
                           accentLight, accentMid, accentDim, border, borderStrong;
-                          Theme.radius (4), radiusSm, font, fontSize, light, barStyle, alpha(col, a)
+                          Theme.radius (4, or the user's orrery-border choice), radiusSm, font, fontSize, light, barStyle, alpha(col, a)
 Commons/Config.qml        shell.json: Config.position/vertical/transparent, layoutFor(), moduleDef(),
                           set("a.b", v) — writes the file, everything rebinds
 Services/*.qml            singletons (pragma Singleton) with IpcHandler: Notifs, Panels, Themes,

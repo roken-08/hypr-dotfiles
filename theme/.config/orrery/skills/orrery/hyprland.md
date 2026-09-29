@@ -76,8 +76,13 @@ uses `Hyprland.monitorFor(screen).scale` instead of `devicePixelRatio`.
 ## Look
 
 `decorations.lua`: gaps 5/7, border 1, rounding 4, active/inactive opacity
-0.9/0.7, shadow, blur, animations. Colours are NOT here (theme). Keep the
-4px rounding and 1px border: it is the rice's signature across every surface.
+0.9/0.7, shadow, blur, animations. Colours are NOT here (theme). 4px rounding
+and a 1px border are the rice's defaults across every surface; the user
+changes both with `orrery-border radius|width <px>` (Menu › Appearance ›
+Corners & borders). It writes `modules/look.local.lua` (gitignored, loaded
+at the end of decorations.lua, so reloads keep it) plus `look` in
+shell.json for the shell, and applies with `hyprctl eval`. Don't edit the
+defaults in decorations.lua for a user's taste; use the command.
 
 ## Autostart, idle, lock
 

@@ -130,3 +130,6 @@ wallpaper
 widgets
 wifi
 wifi_off
+rounded_corner
+line_weight
+crop_square

@@ -45,6 +45,12 @@ def state():
     except Exception:
         opac_on = True
     hib = "disk" in read("/sys/power/state") and bool(sh("swapon --show --noheadings"))
+    # corners and border (orrery-border); absent = the defaults, 4 and 1
+    try:
+        look = json.load(open(f"{HOME}/.config/orrery/shell.json")).get("look", {})
+    except Exception:
+        look = {}
+    radius, border = str(look.get("radius", 4)), str(look.get("border", 1))
     return {
         "nightlight": bool(sh("pgrep -x hyprsunset")),
         "gaps": gaps_on, "opacity": opac_on, "hibernate": hib,
@@ -55,6 +61,10 @@ def state():
         "textsize": sh("orrery-text-size").splitlines()[0].split(":")[1].strip().split()[0] if shutil.which("orrery-text-size") else "12",
         "scale": (sh("hyprctl monitors -j | jq -r '.[] | select(.focused) | .scale'") or "").rstrip("0").rstrip(".") or "1",
         "wallpaper": os.path.basename(os.path.realpath(f"{HOME}/.config/orrery/current/background")),
+        "radius": radius, "border": border,
+        "radiusLabel": "square" if radius == "0" else f"{radius} px",
+        "borderLabel": "none" if border == "0" else f"{border} px",
+        "shape": ("square" if radius == "0" else f"{radius} px") + " · " + ("no border" if border == "0" else f"{border} px border"),
     }
 
 

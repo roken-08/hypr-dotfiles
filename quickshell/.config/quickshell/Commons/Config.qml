@@ -63,6 +63,9 @@ Singleton {
     readonly property bool hidden: !!(bar && bar.hidden)
     readonly property int fontSize: (data.font && data.font.size >= 8 && data.font.size <= 24) ? data.font.size : 12
     readonly property string fontFamily: (data.font && data.font.family) ? data.font.family : ""
+    // corner radius chosen with orrery-border (Menu > Appearance > Corners &
+    // borders); -1 = none chosen, the theme's own radius applies
+    readonly property int radius: (data.look && data.look.radius >= 0 && data.look.radius <= 24) ? data.look.radius : -1
     readonly property var skins: ["pill", "floating", "minimal"]
     readonly property string skin: (bar && skins.indexOf(bar.skin) !== -1) ? bar.skin : ""
     // true once shell.json was read (or found missing); see Theme.ready
