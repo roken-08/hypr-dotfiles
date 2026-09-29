@@ -91,6 +91,7 @@ Commands you will use (all `--help`/header-documented — read the script if uns
 | `orrery-agent list / default / launch / usage / skills install` | coding agents |
 | `orrery-doctor [--print]` | diagnostics bundle (see diagnose.md) |
 | `orrery-font set <family>` · `orrery-text-size <px>` · `orrery-scale <n>` | desktop font, apparent text size (shell + GTK + terminals) and monitor scale |
+| `orrery-terminal [path]` | open the default terminal (`orrery-default terminal`), in that folder; Thunar's "Open Terminal Here" uses it |
 | `orrery-border radius <px>` · `width <px>` · `reset` | corners (windows + shell; 0 = square) and window border thickness |
 | `qs ipc call menu open|run|search <id>` · `orrery-float <cmd>` · `orrery-edit <file>` · `orrery-toggle gaps|opacity` · `orrery-nightlight` · `orrery-remind` · `orrery-default` · `orrery-pkg` | menu actions, usable from anywhere |
 

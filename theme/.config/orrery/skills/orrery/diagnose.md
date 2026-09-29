@@ -65,6 +65,7 @@ to file it upstream; do not "fix" it by disabling half the rice.
 | screen shows for ~2 s after waking, then goes black; keys don't help, lid close/open does | a DPMS command that toggles instead of setting: with the Lua config, `hl.dsp.dpms("on")` ignores the string and toggles, and old-style `dispatch dpms on` is a Lua syntax error. `git grep -n dpms` in the repo, then use `hyprctl dispatch 'hl.dsp.dpms({action = "on"})'` / `{action = "off"}` everywhere (hypridle.conf, hypridle-classic.conf, Services/Idle.qml). Check: dispatch `{action = "on"}` twice and `hyprctl monitors -j | jq '.[0].dpmsStatus'` stays `true` |
 | no sleep / lock | caffeine on (`qs ipc call caffeine status`), `systemd-inhibit --list`, hypridle running twice |
 | `~/.local` or `~/.config/x` is a symlink into the repo (stow folded) | install.sh pre-flight; `stow -D` the package, recreate the dir, `stow -R` |
+| Thunar "Open Terminal Here": *Failed to launch preferred application for category "TerminalEmulator"* | Xfce 4.20's `exo-open --launch TerminalEmulator` needs `xfce4-mime-helper` (xfce4-settings, not installed). `~/.config/Thunar/uca.xml` should run `~/.local/bin/orrery-terminal %f` (install.sh swaps it in); reopen Thunar after editing it (`thunar -q`) |
 | high battery drain | `powerprofilesctl`, `powertop --html` (asks sudo — user runs it), GPU on (`cat /sys/class/drm/card*/device/power_state`), a runaway process in `orrery-doctor` top list |
 
 ## 6. Report

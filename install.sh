@@ -624,11 +624,24 @@ fi
 step "Shell"
 if [[ $DRY_RUN -eq 1 ]]; then
   info "Would mask the swaync user unit and link the /orrery skill (orrery-agent skills install)."
+  info "Would point Thunar's \"Open Terminal Here\" at orrery-terminal."
 else
   if command -v swaync >/dev/null 2>&1; then
     systemctl --user mask swaync.service >/dev/null 2>&1 && ok "swaync user unit masked (the shell is the notification daemon)."
   fi
   "$HOME/.local/bin/orrery-text-size" reset >/dev/null 2>&1 || true   # writes the terminal font family/size overrides
+  # Thunar's "Open Terminal Here" runs exo-open, which on Xfce 4.20 needs
+  # xfce4-mime-helper (xfce4-settings, not installed): point it at the rice's
+  # default terminal instead. Only that one command is swapped; any other
+  # custom actions stay as they are.
+  _uca="$HOME/.config/Thunar/uca.xml"
+  _exo='exo-open --working-directory %f --launch TerminalEmulator'
+  if [[ ! -f "$_uca" && -f /etc/xdg/Thunar/uca.xml ]]; then
+    mkdir -p "$(dirname "$_uca")" && cp /etc/xdg/Thunar/uca.xml "$_uca"
+  fi
+  if [[ -f "$_uca" ]] && grep -qF "$_exo" "$_uca"; then
+    sed -i "s|$_exo|$HOME/.local/bin/orrery-terminal %f|" "$_uca" && ok "Thunar's \"Open Terminal Here\" opens your default terminal."
+  fi
   if "$HOME/.local/bin/orrery-agent" skills install >/dev/null 2>&1; then
     ok "/orrery skill linked for coding agents ($(ls -d "$HOME"/.claude/skills "$HOME"/.agents/skills 2>/dev/null | tr '\n' ' '))."
   else

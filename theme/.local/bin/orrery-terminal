@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# orrery-terminal [path] — open the default terminal (orrery-default terminal),
+# in <path> when given (a file's own folder when <path> is a file).
+#
+# Thunar's "Open Terminal Here" runs this: Xfce 4.20's exo-open needs
+# xfce4-mime-helper (xfce4-settings) for its preferred terminal, which the rice
+# doesn't install. Starting the terminal from inside the folder, instead of
+# passing a flag, works for every terminal (kitty, alacritty, foot, ...).
+set -u
+term="$(orrery-default terminal 2>/dev/null)"
+[[ -n $term ]] || term=kitty
+if [[ -n ${1:-} ]]; then
+    dir="$1"; [[ -d $dir ]] || dir="$(dirname -- "$dir")"
+    cd -- "$dir" 2>/dev/null || true
+fi
+# the stored value can carry arguments ("kitty -1"), so it is split on purpose
+# shellcheck disable=SC2086
+exec $term
