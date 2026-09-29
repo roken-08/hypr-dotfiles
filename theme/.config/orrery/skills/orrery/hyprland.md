@@ -84,6 +84,12 @@ at the end of decorations.lua, so reloads keep it) plus `look` in
 shell.json for the shell, and applies with `hyprctl eval`. Don't edit the
 defaults in decorations.lua for a user's taste; use the command.
 
+Startup: `misc` turns off Hyprland's stock wallpaper, logo and splash, and
+the theme sets `misc.background_color` to its `bg0` (current/hyprland.lua).
+Until the shell's wallpaper layer fades in, a second or two after login, the
+screen is that colour, never the anime default. To see that moment without
+logging out: `shell.sh stop`, screenshot, `shell.sh start`.
+
 ## Autostart, idle, lock
 
 The shell starts from `autostart.lua` (`ORRERY_SHELL=quickshell`). Idle

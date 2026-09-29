@@ -107,9 +107,13 @@ hl.config({
         new_status = "master",
     },
 
+    -- No stock wallpaper, logo or splash: until the shell's wallpaper fades in
+    -- (a second or two after login), the screen is the theme's own background
+    -- colour (misc.background_color, set by orrery-theme in current/hyprland.lua)
     misc = {
-        force_default_wallpaper = -1,
-        disable_hyprland_logo   = false,
+        force_default_wallpaper  = 0,
+        disable_hyprland_logo    = true,
+        disable_splash_rendering = true,
     },
 })
 

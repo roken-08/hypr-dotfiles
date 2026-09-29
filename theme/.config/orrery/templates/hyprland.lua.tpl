@@ -12,4 +12,8 @@ hl.config({
 			color = "{{ mix bg0 bg1 60% | hypr 0.93 }}",
 		},
 	},
+	-- what shows behind everything until the shell's wallpaper is up (login)
+	misc = {
+		background_color = "{{ bg0 | hypr 1 }}",
+	},
 })
