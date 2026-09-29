@@ -6,7 +6,11 @@
 # the earphones, but the mic jack reads "unplugged", so apps record from the
 # built-in mic. Restarting PipeWire does not help; re-probing the sound card
 # does. This script rebinds the PCI audio device behind every card that has a
-# headset-mic jack, then restarts PipeWire.
+# headset-mic jack; WirePlumber picks the card up again on its own.
+#
+# It never restarts PipeWire: PipeWire also carries screen capture, and a
+# restart kills every running screencast (OBS, browser screen share) along
+# with xdg-desktop-portal-hyprland's sessions.
 #
 #   orrery-fix-mic            fix it now (asks for sudo once)
 #   orrery-fix-mic status     jack state + whether the after-sleep hook is on
@@ -52,20 +56,24 @@ rebind() {  # root only
   [[ $found -eq 1 ]] || { echo "No sound card with a headset-mic jack found." >&2; return 1; }
 }
 
-restart_audio_all_users() {  # root only: the user managers own PipeWire
-  local u
-  for u in $(loginctl list-users --no-legend 2>/dev/null | awk '{print $2}'); do
-    systemctl --user -M "$u@" restart pipewire pipewire-pulse wireplumber 2>/dev/null
+# jack_state "Headset Mic Jack" → on/off; "unknown" without alsa-utils.
+jack_state() {
+  command -v amixer >/dev/null || { echo "unknown"; return; }
+  local c v
+  for c in /proc/asound/card*/id; do
+    v=$(amixer -c "$(<"$c")" cget iface=CARD,name="$1" 2>/dev/null | awk -F= '/: values=/{print $2}')
+    [[ -n $v ]] && { echo "$v"; return; }
   done
+  echo "unknown"
 }
 
-jack_state() {
-  command -v amixer >/dev/null || { echo "unknown (install alsa-utils to see it)"; return; }
-  local c
-  for c in /proc/asound/card*/id; do
-    amixer -c "$(<"$c")" cget iface=CARD,name='Headset Mic Jack' 2>/dev/null \
-      | awk -F= '/: values=/{print $2}'
-  done | head -1
+# After resume: re-probe only when earphones are in but their mic is not seen,
+# so a wake without earphones never touches the sound card.
+needs_fix() {
+  local hp mic
+  hp=$(jack_state 'Headphone Jack'); mic=$(jack_state 'Headset Mic Jack')
+  [[ $hp == unknown || $mic == unknown ]] && return 0
+  [[ $hp == on && $mic == off ]]
 }
 
 known() {
@@ -76,13 +84,13 @@ known() {
 }
 
 case "${1:-now}" in
-  post)        # systemd-sleep, after resume
-    sleep 1; rebind && sleep 2 && restart_audio_all_users ;;
+  post)        # systemd-sleep, after resume; let the jacks settle first
+    sleep 2; needs_fix && rebind ;;
   pre)         ;;
   rebind)      rebind ;;
   known)       known ;;
   status)
-    echo "headset mic jack: $(jack_state)"
+    echo "headset mic jack: $(jack_state 'Headset Mic Jack')"
     [[ -x $HOOK ]] && echo "after-sleep fix:  on ($HOOK)" || echo "after-sleep fix:  off (orrery-fix-mic enable)"
     known && echo "this machine:     known to need it" ;;
   enable)
@@ -93,14 +101,12 @@ case "${1:-now}" in
   now)
     if [[ $EUID -eq 0 ]]; then rebind; exit; fi
     sudo "$(readlink -f "$0")" rebind || exit 1
-    sleep 3
-    systemctl --user restart pipewire pipewire-pulse wireplumber
-    sleep 2
-    case "$(jack_state)" in
+    sleep 4
+    case "$(jack_state 'Headset Mic Jack')" in
       on)  echo "Headset mic detected." ;;
       off) echo "Headset mic still not detected. Unplug the earphones, plug them back in firmly, and check the plug has 3 rings (4 contacts)." ;;
       *)   echo "Sound card re-probed; replug the earphones if the mic is still missing." ;;
     esac ;;
-  -h|--help) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//' ;;
+  -h|--help) sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//' ;;
   *) echo "usage: orrery-fix-mic [status|enable|disable|known]" >&2; exit 2 ;;
 esac
