@@ -41,6 +41,24 @@ Relative motion is accelerated, so read `hyprctl cursorpos` after a drag
 before judging the result. Injected keys go to whatever has focus — ask
 before using it while the user is at the keyboard.
 
+## Code checks before shipping
+
+- QML: `/usr/lib/qt6/bin/qmllint --json out.json **/*.qml` (Qt 6's linter;
+  `/usr/bin/qmllint` is Qt 5's syntax checker and rejects Qt 6 syntax such as
+  `function f(): void`, printing nothing but exit 255). Most warnings are
+  Quickshell types it can't see; read `missing-property` on enums
+  (e.g. `WifiSecurityType.None` doesn't exist: it's `Open`/`Owe`), `required`
+  and `incompatible-type`. Then `qs log` after a restart must be quiet.
+- Shell/Python/Lua: `bash -n`, `python3 -m py_compile`, `luac -p` on every
+  tracked file; `jq empty` on JSON.
+- Runtime: every `orrery-*` read-only mode (`list`, `current`, no-argument
+  forms) exits 0; `orrery-menu-data | jq` has keybindings and an `about.rice`
+  value (both read the repo).
+- `./install.sh --dry-run --no-logout </dev/null` must change nothing and end
+  with "nothing was changed".
+- `qs ipc call menu run <id>` *runs* the entry's action (it opened the theme
+  picker once during a check); to look at a page use `menu open <id>`.
+
 ## The checklist for "check the rice" / a new theme
 
 For **dark and light**: bar (all three skins: pill/Legacy, floating, minimal), launcher, clipboard, a

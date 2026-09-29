@@ -15,7 +15,8 @@ object, in one process (the menu runs it every time it opens).
 import json, os, re, shutil, subprocess, sys, time
 
 HOME = os.path.expanduser("~")
-REPO = os.path.join(HOME, "Orrery")
+# the clone, wherever it is: ~/.config/orrery links to <repo>/theme/.config/orrery
+REPO = os.path.realpath(os.path.join(HOME, ".config", "orrery", "..", "..", ".."))
 
 
 def sh(cmd, timeout=3):

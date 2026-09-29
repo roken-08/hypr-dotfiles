@@ -34,9 +34,11 @@ Panel {
 
     // signalStrength is 0..1
     function strengthIcon(v) { const s = v * 100; return s > 75 ? "signal_wifi_4_bar" : s > 50 ? "network_wifi_3_bar" : s > 25 ? "network_wifi_2_bar" : "network_wifi_1_bar" }
+    // open and "enhanced open" (OWE) networks take no password
+    function isOpen(n) { return n.security === WifiSecurityType.Open || n.security === WifiSecurityType.Owe }
     function tap(n) {
         if (n.connected) { n.disconnect(); return }
-        if (n.known || n.security === WifiSecurityType.None) { n.connect(); return }
+        if (n.known || isOpen(n)) { n.connect(); return }
         pskFor = n
     }
 
@@ -65,7 +67,7 @@ Panel {
                     icon: p.strengthIcon(modelData.signalStrength)
                     title: modelData.name
                     subtitle: modelData.connected ? "connected" : modelData.known ? "saved" : ""
-                    trailingIcon: modelData.security === WifiSecurityType.None ? "" : "lock"
+                    trailingIcon: isOpen(modelData) ? "" : "lock"
                     active: modelData.connected
                     busy: modelData.stateChanging
                     onClicked: p.tap(modelData)

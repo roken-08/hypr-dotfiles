@@ -29,6 +29,7 @@ have() { command -v "$1" >/dev/null 2>&1; }
 installed() {
     local k
     for k in "${KNOWN[@]}"; do have "${k%%:*}" && printf '%s\t%s\n' "${k%%:*}" "${k#*:}"; done
+    return 0    # the last agent missing is not an error
 }
 get_default() {
     local d=""

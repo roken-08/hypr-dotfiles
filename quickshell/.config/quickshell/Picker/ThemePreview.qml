@@ -166,7 +166,7 @@ Item {
         Grid {
             x: (parent.side + 16) * tp.k; y: 40 * tp.k; columns: 4; columnSpacing: 12 * tp.k; rowSpacing: 12 * tp.k
             Repeater {
-                model: ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Videos", "Orrery", "Projects"]
+                model: ["Desktop", "Documents", "Downloads", "Music", "Pictures", "Videos", "dotfiles", "Projects"]
                 Column {
                     required property string modelData; required property int index
                     width: 52 * tp.k; spacing: 3 * tp.k

@@ -43,3 +43,4 @@ theme/.config/orrery/themes/*
 # the maintainer's own rules for the /orrery skill (see SKILL.md); not published
 theme/.config/orrery/skills/orrery/MAINTAINER.md
 hyprland/.config/hypr/modules/monitors.local.lua
+hyprland/.config/hypr/modules/binds.local.lua

@@ -686,6 +686,8 @@ fi
 # or disabled, so a broken theme is fixed by deleting the drop-ins from a TTY.
 if [[ $SKIP_ROOT -eq 1 ]]; then
   skip "SDDM theme"
+elif [[ $DRY_RUN -eq 1 ]]; then
+  skip "SDDM theme (dry run)"
 elif ! command -v sddm >/dev/null 2>&1; then
   skip "SDDM theme (sddm not installed)"
 else
@@ -717,6 +719,8 @@ fi
 # sudoers rule for exactly that path so `orrery-theme set` can call it silently.
 if [[ $SKIP_ROOT -eq 1 ]]; then
   skip "Root + SDDM sync"
+elif [[ $DRY_RUN -eq 1 ]]; then
+  skip "Root + SDDM sync (dry run)"
 else
   step "Root + SDDM sync"
   info "Installs /usr/local/bin/orrery-root-sync and its sudoers rule. sudo may prompt."
@@ -774,8 +778,8 @@ item "env.lua sets QT_QPA_PLATFORMTHEME and PATH — those only reach"
 item "applications launched by a fresh session."
 
 head2 "Worth doing first"
-item "${C_TXT}monitors.lua${C_RST} is hardcoded to one eDP-1 at 2560x1440@165Hz, scale 1.6."
-item "Run ${C_TXT}hyprctl monitors${C_RST} and edit it to match your display."
+item "Screens use their preferred mode and an automatic scale. Pick a scale in"
+item "Menu > Appearance > Display scale; exact modes go in ${C_TXT}monitors.local.lua${C_RST} (README)."
 item "${C_TXT}orrery-theme set <name>${C_RST} re-renders and re-applies everything;"
 item "the picker (SUPER+CTRL+SHIFT+SPACE) switches themes. GTK3 and Qt apps need"
 item "a restart to follow a switch — the README has the live/restart table."
@@ -786,7 +790,7 @@ printf '\n'; rule
 # Almost everything above needs a fresh session to take effect, so offer it
 # rather than leaving the user wondering why half the theme did not apply.
 # Default is NO: logging out drops whatever else they have open.
-if [[ $NO_LOGOUT -eq 1 ]]; then
+if [[ $NO_LOGOUT -eq 1 || $DRY_RUN -eq 1 ]]; then
   :
 elif [[ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
   printf '\n  %s %s\n\n' "${C_ACC}·${C_RST}" "Log out and back in to apply the rest."

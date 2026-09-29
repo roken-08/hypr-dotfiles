@@ -46,15 +46,15 @@ hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/launcher.sh")
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- Toggle split
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("~/.config/hypr/scripts/lock.sh")) -- Lock screen
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser)) -- Browser
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/shell.sh restart")) -- restart bar + notifications
-hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("qs ipc call bar toggle")) -- bar skin: Legacy -> floating -> minimal
-hl.bind(mainMod .. " + CTRL + I", hl.dsp.exec_cmd("~/.config/hypr/scripts/caffeine.sh toggle")) -- stay awake toggle
-hl.bind(mainMod .. " + CTRL + SHIFT + space", hl.dsp.exec_cmd("orrery-theme-menu theme")) -- theme picker
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("orrery-theme-menu wallpaper")) -- wallpaper picker
-hl.bind(mainMod .. " + CTRL + space", hl.dsp.exec_cmd("orrery-wall next")) -- next wallpaper
-hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("orrery-agent launch")) -- default coding agent
-hl.bind(mainMod .. " + space", hl.dsp.exec_cmd("qs ipc call menu toggle")) -- the menu
-hl.bind(mainMod .. " + CTRL + O", hl.dsp.exec_cmd("qs ipc call menu open toggle")) -- the menu: toggles
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/shell.sh restart")) -- Restart the shell
+hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("qs ipc call bar toggle")) -- Bar style: Legacy, Floating, Minimal
+hl.bind(mainMod .. " + CTRL + I", hl.dsp.exec_cmd("~/.config/hypr/scripts/caffeine.sh toggle")) -- Caffeine (stay awake)
+hl.bind(mainMod .. " + CTRL + SHIFT + space", hl.dsp.exec_cmd("orrery-theme-menu theme")) -- Theme picker
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("orrery-theme-menu wallpaper")) -- Wallpaper picker
+hl.bind(mainMod .. " + CTRL + space", hl.dsp.exec_cmd("orrery-wall next")) -- Next wallpaper
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("orrery-agent launch")) -- Default coding agent
+hl.bind(mainMod .. " + space", hl.dsp.exec_cmd("qs ipc call menu toggle")) -- The menu
+hl.bind(mainMod .. " + CTRL + O", hl.dsp.exec_cmd("qs ipc call menu open toggle")) -- The menu, opened on Toggle
 
 -- Screenshots (scripts/screenshot.sh): saved to ~/Pictures/screenshot and
 -- copied to the clipboard. Esc, or the same shortcut again, cancels a selection.
@@ -139,4 +139,7 @@ hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "maximized"
 
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("~/.config/hypr/scripts/clipboard.sh")) -- Clipboard history
 
-hl.bind("XF86Launch1", hl.dsp.exec_cmd("sonu listen"))
+-- Your own binds go in binds.local.lua next to this file: it is loaded
+-- after this one (so it can rebind a key) and is not part of the repo.
+local f = io.open(os.getenv("HOME") .. "/.config/hypr/modules/binds.local.lua")
+if f then f:close(); pcall(dofile, os.getenv("HOME") .. "/.config/hypr/modules/binds.local.lua") end

@@ -56,7 +56,7 @@ Singleton {
         entries = base
     }
     FileView { id: baseFile;  path: root.dir + "menu.jsonc";       watchChanges: true; onFileChanged: reload(); onLoaded: root.load() }
-    FileView { id: localFile; path: root.dir + "menu.local.jsonc"; watchChanges: true; onFileChanged: reload(); onLoaded: root.load(); onLoadFailed: {} }
+    FileView { id: localFile; path: root.dir + "menu.local.jsonc"; printErrors: false; watchChanges: true; onFileChanged: reload(); onLoaded: root.load(); onLoadFailed: {} }
 
     Process {
         id: fetch

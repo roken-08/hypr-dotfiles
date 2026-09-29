@@ -100,8 +100,8 @@ Commands you will use (all `--help`/header-documented — read the script if uns
    `~/.config/btop/themes/orrery-theme.theme`, `/usr/share/**`, `/etc/**`
    (except through install.sh). They are rendered from `templates/*.tpl` —
    change the template (all themes) or `colors.toml` (one theme).
-2. **Colour is the default; monochrome only when the user asks for it.** The two
-   `eclipse*` themes are the old greys-only look (plus `[git]` hues) and stay
+2. **Colour is the default; monochrome only when the user asks for it.** Eclipse and
+   Zenith are the greys-only look (plus `[git]` hues) and stay
    that way. Every other theme is **hued**: `hued = true` in colors.toml, the
    palette's official colours, and each app coloured the way its stock
    upstream theme does — btop one hue per box + real gradients, nvim's own
