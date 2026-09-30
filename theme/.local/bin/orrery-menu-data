@@ -147,7 +147,7 @@ def webapps():
         apps = []
     q = lambda v: "'" + v.replace("'", "'\\''") + "'"
     opened = [{"id": a["id"], "label": a["name"], "value": a["url"].split("://", 1)[-1].rstrip("/"),
-               "icon": "language", "action": "orrery-webapp launch " + q(a["url"])} for a in apps]
+               "icon": "language", "action": "orrery-webapp launch " + q(a["url"]) + " " + q(a["id"])} for a in apps]
     removed = [{"id": a["id"], "label": a["name"], "icon": "delete",
                 "action": "orrery-webapp remove " + q(a["name"]), "keep": True} for a in apps]
     none = [{"id": "none", "label": "No web apps yet", "icon": "language"}]

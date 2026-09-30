@@ -142,8 +142,9 @@ hl.config({ input = { kb_layout = "de" } })
 
 Any other Hyprland setting can go in that file too; it's loaded last, so it wins.
 
-**Web apps** open in Chromium's app mode (Chrome, Brave, Vivaldi and Edge work too):
-`sudo pacman -S chromium` if you have none. `orrery-webapp list` / `remove <name>` manage them.
+**Web apps** open in Firefox as a bare window (no tabs, toolbars, scrollbars or link
+preview), each with its own logins: `sudo pacman -S firefox` if you have none. Without
+Firefox a Chromium-family browser's app mode is used. `orrery-webapp list` / `remove <name>`.
 
 **A browser** isn't installed for you. `SUPER` `B` opens the first one it finds of Zen, Firefox,
 Chromium and Brave; pick another in Menu › Settings › Default apps.

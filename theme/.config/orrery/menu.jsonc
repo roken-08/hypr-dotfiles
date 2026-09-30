@@ -19,12 +19,12 @@
   // append). Whole-line // comments only.
 
   "apps": {"icon":"apps","label":"Apps","description":"launcher applications","action":"qs ipc call launcher toggle"},
-  "webapps": {"icon":"language","label":"Web apps","description":"website app install pwa chromium"},
   "appearance": {"icon":"palette","label":"Appearance","description":"style look theme wallpaper bar dock font corners border"},
   "toggle": {"icon":"toggle_on","label":"Quick toggles","description":"switches on off"},
   "devices": {"icon":"devices","label":"Devices","description":"hardware wifi bluetooth sound monitors"},
   "settings": {"icon":"settings","label":"Settings","description":"setup config defaults"},
   "agents": {"icon":"󰚩","label":"Agents","description":"ai claude codex"},
+  "webapps": {"icon":"language","label":"Web apps","description":"website app install pwa chromium"},
   "remind": {"icon":"alarm","label":"Reminders"},
   "learn": {"icon":"school","label":"Learn","description":"help docs keys"},
   "power": {"icon":"power_settings_new","label":"Power","description":"system session lock logout reboot shutdown"},
