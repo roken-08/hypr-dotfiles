@@ -171,12 +171,17 @@ launch <url> <id>`: Firefox `--new-instance --profile
 chrome/*.css hide tabs, toolbars, scrollbars and the link-preview
 #statuspanel; rewritten on every launch), StartupWMClass = <id>, so the dock
 (Services/Dock.qml matches startupClass) shows the site's icon. An open app is
-focused, not started twice. `orrery-webapp browser chromium` (Menu › Web apps
-› Open in; stored in ~/.config/orrery/defaults/webapp-browser) uses the
-Chromium-family `--app --hide-scrollbars` instead, class
-`chrome-<host>__<path, / as _>-Default`; switching rewrites every launcher's
-StartupWMClass. Chromium can't hide its link-preview bubble. Menu › Web apps uses the
-`webapps` / `webapps.remove` providers in orrery-menu-data. Media from a web app:
+focused, not started twice. Each app has its own browser, chosen when it is added
+(`add --chromium`, Menu › Web apps › Add › In Chromium) and kept in its
+launcher (`X-Orrery-WebApp-Browser`, and the 3rd Exec argument): Chromium
+uses `--app --hide-scrollbars`, class `chrome-<host>__<path, / as _>-Default`. Chromium can't hide its link-preview bubble. Menu › Web apps uses the
+`webapps` / `webapps.remove` providers in orrery-menu-data. No sound from one app (Chromium, say) while
+others play: WirePlumber remembers volume and mute per application name
+(~/.local/state/wireplumber/stream-properties, `Output/Audio:application.name:Chromium`),
+so one mute silences every later stream of that app. `pactl list sink-inputs`
+shows `Mute: yes`; unmute that stream (`pactl set-sink-input-mute <id> 0`) and the saved
+state follows. The Sound panel's app rows toggle mute on their icon.
+Media from a web app:
 MPRIS only says "Mozilla firefox"; Services/MediaApps.qml traces each
 player's `dbusName` → process (busctl) → window (hyprctl clients pid) →
 launcher (startupClass) for the app's own name and icon; use

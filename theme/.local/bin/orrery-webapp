@@ -2,18 +2,20 @@
 # orrery-webapp — web apps: a website in its own window, with its own icon, in
 # the launcher and the dock like any app.
 #
-#   orrery-webapp add <url>               the name comes from the site's title
-#   orrery-webapp add <name> <url> [icon] icon: a URL, a file or an icon name;
+#   orrery-webapp add [--firefox|--chromium] <url>     the name comes from the site
+#   orrery-webapp add [--firefox|--chromium] <name> <url> [icon]
+#                                         icon: a URL, a file or an icon name;
 #                                         without one the site's own is fetched
 #   orrery-webapp remove <name>
 #   orrery-webapp list [--json]
-#   orrery-webapp launch <url>            open a URL as an app window
-#   orrery-webapp browser [firefox|chromium]   show or pick what web apps open in
+#   orrery-webapp launch <url> [id] [firefox|chromium]
 #
-# Menu > Apps > Web apps does the same without a terminal.
+# Menu > Web apps does the same without a terminal (Add › In Firefox / In
+# Chromium).
 #
 # A web app is a launcher in ~/.local/share/applications marked
-# X-Orrery-WebApp=true. Two ways to open one (`orrery-webapp browser`):
+# X-Orrery-WebApp=true, and each one opens in the browser it was added with
+# (X-Orrery-WebApp-Browser):
 #   firefox   (default) a bare window in its own small profile
 #             (~/.local/share/orrery/webapps/<id>): no tabs, toolbars,
 #             scrollbars or link-preview bubble; its own logins
@@ -21,7 +23,7 @@
 #             scrollbars; logins shared with that browser; Chromium always
 #             shows the link-preview bubble
 # Either way the window gets a class the launcher names, so the dock shows the
-# site's icon. When the chosen browser is missing the other one is used.
+# site's icon. When an app's browser is missing the other one is used.
 #
 # The URL checks, the launcher escaping and the site-icon lookup follow
 # Omarchy's omarchy-webapp-install (github.com/basecamp/omarchy, MIT).
@@ -68,21 +70,20 @@ chromium_like() {
         command -v "$b" >/dev/null && { echo "$b"; return; }
     done
 }
-CHOICE="$HOME/.config/orrery/defaults/webapp-browser"
-# firefox | chromium: what was picked (default firefox)
-picked() { local c; c="$(cat "$CHOICE" 2>/dev/null)"; [[ $c == chromium ]] && echo chromium || echo firefox; }
-# the browser binary to use: the pick, else whichever of the two exists
-engine() {
+# the binary for a kind (firefox | chromium); the other kind when it's missing
+bin_for() {
     local ff="" ch
     command -v firefox >/dev/null && ff=firefox
     ch=$(chromium_like)
-    if [[ $(picked) == chromium ]]; then echo "${ch:-$ff}"; else echo "${ff:-$ch}"; fi
+    if [[ ${1:-firefox} == chromium ]]; then echo "${ch:-$ff}"; else echo "${ff:-$ch}"; fi
 }
+# the kind a new app gets when none is asked for: Firefox if it's there
+default_kind() { command -v firefox >/dev/null && echo firefox || echo chromium; }
 # the window class: Firefox takes ours (--name); Chromium makes its own,
 # chrome-<host>__<path, / as _>-Default
 wm_class() {
-    local id="$1" url="$2" rest host path
-    if [[ $(engine) == firefox ]]; then printf '%s' "$id"; return; fi
+    local id="$1" url="$2" kind="${3:-firefox}" rest host path
+    if [[ $(bin_for "$kind") == firefox ]]; then printf '%s' "$id"; return; fi
     rest="${url#*://}"; host="${rest%%/*}"; path=""; [[ $rest == */* ]] && path="${rest#*/}"
     path="${path%%\?*}"; path="${path%%#*}"; path="${path%/}"
     printf 'chrome-%s__%s-Default' "$host" "${path//\//_}"
@@ -163,7 +164,11 @@ webapps() { grep -l -s "^$MARK" "$APPS"/*.desktop 2>/dev/null; }
 field() { sed -n "s/^$1=//p" "$2" | head -1; }
 
 add() {
-    local name url icon file slugged
+    local name url icon file slugged kind
+    kind=$(default_kind)
+    case "${1:-}" in --firefox) kind=firefox; shift ;; --chromium) kind=chromium; shift ;; esac
+    [[ $# -ge 1 ]] || die "no web address given"
+    [[ $# -eq 1 && $1 == *" "* ]] && { local words; read -r -a words <<<"$1"; set -- "${words[@]}"; }
     case $# in
         1) set_url "$1"; url="$URL"; name=$(name_of "$url") ;;
         *) # "Name words https://url [icon]": the first thing that looks like a URL is the URL
@@ -179,7 +184,7 @@ add() {
     esac
     [[ $name == */* ]] && die "a name can't contain '/'"
     [[ -n $name && -n $(slug "$name") ]] || die "give the web app a name"
-    [[ -n $(engine) ]] || die "web apps need Firefox (sudo pacman -S firefox)"
+    [[ -n $(bin_for "$kind") ]] || die "web apps need Firefox or Chromium (sudo pacman -S firefox)"
     slugged="orrery-webapp-$(slug "$name")"
     file="$APPS/$slugged.desktop"
     mkdir -p "$APPS" "$ICONS"
@@ -201,16 +206,17 @@ Version=1.0
 Type=Application
 Name=$(desk_str "$name")
 Comment=$(desk_str "Web app · $url")
-Exec=$(desk_str "orrery-webapp launch $(exec_arg "$url") $slugged")
+Exec=$(desk_str "orrery-webapp launch $(exec_arg "$url") $slugged $kind")
 Icon=$(desk_str "$icon_value")
-StartupWMClass=$(desk_str "$(wm_class "$slugged" "$url")")
+StartupWMClass=$(desk_str "$(wm_class "$slugged" "$url" "$kind")")
 StartupNotify=true
 Terminal=false
 Categories=Network;WebBrowser;
 $MARK
+X-Orrery-WebApp-Browser=$kind
 EOF
     command -v update-desktop-database >/dev/null && update-desktop-database -q "$APPS" 2>/dev/null
-    echo "added $name ($url)"
+    echo "added $name ($url, $kind)"
     note "Web app added" "$name is in the launcher (SUPER+D)"
 }
 
@@ -237,23 +243,25 @@ list() {
     [[ $json == --json ]] && printf '['
     while IFS= read -r f; do
         local n u
-        n=$(field Name "$f"); u=$(field Comment "$f"); u="${u#Web app · }"
+        local k
+        n=$(field Name "$f"); u=$(field Comment "$f"); u="${u#Web app · }"; k=$(field X-Orrery-WebApp-Browser "$f")
         if [[ $json == --json ]]; then
             [[ $first -eq 1 ]] || printf ','; first=0
-            jq -cn --arg n "$n" --arg u "$u" --arg id "$(basename "$f" .desktop)" '{name: $n, url: $u, id: $id}' | tr -d '\n'
+            jq -cn --arg n "$n" --arg u "$u" --arg k "${k:-firefox}" --arg id "$(basename "$f" .desktop)" '{name: $n, url: $u, id: $id, browser: $k}' | tr -d '\n'
         else
-            printf '%-24s %s\n' "$n" "$u"
+            printf '%-24s %-9s %s\n' "$n" "${k:-firefox}" "$u"
         fi
     done < <(webapps | sort)
     [[ $json == --json ]] && printf ']\n'
     return 0
 }
 
-# launch <url> [id]: the app's window if it is open, else a new one
+# launch <url> [id] [kind]: the app's window if it is open, else a new one
 launch() {
-    local url id b
-    set_url "${1:?usage: orrery-webapp launch <url> [id]}"; url="$URL"; id="${2:-}"
-    b=$(engine)
+    local url id kind b
+    set_url "${1:?usage: orrery-webapp launch <url> [id] [firefox|chromium]}"; url="$URL"; id="${2:-}"; kind="${3:-}"
+    [[ -z $kind && -n $id && -f $APPS/$id.desktop ]] && kind=$(field X-Orrery-WebApp-Browser "$APPS/$id.desktop")
+    b=$(bin_for "${kind:-firefox}")
     if [[ $b == firefox && -n $id ]]; then
         if hyprctl -j clients 2>/dev/null | jq -e --arg c "$id" 'any(.[]; .class == $c)' >/dev/null; then
             exec hyprctl dispatch "hl.dsp.focus({ window = 'class:^${id}\$' })" >/dev/null
@@ -262,7 +270,7 @@ launch() {
         exec setsid -f firefox --new-instance --profile "$PROFILES/$id" --name "$id" "$url" >/dev/null 2>&1
     fi
     if [[ -n $b && $b != firefox ]]; then
-        local cls; cls=$(wm_class "$id" "$url")
+        local cls; cls=$(wm_class "$id" "$url" chromium)
         if hyprctl -j clients 2>/dev/null | jq -e --arg c "$cls" 'any(.[]; .class == $c)' >/dev/null; then
             exec hyprctl dispatch "hl.dsp.focus({ window = 'class:^${cls}\$' })" >/dev/null
         fi
@@ -271,32 +279,27 @@ launch() {
     exec setsid -f xdg-open "$url" >/dev/null 2>&1
 }
 
-# the launchers' StartupWMClass follows the browser: rewrite them all
-reclass() {
-    local f u id c
+# apps made before each app had its own browser: give them the one the old
+# global setting picked, once
+LEGACY="$HOME/.config/orrery/defaults/webapp-browser"
+migrate() {
+    local f u id k changed=0
+    k=$( [[ "$(cat "$LEGACY" 2>/dev/null)" == chromium ]] && echo chromium || echo firefox )
     while IFS= read -r f; do
+        grep -q '^X-Orrery-WebApp-Browser=' "$f" && continue
         u=$(field Comment "$f"); u="${u#Web app · }"; id=$(basename "$f" .desktop)
-        c=$(wm_class "$id" "$u")
-        sed -i "s|^StartupWMClass=.*|StartupWMClass=$(desk_str "$c")|" "$f"
+        sed -i "s|^Exec=.*|Exec=$(desk_str "orrery-webapp launch $(exec_arg "$u") $id $k" | sed 's/[&|]/\\&/g')|; s|^StartupWMClass=.*|StartupWMClass=$(wm_class "$id" "$u" "$k")|" "$f"
+        echo "X-Orrery-WebApp-Browser=$k" >> "$f"; changed=1
     done < <(webapps)
-    command -v update-desktop-database >/dev/null && update-desktop-database -q "$APPS" 2>/dev/null
-}
-browser_cmd() {
-    case "${1:-}" in
-        "") echo "$(picked)$( [[ $(engine) == firefox ]] && [[ $(picked) == chromium ]] && echo ' (not installed: using firefox)' )$( [[ -n $(engine) && $(engine) != firefox && $(picked) == firefox ]] && echo ' (not installed: using chromium)' )" ;;
-        firefox|chromium)
-            mkdir -p "$(dirname "$CHOICE")"; echo "$1" > "$CHOICE"
-            reclass
-            local what; [[ $1 == firefox ]] && what="Firefox" || what="Chromium"
-            echo "web apps open in $what"; note "Web apps" "They open in $what from now on (reopen the ones that are open)" ;;
-        *) echo "usage: orrery-webapp browser [firefox|chromium]" >&2; exit 2 ;;
-    esac
+    rm -f -- "$LEGACY"
+    [[ $changed -eq 1 ]] && command -v update-desktop-database >/dev/null && update-desktop-database -q "$APPS" 2>/dev/null
+    return 0
 }
 
+migrate
 case "${1:-}" in
-    browser) shift; browser_cmd "${1:-}" ;;
-    add)    shift; [[ $# -ge 1 ]] || die "usage: orrery-webapp add [name] <url> [icon]"
-            [[ $# -eq 1 && $1 == *" "* ]] && { read -r -a words <<<"$1"; add "${words[@]}"; } || add "$@" ;;
+    add)    shift; [[ $# -ge 1 ]] || die "usage: orrery-webapp add [--firefox|--chromium] [name] <url> [icon]"
+            add "$@" ;;
     remove) shift; remove "$@" ;;
     list)   shift; list "${1:-}" ;;
     launch) shift; launch "$@" ;;

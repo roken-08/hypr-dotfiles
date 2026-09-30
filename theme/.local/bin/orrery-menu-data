@@ -63,9 +63,7 @@ def state():
         "scale": (sh("hyprctl monitors -j | jq -r '.[] | select(.focused) | .scale'") or "").rstrip("0").rstrip(".") or "1",
         "wallpaper": os.path.basename(os.path.realpath(f"{HOME}/.config/orrery/current/background")),
         "radius": radius, "border": border,
-        # web apps: which browser (orrery-webapp browser) and which are installed
-        "webappbrowser": "chromium" if read(f"{HOME}/.config/orrery/defaults/webapp-browser", "firefox").strip() == "chromium" else "firefox",
-        "webappbrowserLabel": "Chromium" if read(f"{HOME}/.config/orrery/defaults/webapp-browser", "firefox").strip() == "chromium" else "Firefox",
+        # web apps: which browsers are installed (Add › In Firefox / In Chromium)
         "hasfirefox": bool(shutil.which("firefox")),
         "haschromium": any(shutil.which(b) for b in ("chromium", "google-chrome-stable", "google-chrome", "brave", "brave-browser", "vivaldi-stable", "vivaldi", "microsoft-edge-stable")),
         "radiusLabel": "square" if radius == "0" else f"{radius} px",
@@ -151,7 +149,7 @@ def webapps():
     except Exception:
         apps = []
     q = lambda v: "'" + v.replace("'", "'\\''") + "'"
-    opened = [{"id": a["id"], "label": a["name"], "value": a["url"].split("://", 1)[-1].rstrip("/"),
+    opened = [{"id": a["id"], "label": a["name"], "value": a.get("browser", "firefox").capitalize(),
                "icon": "language", "action": "orrery-webapp launch " + q(a["url"]) + " " + q(a["id"])} for a in apps]
     removed = [{"id": a["id"], "label": a["name"], "icon": "delete",
                 "action": "orrery-webapp remove " + q(a["name"]), "keep": True} for a in apps]

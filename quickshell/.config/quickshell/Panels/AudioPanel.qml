@@ -87,7 +87,9 @@ Panel {
                           || DesktopEntries.heuristicLookup(modelData.name)
                 return e ? e.icon : ""
             }
-            function setAll(v) { for (const n of modelData.streams) if (n.audio) n.audio.volume = v }
+            // a move unmutes, as the output line does; the icon toggles mute
+            function setAll(v) { for (const n of modelData.streams) if (n.audio) { n.audio.volume = v; if (v > 0) n.audio.muted = false } }
+            function toggleMute() { const m = !muted; for (const n of modelData.streams) if (n.audio) n.audio.muted = m }
             Item {
                 id: appIcon
                 anchors.left: parent.left; anchors.leftMargin: 6; anchors.verticalCenter: parent.verticalCenter
@@ -99,6 +101,15 @@ Panel {
                     visible: source.toString() !== ""
                 }
                 Icon { anchors.centerIn: parent; visible: !img.visible; icon: "music_note"; size: Theme.fs(16); color: Theme.c.accentLight }
+                opacity: app.muted ? 0.4 : 1
+                // muted: a crossed speaker over the icon
+                Rectangle {
+                    visible: app.muted
+                    anchors.right: parent.right; anchors.bottom: parent.bottom
+                    width: 14; height: 14; radius: 7; color: Theme.c.bg0
+                    Icon { anchors.centerIn: parent; icon: "volume_off"; size: Theme.fs(11); color: Theme.c.accentBright }
+                }
+                MouseArea { anchors.fill: parent; cursorShape: Qt.PointingHandCursor; onClicked: app.toggleMute() }
             }
             Label {
                 id: appLabel

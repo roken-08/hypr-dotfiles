@@ -142,10 +142,11 @@ hl.config({ input = { kb_layout = "de" } })
 
 Any other Hyprland setting can go in that file too; it's loaded last, so it wins.
 
-**Web apps** open in Firefox or Chromium: pick in Menu › Web apps › Open in (or
-`orrery-webapp browser firefox|chromium`). Firefox gives each app a bare window with its own
-logins and no link preview; Chromium uses its app mode, with logins shared with the browser
-(Chrome, Brave, Vivaldi and Edge work too). No scrollbars either way.
+**Web apps** open in Firefox or Chromium, picked for each app when you add it (Menu › Web
+apps › Add a web app › In Firefox / In Chromium, or `orrery-webapp add --firefox|--chromium`).
+Firefox gives each app a bare window with its own logins and no link preview; Chromium uses
+its app mode, with logins shared with the browser (Chrome, Brave, Vivaldi and Edge work too).
+No scrollbars either way.
 
 **A browser** isn't installed for you. `SUPER` `B` opens the first one it finds of Zen, Firefox,
 Chromium and Brave; pick another in Menu › Settings › Default apps.
