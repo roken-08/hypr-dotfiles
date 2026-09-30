@@ -171,8 +171,11 @@ launch <url> <id>`: Firefox `--new-instance --profile
 chrome/*.css hide tabs, toolbars, scrollbars and the link-preview
 #statuspanel; rewritten on every launch), StartupWMClass = <id>, so the dock
 (Services/Dock.qml matches startupClass) shows the site's icon. An open app is
-focused, not started twice. No Firefox: Chromium-family `--app`, class
-`chrome-<host>__<path, / as _>-Default`. Menu › Web apps uses the
+focused, not started twice. `orrery-webapp browser chromium` (Menu › Web apps
+› Open in; stored in ~/.config/orrery/defaults/webapp-browser) uses the
+Chromium-family `--app --hide-scrollbars` instead, class
+`chrome-<host>__<path, / as _>-Default`; switching rewrites every launcher's
+StartupWMClass. Chromium can't hide its link-preview bubble. Menu › Web apps uses the
 `webapps` / `webapps.remove` providers in orrery-menu-data. Media from a web app:
 MPRIS only says "Mozilla firefox"; Services/MediaApps.qml traces each
 player's `dbusName` → process (busctl) → window (hyprctl clients pid) →

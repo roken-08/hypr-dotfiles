@@ -133,6 +133,9 @@
   // Reminders
   "webapps.add": {"icon":"add_circle","label":"Add a web app","description":"install website","input":"web address, or a name then the address","action":"orrery-webapp add {}"},
   "webapps.open": {"icon":"language","label":"Open","provider":"webapps"},
+  "webapps.browser": {"icon":"open_in_new","label":"Open in","description":"browser firefox chromium engine","value":"webappbrowserLabel"},
+  "webapps.browser.firefox": {"icon":"language","label":"Firefox","description":"bare window, own logins, no link bubble","when":"hasfirefox","checked":"webappbrowser:firefox","action":"orrery-webapp browser firefox","keep":true},
+  "webapps.browser.chromium": {"icon":"language","label":"Chromium","description":"app mode, logins shared with the browser","when":"haschromium","checked":"webappbrowser:chromium","action":"orrery-webapp browser chromium","keep":true},
   "webapps.remove": {"icon":"delete","label":"Remove a web app","description":"uninstall delete","provider":"webapps.remove"},
   "remind.set": {"icon":"alarm_add","label":"Set a reminder","description":"timer notify","input":"minutes message  (e.g. 15 pick up jack)","action":"orrery-remind {}"},
   "remind.show": {"icon":"schedule","label":"Pending","provider":"reminders"},

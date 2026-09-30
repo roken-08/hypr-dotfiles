@@ -63,6 +63,11 @@ def state():
         "scale": (sh("hyprctl monitors -j | jq -r '.[] | select(.focused) | .scale'") or "").rstrip("0").rstrip(".") or "1",
         "wallpaper": os.path.basename(os.path.realpath(f"{HOME}/.config/orrery/current/background")),
         "radius": radius, "border": border,
+        # web apps: which browser (orrery-webapp browser) and which are installed
+        "webappbrowser": "chromium" if read(f"{HOME}/.config/orrery/defaults/webapp-browser", "firefox").strip() == "chromium" else "firefox",
+        "webappbrowserLabel": "Chromium" if read(f"{HOME}/.config/orrery/defaults/webapp-browser", "firefox").strip() == "chromium" else "Firefox",
+        "hasfirefox": bool(shutil.which("firefox")),
+        "haschromium": any(shutil.which(b) for b in ("chromium", "google-chrome-stable", "google-chrome", "brave", "brave-browser", "vivaldi-stable", "vivaldi", "microsoft-edge-stable")),
         "radiusLabel": "square" if radius == "0" else f"{radius} px",
         "borderLabel": "none" if border == "0" else f"{border} px",
         "shape": ("square" if radius == "0" else f"{radius} px") + " · " + ("no border" if border == "0" else f"{border} px border"),
