@@ -46,7 +46,7 @@ hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/launcher.sh")
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- Toggle split
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("~/.config/hypr/scripts/lock.sh")) -- Lock screen
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser)) -- Browser
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/shell.sh restart")) -- Restart the shell
+hl.bind(mainMod .. " + CTRL + R", hl.dsp.exec_cmd("~/.config/hypr/scripts/shell.sh restart")) -- Restart the shell
 hl.bind(mainMod .. " + SHIFT + B", hl.dsp.exec_cmd("qs ipc call bar toggle")) -- Bar style: Legacy, Floating, Minimal
 hl.bind(mainMod .. " + CTRL + I", hl.dsp.exec_cmd("~/.config/hypr/scripts/caffeine.sh toggle")) -- Caffeine (stay awake)
 hl.bind(mainMod .. " + CTRL + SHIFT + space", hl.dsp.exec_cmd("orrery-theme-menu theme")) -- Theme picker

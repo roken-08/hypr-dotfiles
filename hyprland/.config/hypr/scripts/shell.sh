@@ -2,7 +2,7 @@
 # shell.sh — start or restart the desktop shell (bar, notifications, wallpaper).
 #
 #   shell.sh start      at session start (autostart.lua)
-#   shell.sh restart    SUPER+R and Menu > Settings > Restart shell: the way
+#   shell.sh restart    SUPER+CTRL+R and Menu > Settings > Restart shell: the way
 #                       back when the shell hangs or its bar is gone
 #
 # ORRERY_SHELL picks the bar: "quickshell" (default) or "waybar" (the classic

@@ -231,7 +231,7 @@ you make stay on your machine: git ignores them.
 | Keys | Action |
 |---|---|
 | `SUPER` `CTRL` `O` | The menu, opened on Toggle |
-| `SUPER` `R` | Restart the shell |
+| `SUPER` `CTRL` `R` | Restart the shell |
 | `SUPER` `SHIFT` `B` | Bar style: Legacy → Floating → Minimal |
 | `SUPER` `CTRL` `I` | Caffeine: pause idle lock and suspend |
 | `SUPER` `SHIFT` `W` · `SUPER` `CTRL` `SPACE` | Wallpaper picker · next wallpaper |
@@ -261,7 +261,7 @@ even on the lock screen. The full list is in
 | Boxes instead of icons or text | `fc-list \| grep -i "JetBrainsMono Nerd Font Propo"` should print a line; if not, `sudo pacman -S ttf-jetbrains-mono-nerd` |
 | The login screen is black | From a TTY (`Ctrl` `Alt` `F3`): `sudo rm /etc/sddm.conf.d/10-wayland.conf`, then reboot |
 | The Wi-Fi panel is empty | Your network is run by something other than NetworkManager. The installer prints how to switch |
-| The bar or dock is missing | `SUPER` `R` restarts the shell; `qs log` shows why it stopped |
+| The bar or dock is missing | `SUPER` `CTRL` `R` restarts the shell; `qs log` shows why it stopped |
 | Earphones play sound but apps use the laptop mic (often after sleep) | `orrery-fix-mic` re-detects the headset mic. `orrery-fix-mic enable` runs it after every sleep; the installer does this on laptops known to need it |
 
 ---

@@ -807,7 +807,7 @@ fi
 
 head2 "Live already"
 item "Configs are symlinked — Hyprland, the shell, theme engine, kitty, nvim, zsh."
-item "${C_TXT}SUPER+R${C_RST} restarts the shell; ${C_TXT}SUPER+SPACE${C_RST} is the menu; ${C_TXT}/orrery${C_RST} in Claude Code knows the rest."
+item "${C_TXT}SUPER+CTRL+R${C_RST} restarts the shell; ${C_TXT}SUPER+SPACE${C_RST} is the menu; ${C_TXT}/orrery${C_RST} in Claude Code knows the rest."
 
 head2 "Needs a re-login"
 item "GTK and Qt apps read their theme once, at startup."
