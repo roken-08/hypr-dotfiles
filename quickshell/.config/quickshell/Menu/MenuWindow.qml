@@ -178,7 +178,6 @@ Variants {
                                 onClicked: list.activate(row.index) }
                 }
                 Label { visible: win.rows.length === 0 && !Menu.inputRow; anchors.centerIn: parent; text: "Nothing found"; font.pixelSize: Theme.fs(12); color: Theme.c.accentDim }
-                Label { visible: !!Menu.inputRow; anchors.centerIn: parent; text: "Enter to set"; font.pixelSize: Theme.fs(12); color: Theme.c.accentDim }
             }
         }
     }

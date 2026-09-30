@@ -19,6 +19,7 @@
   // append). Whole-line // comments only.
 
   "apps": {"icon":"apps","label":"Apps","description":"launcher applications","action":"qs ipc call launcher toggle"},
+  "webapps": {"icon":"language","label":"Web apps","description":"website app install pwa chromium"},
   "appearance": {"icon":"palette","label":"Appearance","description":"style look theme wallpaper bar dock font corners border"},
   "toggle": {"icon":"toggle_on","label":"Quick toggles","description":"switches on off"},
   "devices": {"icon":"devices","label":"Devices","description":"hardware wifi bluetooth sound monitors"},
@@ -130,6 +131,9 @@
   "agents.skills": {"icon":"extension","label":"Link /orrery skill into agents","action":"orrery-float orrery-agent skills install"},
 
   // Reminders
+  "webapps.add": {"icon":"add_circle","label":"Add a web app","description":"install website","input":"web address, or a name then the address","action":"orrery-webapp add {}"},
+  "webapps.open": {"icon":"language","label":"Open","provider":"webapps"},
+  "webapps.remove": {"icon":"delete","label":"Remove a web app","description":"uninstall delete","provider":"webapps.remove"},
   "remind.set": {"icon":"alarm_add","label":"Set a reminder","description":"timer notify","input":"minutes message  (e.g. 15 pick up jack)","action":"orrery-remind {}"},
   "remind.show": {"icon":"schedule","label":"Pending","provider":"reminders"},
   "remind.clear": {"icon":"delete_sweep","label":"Clear all","action":"orrery-remind clear"},

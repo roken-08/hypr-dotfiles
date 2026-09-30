@@ -1,0 +1,211 @@
+#!/usr/bin/env bash
+# orrery-webapp — web apps: a website in its own window, with its own icon, in
+# the launcher and the dock like any app.
+#
+#   orrery-webapp add <url>               the name comes from the site's title
+#   orrery-webapp add <name> <url> [icon] icon: a URL, a file or an icon name;
+#                                         without one the site's own is fetched
+#   orrery-webapp remove <name>
+#   orrery-webapp list [--json]
+#   orrery-webapp launch <url>            open a URL as an app window
+#
+# Menu > Apps > Web apps does the same without a terminal.
+#
+# A web app is a launcher in ~/.local/share/applications marked
+# X-Orrery-WebApp=true; it opens in a Chromium-based browser's app mode
+# (Chromium, Chrome, Brave, Vivaldi, Edge: whichever is installed, your
+# default browser first). Logins are shared with that browser.
+#
+# The URL checks, the launcher escaping and the site-icon lookup follow
+# Omarchy's omarchy-webapp-install (github.com/basecamp/omarchy, MIT).
+set -u
+
+APPS="$HOME/.local/share/applications"
+ICONS="$HOME/.local/share/icons/hicolor/256x256/apps"
+MARK="X-Orrery-WebApp=true"
+
+die()  { echo "orrery-webapp: $*" >&2; command -v notify-send >/dev/null && notify-send -a "Web apps" "Couldn't add the web app" "$*"; exit 1; }
+note() { command -v notify-send >/dev/null && notify-send -a "Web apps" "$@" || true; }
+
+slug() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^[:alnum:]]\+/-/g; s/^-//; s/-$//'; }
+
+# https:// for a bare "example.com"; only http(s), no whitespace (Chromium's
+# --app would run javascript:, file: or data: as a document). Sets URL; not
+# called in $( ), where die would only leave the subshell.
+set_url() {
+    local u="$1"
+    [[ $u =~ ^[a-zA-Z][a-zA-Z0-9+.-]*: ]] || u="https://$u"
+    [[ $u =~ [[:space:]] ]] && die "a URL can't contain spaces"
+    [[ ${u,,} =~ ^https?:// ]] || die "only http(s) addresses can be web apps"
+    # a real host: a dotted name, localhost, or an IP (not "https://ex")
+    local host="${u#*://}"; host="${host%%[/?#]*}"; host="${host%%:*}"
+    [[ $host == *.?* || $host == localhost ]] || die "'$1' isn't a web address"
+    URL="$u"
+}
+
+# Desktop Entry string value: a raw newline would start a new key (a second Exec=)
+desk_str() {
+    local v="$1"
+    v=${v//\\/\\\\}; v=${v//$'\t'/\\t}; v=${v//$'\r'/\\r}; v=${v//$'\n'/\\n}
+    [[ $v == " "* ]] && v="\\s${v# }"
+    printf '%s' "$v"
+}
+# one quoted Exec argument
+exec_arg() { printf '"%s"' "$(printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/`/\\`/g' -e 's/\$/\\$/g' -e 's/%/%%/g')"; }
+
+# the browser to use: the default one when it has an app mode, else the first found
+browser() {
+    local d b
+    d="$(cat "$HOME/.config/orrery/defaults/browser" 2>/dev/null)"
+    for b in "$d" chromium google-chrome-stable google-chrome brave brave-browser vivaldi-stable vivaldi microsoft-edge-stable; do
+        [[ -n $b ]] || continue
+        case $b in chromium|google-chrome*|brave*|vivaldi*|microsoft-edge*) command -v "$b" >/dev/null && { echo "$b"; return; } ;; esac
+    done
+}
+# the window class Chromium gives an --app window, so the dock groups it:
+# chrome-<host>__<path, / as _>-Default
+wm_class() {
+    local rest="${1#*://}" host path
+    host="${rest%%/*}"; path=""; [[ $rest == */* ]] && path="${rest#*/}"
+    path="${path%%\?*}"; path="${path%%#*}"; path="${path%/}"
+    printf 'chrome-%s__%s-Default' "$host" "${path//\//_}"
+}
+
+download_icon() {
+    curl -fsSL --max-time 10 -o "$2" "$1" 2>/dev/null && [[ -s $2 && $(file -b --mime-type "$2") == image/* ]] && return 0
+    rm -f -- "$2"; return 1
+}
+# the site's own big icon (apple-touch-icon), the well-known path, then Google's favicon service
+fetch_icon() {
+    local url="$1" dest="$2" origin page icon
+    origin=$(sed -E 's|^(https?://[^/]+).*|\1|' <<<"$url")
+    page=$(curl -fsSL --max-time 6 "$url" 2>/dev/null | head -c 200000 | tr '\n' ' ')
+    icon=$(grep -oiE "<link[^>]*rel=[\"'][^\"']*apple-touch-icon[^\"']*[\"'][^>]*>" <<<"$page" |
+           grep -oiE "href=[\"'][^\"']+" | head -1 | sed -E "s/^href=[\"']//")
+    case $icon in
+        http://*|https://*) ;;
+        //*) icon="https:$icon" ;;
+        /*) icon="$origin$icon" ;;
+        ?*) icon="$origin/$icon" ;;
+    esac
+    { [[ -n $icon ]] && download_icon "$icon" "$dest"; } ||
+        download_icon "$origin/apple-touch-icon.png" "$dest" ||
+        download_icon "https://www.google.com/s2/favicons?domain=${url}&sz=256" "$dest"
+}
+# a name from the page title ("Inbox (3) - Gmail" → "Gmail"), else the domain
+name_of() {
+    local url="$1" t host
+    t=$(curl -fsSL --max-time 6 "$url" 2>/dev/null | head -c 200000 | tr '\n' ' ' |
+        grep -oiE '<title[^>]*>[^<]*' | head -1 | sed -E 's/<title[^>]*>//; s/&amp;/\&/g; s/^[[:space:]]+|[[:space:]]+$//g')
+    t="${t##* - }"; t="${t##* | }"; t="${t##* · }"
+    if [[ -n $t && ${#t} -le 30 ]]; then printf '%s' "$t"; return; fi
+    host="${url#*://}"; host="${host%%/*}"; host="${host#www.}"; host="${host#app.}"; host="${host%.*}"
+    printf '%s' "${host^}"
+}
+
+# launcher files that are web apps
+webapps() { grep -l -s "^$MARK" "$APPS"/*.desktop 2>/dev/null; }
+field() { sed -n "s/^$1=//p" "$2" | head -1; }
+
+add() {
+    local name url icon file slugged
+    case $# in
+        1) set_url "$1"; url="$URL"; name=$(name_of "$url") ;;
+        *) # "Name words https://url [icon]": the first thing that looks like a URL is the URL
+           local i args=("$@"); name=""; url=""; icon=""
+           for ((i = 0; i < ${#args[@]}; i++)); do
+               if [[ -z $url && ( ${args[$i]} == *://* || ${args[$i]} =~ ^[a-z0-9-]+(\.[a-z0-9-]+)+(/.*)?$ ) ]]; then
+                   set_url "${args[$i]}"; url="$URL"; icon="${args[*]:$((i + 1))}"; break
+               fi
+               name+="${name:+ }${args[$i]}"
+           done
+           [[ -n $url ]] || die "no web address given"
+           [[ -n $name ]] || name=$(name_of "$url") ;;
+    esac
+    [[ $name == */* ]] && die "a name can't contain '/'"
+    [[ -n $name && -n $(slug "$name") ]] || die "give the web app a name"
+    [[ -n $(browser) ]] || die "web apps need Chromium, Chrome, Brave, Vivaldi or Edge (sudo pacman -S chromium)"
+    slugged="orrery-webapp-$(slug "$name")"
+    file="$APPS/$slugged.desktop"
+    mkdir -p "$APPS" "$ICONS"
+    # the icon: given (URL, file, name) or the site's own
+    local icon_value="$slugged"
+    if [[ -z ${icon:-} ]]; then
+        fetch_icon "$url" "$ICONS/$slugged.png" || icon_value="applications-internet"
+    elif [[ $icon =~ ^https?:// ]]; then
+        download_icon "$icon" "$ICONS/$slugged.png" || icon_value="applications-internet"
+    elif [[ -f $icon ]]; then
+        cp -- "$icon" "$ICONS/$slugged.png"
+    else
+        icon_value="$icon"
+    fi
+    command -v gtk-update-icon-cache >/dev/null && gtk-update-icon-cache -q "$HOME/.local/share/icons/hicolor" 2>/dev/null
+    cat > "$file" <<EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=$(desk_str "$name")
+Comment=$(desk_str "Web app · $url")
+Exec=$(desk_str "orrery-webapp launch $(exec_arg "$url")")
+Icon=$(desk_str "$icon_value")
+StartupWMClass=$(desk_str "$(wm_class "$url")")
+StartupNotify=true
+Terminal=false
+Categories=Network;WebBrowser;
+$MARK
+EOF
+    command -v update-desktop-database >/dev/null && update-desktop-database -q "$APPS" 2>/dev/null
+    echo "added $name ($url)"
+    note "Web app added" "$name is in the launcher (SUPER+D)"
+}
+
+remove() {
+    local want="$*" f n removed=""
+    [[ -n $want ]] || die "which web app? (orrery-webapp list)"
+    while IFS= read -r f; do
+        n=$(field Name "$f")
+        if [[ $n == "$want" || $(basename "$f" .desktop) == "$want" ]]; then
+            rm -f -- "$f" "$ICONS/$(basename "$f" .desktop).png"; removed="$n"
+        fi
+    done < <(webapps)
+    [[ -n $removed ]] || { echo "no web app called '$want'" >&2; exit 1; }
+    command -v update-desktop-database >/dev/null && update-desktop-database -q "$APPS" 2>/dev/null
+    echo "removed $removed"
+    note "Web app removed" "$removed"
+}
+
+list() {
+    local f json="${1:-}" first=1
+    [[ $json == --json ]] && printf '['
+    while IFS= read -r f; do
+        local n u
+        n=$(field Name "$f"); u=$(field Comment "$f"); u="${u#Web app · }"
+        if [[ $json == --json ]]; then
+            [[ $first -eq 1 ]] || printf ','; first=0
+            jq -cn --arg n "$n" --arg u "$u" --arg id "$(basename "$f" .desktop)" '{name: $n, url: $u, id: $id}' | tr -d '\n'
+        else
+            printf '%-24s %s\n' "$n" "$u"
+        fi
+    done < <(webapps | sort)
+    [[ $json == --json ]] && printf ']\n'
+    return 0
+}
+
+launch() {
+    local b url
+    set_url "${1:?usage: orrery-webapp launch <url>}"; url="$URL"
+    b=$(browser)
+    if [[ -n $b ]]; then exec setsid -f "$b" --app="$url" >/dev/null 2>&1; fi
+    # no app-mode browser: open it as a normal tab rather than not at all
+    exec setsid -f xdg-open "$url" >/dev/null 2>&1
+}
+
+case "${1:-}" in
+    add)    shift; [[ $# -ge 1 ]] || die "usage: orrery-webapp add [name] <url> [icon]"
+            [[ $# -eq 1 && $1 == *" "* ]] && { read -r -a words <<<"$1"; add "${words[@]}"; } || add "$@" ;;
+    remove) shift; remove "$@" ;;
+    list)   shift; list "${1:-}" ;;
+    launch) shift; launch "$@" ;;
+    -h|--help|"") sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//' ;;
+    *) echo "usage: orrery-webapp add|remove|list|launch" >&2; exit 2 ;;
+esac

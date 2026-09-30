@@ -9,6 +9,7 @@ object, in one process (the menu runs it every time it opens).
     "keybindings": [ {id, label, value, description} ],
     "fonts":       [ {id, label, checked, action, keep} ],
     "reminders":   [ {id, label} ],
+    "webapps":     [ {id, label, value, icon, action} ]    (and "webapps.remove")
     "about":       [ {id, label, value} ]
   }
 """
@@ -138,6 +139,21 @@ def fonts():
     return out
 
 
+def webapps():
+    """Your web apps (orrery-webapp): open rows, and remove rows."""
+    try:
+        apps = json.loads(sh("orrery-webapp list --json") or "[]")
+    except Exception:
+        apps = []
+    q = lambda v: "'" + v.replace("'", "'\\''") + "'"
+    opened = [{"id": a["id"], "label": a["name"], "value": a["url"].split("://", 1)[-1].rstrip("/"),
+               "icon": "language", "action": "orrery-webapp launch " + q(a["url"])} for a in apps]
+    removed = [{"id": a["id"], "label": a["name"], "icon": "delete",
+                "action": "orrery-webapp remove " + q(a["name"]), "keep": True} for a in apps]
+    none = [{"id": "none", "label": "No web apps yet", "icon": "language"}]
+    return opened or none, removed or none
+
+
 def reminders():
     out = []
     for line in sh("orrery-remind show").splitlines():
@@ -163,7 +179,8 @@ def about():
 def main():
     st = state()
     print(json.dumps({"state": st, "agents": agents(st["agent"]), "keybindings": keybindings(), "fonts": fonts(),
-                      "reminders": reminders(), "about": about()}))
+                      "reminders": reminders(), "about": about(),
+                      "webapps": webapps()[0], "webapps.remove": webapps()[1]}))
 
 
 if __name__ == "__main__":

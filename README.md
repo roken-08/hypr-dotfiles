@@ -81,6 +81,8 @@ Four themes ship with it. Switch live with **`SUPER` `CTRL` `SHIFT` `SPACE`**, o
   dock, fonts, Wi-Fi, Bluetooth, keybindings.
 - **Launcher and clipboard.** Fuzzy app search that learns what you use, and clipboard history
   with image previews.
+- **Web apps.** Turn any site into an app with its own window, icon, launcher entry and dock
+  icon: Menu › Web apps, or `orrery-webapp add https://mail.example.com`.
 - **Panels that grow out of the bar**: sound with per-app volume, Wi-Fi, Bluetooth pairing,
   power (battery, brightness, profiles), notifications, calendar and media, all in one
   Material 3 motion.
@@ -139,6 +141,9 @@ hl.config({ input = { kb_layout = "de" } })
 ```
 
 Any other Hyprland setting can go in that file too; it's loaded last, so it wins.
+
+**Web apps** open in Chromium's app mode (Chrome, Brave, Vivaldi and Edge work too):
+`sudo pacman -S chromium` if you have none. `orrery-webapp list` / `remove <name>` manage them.
 
 **A browser** isn't installed for you. `SUPER` `B` opens the first one it finds of Zen, Firefox,
 Chromium and Brave; pick another in Menu › Settings › Default apps.

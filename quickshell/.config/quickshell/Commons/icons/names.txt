@@ -162,3 +162,5 @@ notes
 subject
 keyboard_return
 ac_unit
+add_circle
+delete

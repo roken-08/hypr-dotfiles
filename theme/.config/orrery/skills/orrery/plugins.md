@@ -164,6 +164,15 @@ footer button where one icon says it, and a Legacy (pill) bar turns the
 clicked pill into the drawer's tab (Pill.qml `attached`). Check new panel
 work in the floating and pill skins, dark and light.
 
+Web apps (theme/.local/bin/orrery-webapp): launchers marked
+`X-Orrery-WebApp=true` in ~/.local/share/applications, Exec `orrery-webapp
+launch <url>` (Chromium-family `--app`), StartupWMClass
+`chrome-<host>__<path, / as _>-Default` so the dock (Services/Dock.qml
+matches startupClass) shows the site's icon. Menu › Web apps uses the
+`webapps` / `webapps.remove` providers in orrery-menu-data. In bash, never
+validate inside `$( )`: `die` there only leaves the subshell (an invalid URL
+once wrote an empty launcher).
+
 QML pitfalls learned here (don't relearn them):
 A component whose root has a `default property alias x: inner.data` also
 sends its OWN declared children into `inner` (PanelHeader did: "Row will not
