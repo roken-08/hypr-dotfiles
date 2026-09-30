@@ -87,12 +87,13 @@ Panel {
                 id: appIcon
                 anchors.verticalCenter: parent.verticalCenter
                 width: 14; height: 14
-                source: p.player && p.player.desktopEntry ? Quickshell.iconPath(p.player.desktopEntry, true) : ""
+                // the app it plays in: a web app's own icon, not the browser's (Services/MediaApps)
+                source: { void MediaApps.classes; return MediaApps.icon(p.player) }
                 visible: source != ""
             }
             Label {
                 anchors.verticalCenter: parent.verticalCenter
-                text: (p.playing ? "Now playing" : "Paused") + (p.player && p.player.identity ? "  ·  " + p.player.identity : "")
+                text: { void MediaApps.classes; const n = MediaApps.name(p.player); return (p.playing ? "Now playing" : "Paused") + (n ? "  ·  " + n : "") }
                 font.pixelSize: Theme.fs(10); font.weight: Font.Bold; font.letterSpacing: 0.6
                 color: Theme.c.accentMid
             }
@@ -504,7 +505,7 @@ Panel {
                     }
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: chip.modelData.identity || chip.modelData.desktopEntry || "player"
+                        text: { void MediaApps.classes; return MediaApps.name(chip.modelData) || "player" }
                         font.pixelSize: Theme.fs(11)
                         color: chip.current ? Theme.c.accentBright : Theme.c.accentMid
                     }

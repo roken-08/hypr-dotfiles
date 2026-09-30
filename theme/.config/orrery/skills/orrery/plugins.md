@@ -173,7 +173,13 @@ chrome/*.css hide tabs, toolbars, scrollbars and the link-preview
 (Services/Dock.qml matches startupClass) shows the site's icon. An open app is
 focused, not started twice. No Firefox: Chromium-family `--app`, class
 `chrome-<host>__<path, / as _>-Default`. Menu › Web apps uses the
-`webapps` / `webapps.remove` providers in orrery-menu-data. In bash, never
+`webapps` / `webapps.remove` providers in orrery-menu-data. Media from a web app:
+MPRIS only says "Mozilla firefox"; Services/MediaApps.qml traces each
+player's `dbusName` → process (busctl) → window (hyprctl clients pid) →
+launcher (startupClass) for the app's own name and icon; use
+`MediaApps.name(player)` / `.icon(player)`, never `identity` directly. To
+test, serve a page with a −50 dB tone on localhost as a temporary web app
+(Firefox registers no player for silent audio). In bash, never
 validate inside `$( )`: `die` there only leaves the subshell (an invalid URL
 once wrote an empty launcher).
 
