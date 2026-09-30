@@ -19,7 +19,7 @@ PKGS_REPO=(
   grim slurp wl-clipboard cliphist playerctl brightnessctl batsignal ffmpeg hyprsunset
   thunar pavucontrol networkmanager nm-connection-editor
   # what the shell talks to: notifications, volume, bluetooth, battery, links
-  libnotify pipewire pipewire-pulse wireplumber bluez bluez-utils blueman upower xdg-utils
+  libnotify pipewire pipewire-pulse wireplumber alsa-utils bluez bluez-utils blueman upower xdg-utils
   ttf-jetbrains-mono-nerd inter-font papirus-icon-theme adw-gtk-theme stow
   # theme engine: renderer, JSON edits, gsettings schema, portal settings backend
   # (GTK4/Zen follow dark/light through it), login screen
