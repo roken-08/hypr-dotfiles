@@ -36,8 +36,22 @@ local nv = io.open("/proc/driver/nvidia/version")
 if nv then
     nv:close()
     hl.env("GBM_BACKEND", "nvidia-drm")
-    hl.env("LIBVA_DRIVER_NAME", "nvidia")
     hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+    -- Video decoding (VA-API) on the NVIDIA card only when NVIDIA drives the
+    -- screen. On a hybrid laptop whose screen hangs off the Intel/AMD GPU,
+    -- frames decoded on NVIDIA can't be shown by Chromium (video areas went
+    -- see-through) and keep the dGPU awake; unset, libva picks the driver of
+    -- the GPU the app renders on (iHD / radeonsi).
+    local igpu_display = false
+    local ls = io.popen("for c in /sys/class/drm/card*-*/status; do [ \"$(cat \"$c\" 2>/dev/null)\" = connected ] || continue; " ..
+                        "d=${c%/status}; d=${d##*/}; cat \"/sys/class/drm/${d%%-*}/device/vendor\" 2>/dev/null; done")
+    if ls then
+        for vendor in ls:lines() do
+            if vendor ~= "0x10de" then igpu_display = true end
+        end
+        ls:close()
+    end
+    if not igpu_display then hl.env("LIBVA_DRIVER_NAME", "nvidia") end
 end
 
 -- ─── 6. Disabled / optional ────────────────────────────
