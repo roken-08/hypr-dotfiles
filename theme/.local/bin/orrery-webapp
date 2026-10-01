@@ -1,0 +1,308 @@
+#!/usr/bin/env bash
+# orrery-webapp — web apps: a website in its own window, with its own icon, in
+# the launcher and the dock like any app.
+#
+#   orrery-webapp add [--firefox|--chromium] <url>     the name comes from the site
+#   orrery-webapp add [--firefox|--chromium] <name> <url> [icon]
+#                                         icon: a URL, a file or an icon name;
+#                                         without one the site's own is fetched
+#   orrery-webapp remove <name>
+#   orrery-webapp list [--json]
+#   orrery-webapp launch <url> [id] [firefox|chromium]
+#
+# Menu > Web apps does the same without a terminal (Add › In Firefox / In
+# Chromium).
+#
+# A web app is a launcher in ~/.local/share/applications marked
+# X-Orrery-WebApp=true, and each one opens in the browser it was added with
+# (X-Orrery-WebApp-Browser):
+#   firefox   (default) a bare window in its own small profile
+#             (~/.local/share/orrery/webapps/<id>): no tabs, toolbars,
+#             scrollbars or link-preview bubble; its own logins
+#   chromium  Chromium's app mode (or Chrome, Brave, Vivaldi, Edge), no
+#             scrollbars; logins shared with that browser; Chromium always
+#             shows the link-preview bubble
+# Either way the window gets a class the launcher names, so the dock shows the
+# site's icon. When an app's browser is missing the other one is used.
+#
+# The URL checks, the launcher escaping and the site-icon lookup follow
+# Omarchy's omarchy-webapp-install (github.com/basecamp/omarchy, MIT).
+set -u
+
+APPS="$HOME/.local/share/applications"
+PROFILES="$HOME/.local/share/orrery/webapps"
+ICONS="$HOME/.local/share/icons/hicolor/256x256/apps"
+MARK="X-Orrery-WebApp=true"
+
+die()  { echo "orrery-webapp: $*" >&2; command -v notify-send >/dev/null && notify-send -a "Web apps" "Couldn't add the web app" "$*"; exit 1; }
+note() { command -v notify-send >/dev/null && notify-send -a "Web apps" "$@" || true; }
+
+slug() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^[:alnum:]]\+/-/g; s/^-//; s/-$//'; }
+
+# https:// for a bare "example.com"; only http(s), no whitespace (Chromium's
+# --app would run javascript:, file: or data: as a document). Sets URL; not
+# called in $( ), where die would only leave the subshell.
+set_url() {
+    local u="$1"
+    [[ $u =~ ^[a-zA-Z][a-zA-Z0-9+.-]*: ]] || u="https://$u"
+    [[ $u =~ [[:space:]] ]] && die "a URL can't contain spaces"
+    [[ ${u,,} =~ ^https?:// ]] || die "only http(s) addresses can be web apps"
+    # a real host: a dotted name, localhost, or an IP (not "https://ex")
+    local host="${u#*://}"; host="${host%%[/?#]*}"; host="${host%%:*}"
+    [[ $host == *.?* || $host == localhost ]] || die "'$1' isn't a web address"
+    URL="$u"
+}
+
+# Desktop Entry string value: a raw newline would start a new key (a second Exec=)
+desk_str() {
+    local v="$1"
+    v=${v//\\/\\\\}; v=${v//$'\t'/\\t}; v=${v//$'\r'/\\r}; v=${v//$'\n'/\\n}
+    [[ $v == " "* ]] && v="\\s${v# }"
+    printf '%s' "$v"
+}
+# one quoted Exec argument
+exec_arg() { printf '"%s"' "$(printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/`/\\`/g' -e 's/\$/\\$/g' -e 's/%/%%/g')"; }
+
+# Chromium-family fallback, when there is no Firefox
+chromium_like() {
+    local b
+    for b in chromium google-chrome-stable google-chrome brave brave-browser vivaldi-stable vivaldi microsoft-edge-stable; do
+        command -v "$b" >/dev/null && { echo "$b"; return; }
+    done
+}
+# the binary for a kind (firefox | chromium); the other kind when it's missing
+bin_for() {
+    local ff="" ch
+    command -v firefox >/dev/null && ff=firefox
+    ch=$(chromium_like)
+    if [[ ${1:-firefox} == chromium ]]; then echo "${ch:-$ff}"; else echo "${ff:-$ch}"; fi
+}
+# the kind a new app gets when none is asked for: Firefox if it's there
+default_kind() { command -v firefox >/dev/null && echo firefox || echo chromium; }
+# the window class: Firefox takes ours (--name); Chromium makes its own,
+# chrome-<host>__<path, / as _>-Default
+wm_class() {
+    local id="$1" url="$2" kind="${3:-firefox}" rest host path
+    if [[ $(bin_for "$kind") == firefox ]]; then printf '%s' "$id"; return; fi
+    rest="${url#*://}"; host="${rest%%/*}"; path=""; [[ $rest == */* ]] && path="${rest#*/}"
+    path="${path%%\?*}"; path="${path%%#*}"; path="${path%/}"
+    printf 'chrome-%s__%s-Default' "$host" "${path//\//_}"
+}
+
+# a Firefox profile that is only the page: no tabs, toolbars, scrollbars,
+# link-preview bubble or first-run pages; rewritten on every launch so an
+# update of these rules reaches old apps too
+ff_profile() {
+    local dir="$1" url="$2"
+    mkdir -p "$dir/chrome"
+    cat > "$dir/user.js" <<EOF
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+user_pref("browser.startup.homepage", "$url");
+user_pref("browser.startup.page", 1);
+user_pref("browser.shell.checkDefaultBrowser", false);
+user_pref("browser.aboutwelcome.enabled", false);
+user_pref("browser.startup.homepage_override.mstone", "ignore");
+user_pref("startup.homepage_welcome_url", "");
+user_pref("startup.homepage_welcome_url.additional", "");
+user_pref("datareporting.policy.dataSubmissionPolicyBypassNotification", true);
+user_pref("browser.tabs.warnOnClose", false);
+user_pref("browser.sessionstore.resume_from_crash", false);
+user_pref("browser.link.open_newwindow", 3);
+user_pref("sidebar.revamp", false);
+user_pref("sidebar.verticalTabs", false);
+user_pref("browser.toolbars.bookmarks.visibility", "never");
+user_pref("browser.translations.automaticallyPopup", false);
+user_pref("extensions.pocket.enabled", false);
+user_pref("layout.css.prefers-color-scheme.content-override", 2);
+EOF
+    cat > "$dir/chrome/userChrome.css" <<'EOF'
+/* orrery-webapp: the page and nothing else */
+#TabsToolbar, #nav-bar, #PersonalToolbar, #titlebar, #sidebar-box, #sidebar-main,
+#statuspanel, #notifications-toolbar, .browserSidebarContainer > .dialogStack { visibility: collapse !important; }
+#navigator-toolbox { border: none !important; }
+EOF
+    cat > "$dir/chrome/userContent.css" <<'EOF'
+/* orrery-webapp: no scrollbars (the page still scrolls) */
+:root, * { scrollbar-width: none !important; }
+EOF
+}
+
+download_icon() {
+    curl -fsSL --max-time 10 -o "$2" "$1" 2>/dev/null && [[ -s $2 && $(file -b --mime-type "$2") == image/* ]] && return 0
+    rm -f -- "$2"; return 1
+}
+# the site's own big icon (apple-touch-icon), the well-known path, then Google's favicon service
+fetch_icon() {
+    local url="$1" dest="$2" origin page icon
+    origin=$(sed -E 's|^(https?://[^/]+).*|\1|' <<<"$url")
+    page=$(curl -fsSL --max-time 6 "$url" 2>/dev/null | head -c 200000 | tr '\n' ' ')
+    icon=$(grep -oiE "<link[^>]*rel=[\"'][^\"']*apple-touch-icon[^\"']*[\"'][^>]*>" <<<"$page" |
+           grep -oiE "href=[\"'][^\"']+" | head -1 | sed -E "s/^href=[\"']//")
+    case $icon in
+        http://*|https://*) ;;
+        //*) icon="https:$icon" ;;
+        /*) icon="$origin$icon" ;;
+        ?*) icon="$origin/$icon" ;;
+    esac
+    { [[ -n $icon ]] && download_icon "$icon" "$dest"; } ||
+        download_icon "$origin/apple-touch-icon.png" "$dest" ||
+        download_icon "https://www.google.com/s2/favicons?domain=${url}&sz=256" "$dest"
+}
+# a name from the page title ("Inbox (3) - Gmail" → "Gmail"), else the domain
+name_of() {
+    local url="$1" t host
+    t=$(curl -fsSL --max-time 6 "$url" 2>/dev/null | head -c 200000 | tr '\n' ' ' |
+        grep -oiE '<title[^>]*>[^<]*' | head -1 | sed -E 's/<title[^>]*>//; s/&amp;/\&/g; s/^[[:space:]]+|[[:space:]]+$//g')
+    t="${t##* - }"; t="${t##* | }"; t="${t##* · }"
+    if [[ -n $t && ${#t} -le 30 ]]; then printf '%s' "$t"; return; fi
+    host="${url#*://}"; host="${host%%/*}"; host="${host#www.}"; host="${host#app.}"; host="${host%.*}"
+    printf '%s' "${host^}"
+}
+
+# launcher files that are web apps
+webapps() { grep -l -s "^$MARK" "$APPS"/*.desktop 2>/dev/null; }
+field() { sed -n "s/^$1=//p" "$2" | head -1; }
+
+add() {
+    local name url icon file slugged kind
+    kind=$(default_kind)
+    case "${1:-}" in --firefox) kind=firefox; shift ;; --chromium) kind=chromium; shift ;; esac
+    [[ $# -ge 1 ]] || die "no web address given"
+    [[ $# -eq 1 && $1 == *" "* ]] && { local words; read -r -a words <<<"$1"; set -- "${words[@]}"; }
+    case $# in
+        1) set_url "$1"; url="$URL"; name=$(name_of "$url") ;;
+        *) # "Name words https://url [icon]": the first thing that looks like a URL is the URL
+           local i args=("$@"); name=""; url=""; icon=""
+           for ((i = 0; i < ${#args[@]}; i++)); do
+               if [[ -z $url && ( ${args[$i]} == *://* || ${args[$i]} =~ ^[a-z0-9-]+(\.[a-z0-9-]+)+(/.*)?$ ) ]]; then
+                   set_url "${args[$i]}"; url="$URL"; icon="${args[*]:$((i + 1))}"; break
+               fi
+               name+="${name:+ }${args[$i]}"
+           done
+           [[ -n $url ]] || die "no web address given"
+           [[ -n $name ]] || name=$(name_of "$url") ;;
+    esac
+    [[ $name == */* ]] && die "a name can't contain '/'"
+    [[ -n $name && -n $(slug "$name") ]] || die "give the web app a name"
+    [[ -n $(bin_for "$kind") ]] || die "web apps need Firefox or Chromium (sudo pacman -S firefox)"
+    slugged="orrery-webapp-$(slug "$name")"
+    file="$APPS/$slugged.desktop"
+    mkdir -p "$APPS" "$ICONS"
+    # the icon: given (URL, file, name) or the site's own
+    local icon_value="$slugged"
+    if [[ -z ${icon:-} ]]; then
+        fetch_icon "$url" "$ICONS/$slugged.png" || icon_value="applications-internet"
+    elif [[ $icon =~ ^https?:// ]]; then
+        download_icon "$icon" "$ICONS/$slugged.png" || icon_value="applications-internet"
+    elif [[ -f $icon ]]; then
+        cp -- "$icon" "$ICONS/$slugged.png"
+    else
+        icon_value="$icon"
+    fi
+    command -v gtk-update-icon-cache >/dev/null && gtk-update-icon-cache -q "$HOME/.local/share/icons/hicolor" 2>/dev/null
+    cat > "$file" <<EOF
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=$(desk_str "$name")
+Comment=$(desk_str "Web app · $url")
+Exec=$(desk_str "orrery-webapp launch $(exec_arg "$url") $slugged $kind")
+Icon=$(desk_str "$icon_value")
+StartupWMClass=$(desk_str "$(wm_class "$slugged" "$url" "$kind")")
+StartupNotify=true
+Terminal=false
+Categories=Network;WebBrowser;
+$MARK
+X-Orrery-WebApp-Browser=$kind
+EOF
+    command -v update-desktop-database >/dev/null && update-desktop-database -q "$APPS" 2>/dev/null
+    echo "added $name ($url, $kind)"
+    note "Web app added" "$name is in the launcher (SUPER+D)"
+}
+
+remove() {
+    local want="$*" f n removed=""
+    [[ -n $want ]] || die "which web app? (orrery-webapp list)"
+    while IFS= read -r f; do
+        n=$(field Name "$f")
+        if [[ $n == "$want" || $(basename "$f" .desktop) == "$want" ]]; then
+            rm -f -- "$f" "$ICONS/$(basename "$f" .desktop).png"
+            local p="$PROFILES/$(basename "$f" .desktop)"
+            [[ -n $PROFILES && -d $p ]] && rm -rf -- "${p:?}"
+            removed="$n"
+        fi
+    done < <(webapps)
+    [[ -n $removed ]] || { echo "no web app called '$want'" >&2; exit 1; }
+    command -v update-desktop-database >/dev/null && update-desktop-database -q "$APPS" 2>/dev/null
+    echo "removed $removed"
+    note "Web app removed" "$removed"
+}
+
+list() {
+    local f json="${1:-}" first=1
+    [[ $json == --json ]] && printf '['
+    while IFS= read -r f; do
+        local n u
+        local k
+        n=$(field Name "$f"); u=$(field Comment "$f"); u="${u#Web app · }"; k=$(field X-Orrery-WebApp-Browser "$f")
+        if [[ $json == --json ]]; then
+            [[ $first -eq 1 ]] || printf ','; first=0
+            jq -cn --arg n "$n" --arg u "$u" --arg k "${k:-firefox}" --arg id "$(basename "$f" .desktop)" '{name: $n, url: $u, id: $id, browser: $k}' | tr -d '\n'
+        else
+            printf '%-24s %-9s %s\n' "$n" "${k:-firefox}" "$u"
+        fi
+    done < <(webapps | sort)
+    [[ $json == --json ]] && printf ']\n'
+    return 0
+}
+
+# launch <url> [id] [kind]: the app's window if it is open, else a new one
+launch() {
+    local url id kind b
+    set_url "${1:?usage: orrery-webapp launch <url> [id] [firefox|chromium]}"; url="$URL"; id="${2:-}"; kind="${3:-}"
+    [[ -z $kind && -n $id && -f $APPS/$id.desktop ]] && kind=$(field X-Orrery-WebApp-Browser "$APPS/$id.desktop")
+    b=$(bin_for "${kind:-firefox}")
+    if [[ $b == firefox && -n $id ]]; then
+        if hyprctl -j clients 2>/dev/null | jq -e --arg c "$id" 'any(.[]; .class == $c)' >/dev/null; then
+            exec hyprctl dispatch "hl.dsp.focus({ window = 'class:^${id}\$' })" >/dev/null
+        fi
+        ff_profile "$PROFILES/$id" "$url"
+        exec setsid -f firefox --new-instance --profile "$PROFILES/$id" --name "$id" "$url" >/dev/null 2>&1
+    fi
+    if [[ -n $b && $b != firefox ]]; then
+        local cls; cls=$(wm_class "$id" "$url" chromium)
+        if hyprctl -j clients 2>/dev/null | jq -e --arg c "$cls" 'any(.[]; .class == $c)' >/dev/null; then
+            exec hyprctl dispatch "hl.dsp.focus({ window = 'class:^${cls}\$' })" >/dev/null
+        fi
+        exec setsid -f "$b" --hide-scrollbars --app="$url" >/dev/null 2>&1
+    fi
+    exec setsid -f xdg-open "$url" >/dev/null 2>&1
+}
+
+# apps made before each app had its own browser: give them the one the old
+# global setting picked, once
+LEGACY="$HOME/.config/orrery/defaults/webapp-browser"
+migrate() {
+    local f u id k changed=0
+    k=$( [[ "$(cat "$LEGACY" 2>/dev/null)" == chromium ]] && echo chromium || echo firefox )
+    while IFS= read -r f; do
+        grep -q '^X-Orrery-WebApp-Browser=' "$f" && continue
+        u=$(field Comment "$f"); u="${u#Web app · }"; id=$(basename "$f" .desktop)
+        sed -i "s|^Exec=.*|Exec=$(desk_str "orrery-webapp launch $(exec_arg "$u") $id $k" | sed 's/[&|]/\\&/g')|; s|^StartupWMClass=.*|StartupWMClass=$(wm_class "$id" "$u" "$k")|" "$f"
+        echo "X-Orrery-WebApp-Browser=$k" >> "$f"; changed=1
+    done < <(webapps)
+    rm -f -- "$LEGACY"
+    [[ $changed -eq 1 ]] && command -v update-desktop-database >/dev/null && update-desktop-database -q "$APPS" 2>/dev/null
+    return 0
+}
+
+migrate
+case "${1:-}" in
+    add)    shift; [[ $# -ge 1 ]] || die "usage: orrery-webapp add [--firefox|--chromium] [name] <url> [icon]"
+            add "$@" ;;
+    remove) shift; remove "$@" ;;
+    list)   shift; list "${1:-}" ;;
+    launch) shift; launch "$@" ;;
+    -h|--help|"") sed -n '2,/^set -u/p' "$0" | sed '$d' | sed 's/^# \{0,1\}//' ;;
+    *) echo "usage: orrery-webapp add|remove|list|launch" >&2; exit 2 ;;
+esac

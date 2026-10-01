@@ -12,7 +12,7 @@
  * adw-gtk3 respects the common ones, but a stylesheet that hardcodes colours
  * will win over these overrides.
  */
-@import '../hypr-theme/palette.css';
+@import '../orrery/current/palette.css';
 
 /* Classic GTK3 theme colours */
 @define-color theme_bg_color          @bg0;
@@ -44,3 +44,11 @@
 @define-color accent_bg_color         @accent-light;
 @define-color accent_fg_color         @bg0;
 @define-color accent_color            @accent-bright;
+
+/* Selected items in Thunar's views: Thunar paints the selection box itself,
+   solid in theme_selected_bg_color (the pale accent in dark themes), and
+   exo draws the label as a selected .cell in the ordinary text colour, which
+   is light: unreadable. Give selected cells the selection's own foreground. */
+.view .cell:selected, iconview .cell:selected, .cell:selected {
+  color: @theme_selected_fg_color;
+}

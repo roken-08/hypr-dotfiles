@@ -1,0 +1,44 @@
+-- Colourscheme follows the orrery-theme engine (see config/orrery.lua).
+-- "orrery" is generated from the theme palette by lua/orrery/init.lua;
+-- zenbones stays installed as the fallback family with real light/dark
+-- variants for themes that name it; gruvbox is a warm stock scheme a theme
+-- can name; aether.nvim is coloured from the palette (colorscheme "aether"),
+-- Aether/Omarchy style.
+local bridge = require("config.orrery")
+local theme = bridge.read()
+
+return {
+  {
+    "zenbones-theme/zenbones.nvim",
+    dependencies = "rktjmp/lush.nvim",
+    lazy = false,
+    priority = 1000,
+    init = function()
+      vim.o.background = theme.background or "dark"
+    end,
+  },
+
+  {
+    "ellisonleao/gruvbox.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = { contrast = "hard" },
+  },
+
+  {
+    "omacom/aether.nvim",
+    branch = "v3",
+    name = "aether",
+    lazy = false,
+    priority = 1000,
+  },
+
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = function()
+        bridge.apply()
+      end,
+    },
+  },
+}

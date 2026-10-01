@@ -1,280 +1,175 @@
-# hypr-dotfiles
+<div align="center">
 
-My personal Hyprland rice — a dark, blurred, mostly-monochrome setup built around a **Lua-configured Hyprland**.
+<img src="Screenshots/cover.png" alt="Orrery: a Hyprland desktop where everything orbits one palette" width="100%">
 
-Everything here is what I actually run day to day. Grab whatever's useful.
+**A complete, themeable Hyprland desktop for Arch Linux.**<br>
+Switch the theme and everything follows: the shell, terminals, GTK and Qt apps, Neovim,
+VS Code, Firefox, Spotify and the login screen.
 
-![License: MIT](https://img.shields.io/badge/license-MIT-black)
-![Hyprland 0.56.2](https://img.shields.io/badge/hyprland-0.56.2-black)
-![Config: Lua](https://img.shields.io/badge/config-lua-black)
+![Hyprland 0.56](https://img.shields.io/badge/Hyprland-0.56-0d0d0f?style=flat-square&logo=hyprland&logoColor=white)
+![Quickshell 0.3](https://img.shields.io/badge/Quickshell-0.3-0d0d0f?style=flat-square)
+![Arch Linux](https://img.shields.io/badge/Arch-Linux-0d0d0f?style=flat-square&logo=archlinux&logoColor=white)
+![License: MIT](https://img.shields.io/badge/license-MIT-0d0d0f?style=flat-square)
 
----
+[Install](#install) · [Keybinds](#keybinds) · [Make it yours](#make-it-yours) · [Help](#troubleshooting)
 
-## Screenshots
+</div>
 
-**Desktop**
 
-![Main Window](Screenshots/mainwindow.png)
+https://github.com/user-attachments/assets/a86c8b7f-421c-4d59-ae3d-25050f7ee63c
 
-**Terminal — fastfetch + btop**
 
-![Fastfetch and Btop](Screenshots/withfastfetchandbtop.png)
+## Themes
 
-**Lock screen (hyprlock)**
+<img src="Screenshots/themes.webp" alt="The four themes in turn: Eclipse, Zenith, Catppuccin Mocha and Cassini" width="100%">
 
-![Hyprlock](Screenshots/hyprlock_scshot.png)
+Four themes ship with it: **Eclipse** (dark greys), **Zenith** (the same on white),
+**Catppuccin Mocha** and **Cassini** (ice-teal on deep space). Switch live with
+**`SUPER` `CTRL` `SHIFT` `SPACE`**.
 
-**Rofi launcher**
+<details>
+<summary>Screenshots of each theme</summary>
+<br>
 
-![Rofi Launcher](Screenshots/rofi.png)
+| | |
+|---|---|
+| <img src="Screenshots/eclipse.jpg" alt="Eclipse"> | <img src="Screenshots/zenith.jpg" alt="Zenith"> |
+| <img src="Screenshots/catppuccin-mocha.jpg" alt="Catppuccin Mocha"> | <img src="Screenshots/cassini.jpg" alt="Cassini"> |
+| <img src="Screenshots/launcher-cassini.jpg" alt="The launcher"> | <img src="Screenshots/menu-cassini.jpg" alt="The menu"> |
 
-**Logout menu (wlogout)**
+</details>
 
-![Wlogout](Screenshots/wlogout.png)
+## Features
 
-**Notification centre (SwayNC)**
-
-![SwayNC Notifications](Screenshots/swaync_notification.png)
-
-**Zen Browser**
-
-![Zen Browser](Screenshots/zen-browser.png)
-
----
-
-## What's in it
-
-| | Using | Package |
-|---|---|---|
-| Compositor | [Hyprland](https://hyprland.org/) | `hyprland` |
-| Bar | [Waybar](https://github.com/Alexays/Waybar) | `waybar` |
-| Launcher | [Rofi](https://github.com/davatorium/rofi) | `rofi` |
-| Notifications | [SwayNC](https://github.com/ErikReider/SwayNotificationCenter) | `swaync` |
-| Lock / idle | [hyprlock](https://github.com/hyprwm/hyprlock) + [hypridle](https://github.com/hyprwm/hypridle) | `hyprlock` `hypridle` |
-| Logout menu | [wlogout](https://github.com/ArtsyMacaw/wlogout) | `wlogout` |
-| Wallpaper | [awww](https://codeberg.org/LGFae/awww) | `awww` |
-| Terminal | [Kitty](https://sw.kovidgoyal.net/kitty/), [Alacritty](https://alacritty.org/) | `kitty` `alacritty` |
-| Shell | [Zsh](https://www.zsh.org/) + [Starship](https://starship.rs/) | `zsh` `starship` |
-| Editor | [Neovim](https://neovim.io/) ([LazyVim](https://www.lazyvim.org/)) | `neovim` |
-| Files | [Thunar](https://docs.xfce.org/xfce/thunar/start) | `thunar` |
-| Browser | [Zen Browser](https://zen-browser.app/) | `zen-browser-bin` |
-| Clipboard | [cliphist](https://github.com/sentriz/cliphist) with image thumbnails | `cliphist` `ffmpeg` |
-| Screenshots | grim + slurp | `grim` `slurp` |
-| App theming | GTK2/3/4 + Qt5/6 from one palette | `qt5ct` `qt6ct` `papirus-icon-theme` `inter-font` |
-
----
-
-## Fonts
-
-```bash
-sudo pacman -S ttf-jetbrains-mono-nerd inter-font
-```
-
-The **Propo** variant matters — it's what Waybar, SwayNC and hyprlock use. Check it landed:
-
-```bash
-fc-list : family | grep -i "JetBrainsMono Nerd Font Propo"
-```
-
-**If that prints nothing, every icon renders as an empty box.** That's the usual reason a fresh
-install looks broken.
-
----
+- **One palette, every app**, dark or light. Most apps follow a theme switch instantly.
+- **A shell built on [Quickshell](https://quickshell.org/)**: a bar in three styles on any screen
+  edge, a dock, panels for sound, Wi-Fi, Bluetooth, power, notifications and media, a lock
+  screen and a power menu.
+- **One menu for everything** (`SUPER` `SPACE`): theme, wallpaper, bar, dock, fonts, Wi-Fi,
+  Bluetooth, web apps, keybindings.
+- **Launcher and clipboard history** with image previews.
+- **Web apps**: turn any site into an app with its own window and dock icon.
+- **An `/orrery` skill** for Claude Code, Codex, OpenCode and Gemini: ask for a theme, a widget
+  or a fix in plain words.
 
 ## Install
 
+> **You need** Arch Linux or an Arch-based distro (CachyOS, EndeavourOS…), a user with `sudo`
+> and a GPU that runs Wayland. In a VM, turn on 3D acceleration.
+
 ```bash
 sudo pacman -Syu --needed git
-git clone https://github.com/thomasmartinoa/hypr-dotfiles.git ~/hypr-dotfiles
-cd ~/hypr-dotfiles
-./install.sh
+git clone https://github.com/thomasmartinoa/Orrery-dotfiles.git ~/Orrery-dotfiles
+cd ~/Orrery-dotfiles && ./install.sh
 ```
 
-That installs the packages and symlinks everything with GNU Stow. It won't overwrite anything
-without asking first.
+Reboot, choose **Hyprland** on the login screen, and press **`SUPER` `SPACE`** to find
+everything. To update: `cd ~/Orrery-dotfiles && git pull && ./install.sh`.
 
-| Flag | Does |
+The installer installs the packages (offering to build `yay` for the three AUR ones), backs up
+any configs in the way after asking, links the configs with GNU Stow and enables
+NetworkManager, Bluetooth, power profiles and SDDM. It's safe to run again and never deletes
+your files.
+
+<details>
+<summary>Installer options</summary>
+
+| Flag | |
 |---|---|
 | `--dry-run` | Show what would happen, change nothing |
-| `--stow-only` | Skip package installation |
-| `--migrate` | Back up blocking files without asking |
-| `--no-migrate` | Never move anything; stop instead |
-| `--skip-root` | Don't copy the GTK config into `/root` or install the SDDM theme |
-| `--no-logout` | Don't offer to log out at the end |
-| `--no-aur` | Don't offer to install yay / AUR packages |
+| `--stow-only` | Skip installing packages |
+| `--migrate` · `--no-migrate` | Back up blocking files without asking · never move anything |
+| `--skip-root` | Don't touch `/root`, SDDM or sudoers |
+| `--no-aur` | Skip the AUR packages |
 
-### Manual
+</details>
 
-If you'd rather not run the script:
+### After installing
 
-```bash
-# compositor, session and theming
-sudo pacman -S hyprland hyprlock hypridle waybar rofi swaync awww \
-               xdg-desktop-portal-hyprland polkit-gnome power-profiles-daemon \
-               qt5ct qt6ct papirus-icon-theme adw-gtk-theme
+- **Keyboard layout** is US. Set yours in `~/.config/hypr/hyprland.local.lua` (updates never
+  touch it), then `hyprctl reload`:
+  ```lua
+  hl.config({ input = { kb_layout = "de" } })
+  ```
+- **Display scale** is automatic. Change it in Menu › Appearance › Display scale.
+- **A browser** isn't installed for you. `SUPER` `B` opens Zen, Firefox, Chromium or Brave,
+  whichever it finds first.
 
-# terminal, shell and editor
-sudo pacman -S kitty alacritty zsh starship neovim fastfetch btop eza
+<details>
+<summary>Optional: Spotify and Claude Code colours</summary>
 
-# utilities
-sudo pacman -S grim slurp wl-clipboard cliphist ffmpeg playerctl brightnessctl \
-               batsignal jq thunar pavucontrol networkmanager nm-connection-editor
-
-# fonts and stow
-sudo pacman -S ttf-jetbrains-mono-nerd inter-font stow
-
-# AUR (in the [cachyos] repo if you're on CachyOS)
-yay -S wlogout adwaita-qt5 adwaita-qt6
-```
-
-Then link it up:
+**Spotify** follows the theme through [Spicetify](https://spicetify.app/):
 
 ```bash
-mkdir -p ~/Pictures/screenshot ~/.config/qt5ct ~/.config/qt6ct
-
-stow alacritty gtk hyprland kde kittyterminal nvim qt rofi starship swaync theme \
-     waybar wlogout zsh
+yay -S spotify-launcher spicetify-cli
+spicetify config spotify_path ~/.local/share/spotify-launcher/install/usr/share/spotify
+orrery-theme reload
 ```
 
-Two things the script does that stow can't:
+**Claude Code**: run `/theme` once and pick **Auto (match terminal)**.
 
-- **`qt5ct.conf` / `qt6ct.conf` are not symlinked.** `color_scheme_path` has to be an absolute
-  path, so copy [`templates/qt5ct.conf.in`](templates/) to `~/.config/qt5ct/qt5ct.conf` and replace
-  `@HOME@` with your home directory. Same for qt6ct.
-- **`/root` gets its own copy of the GTK config**, so pkexec apps like grub-customizer aren't stuck
-  on the default light theme. Copy `gtk/.config/gtk-*/` and `theme/.config/hypr-theme/` into
-  `/root/.config/` if you want that.
-
-If stow refuses, something real is already at that path — move it aside and re-run.
-
----
-
-## Layout
-
-Each top-level folder is a Stow package mirroring your home directory:
-
-```
-alacritty/   →  ~/.config/alacritty/
-gtk/         →  ~/.gtkrc-2.0, ~/.config/gtk-3.0/, ~/.config/gtk-4.0/
-hyprland/    →  ~/.config/hypr/     (lua config, hyprlock, hypridle, wallpapers)
-kde/         →  ~/.config/kdeglobals, ~/.local/share/color-schemes/
-kittyterminal/ → ~/.config/kitty/
-nvim/        →  ~/.config/nvim/     (LazyVim)
-qt/          →  ~/.config/qt5ct/colors/, ~/.config/qt6ct/colors/
-rofi/        →  ~/.config/rofi/
-starship/    →  ~/.config/starship.toml
-swaync/      →  ~/.config/swaync/
-theme/       →  ~/.config/hypr-theme/   (the shared palette)
-waybar/      →  ~/.config/waybar/
-wlogout/     →  ~/.config/wlogout/
-zsh/         →  ~/.zshrc
-
-sddm/        →  /usr/share/sddm/themes/hyprmono, /etc/sddm.conf.d/   (not stowed — copied by install.sh)
-```
-
-The Hyprland config is split into modules under
-[`hypr/modules/`](hyprland/.config/hypr/modules/) — `binds`, `monitors`, `decorations`, `env`,
-`autostart`, `windowrules`.
-
----
-
-## Login screen
-
-[`sddm/hyprmono/`](sddm/hyprmono/) is an SDDM theme that mirrors hyprlock: blurred wallpaper, big
-clock, `Hello, <user>`, the same grey password box — plus a user picker, session picker and
-suspend / reboot / shutdown (the wlogout icons). Like Omarchy, the greeter runs under Hyprland
-([`sddm/hyprland.lua`](sddm/hyprland.lua)) instead of X11.
-
-`install.sh` copies it into place. Preview it in a window without logging out:
-
-```sh
-sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/hyprmono
-```
-
-If the login screen ever comes up black, switch to a TTY (`Ctrl+Alt+F3`) and
-`sudo rm /etc/sddm.conf.d/10-wayland.conf` — SDDM falls back to X11 with the same theme.
-
----
+</details>
 
 ## Keybinds
 
-`SUPER` is the mod key. All of them live in
-[`modules/binds.lua`](hyprland/.config/hypr/modules/binds.lua).
-
 | Keys | Action |
 |---|---|
-| `SUPER` + `Return` / `E` / `B` | Terminal · file manager · browser |
-| `SUPER` + `D` / `V` | App launcher · clipboard history |
-| `SUPER` + `L` / `M` | Lock screen · logout menu |
-| `SUPER` + `R` | Restart waybar + swaync |
-| `SUPER` + `CTRL` + `I` | Caffeine: pause idle lock & suspend (also the ☕ in waybar) |
-| `SUPER` + `Q` / `T` / `F` | Close · float · fullscreen |
-| `SUPER` + `SHIFT` + `F` / `P` / `J` | Maximize · pseudo-tile · toggle split |
-| `SUPER` + `←↑↓→` | Move focus |
-| `SUPER` + drag `LMB` / `RMB` | Move · resize window |
-| `SUPER` + `1`–`0` | Switch workspace (add `SHIFT` to move the window there) |
-| `SUPER` + scroll · 3-finger swipe | Cycle workspaces |
-| `SUPER` + `S` / `SHIFT` + `S` | Toggle scratchpad · move window to it |
-| `SUPER` + `Print` / `X` | Screenshot: whole screen · region |
-| `SUPER` + `SHIFT` + `Print` / `X` | Active window · region to clipboard only |
+| `SUPER` `SPACE` | The menu |
+| `SUPER` `Return` | Terminal |
+| `SUPER` `D` · `V` | App launcher · clipboard history |
+| `SUPER` `E` · `B` | File manager · browser |
+| `SUPER` `Q` · `T` · `F` | Close · float · fullscreen |
+| `SUPER` `1`–`0` | Go to workspace (add `SHIFT` to move the window there) |
+| `SUPER` `L` · `M` | Lock screen · power menu |
+| `SUPER` `CTRL` `SHIFT` `SPACE` | Theme picker |
+| `SUPER` `CTRL` `R` | Restart the shell |
+| `Print` · `SUPER` `Print` | Screenshot a region · the whole screen |
 
-Screenshots are saved to `~/Pictures/screenshot/` and copied to the clipboard. Volume, brightness
-and media keys work while locked.
+The full list is under Menu › Learn and in
+[`modules/binds.lua`](hyprland/.config/hypr/modules/binds.lua).
 
-In the clipboard menu (`SUPER` + `V`): `Enter` copies, `Delete` removes an entry, `Ctrl`+`D`
-forward-deletes in the search box.
+## Make it yours
 
----
+- **Ask your coding agent.** The installer links the `/orrery` skill into Claude Code, Codex,
+  OpenCode and Gemini CLI: *"make a warm dark theme called ember from ~/Pictures/forest.jpg"*.
+- **Bar, dock, fonts, corners and borders:** Menu › Appearance.
+- **Your own keybinds** go in `~/.config/hypr/modules/binds.local.lua`. Updates never touch it.
 
-## Customising
+<details>
+<summary>Make a theme by hand</summary>
 
-**Wallpaper** — drop an image in
-[`hypr/wallpapers/`](hyprland/.config/hypr/wallpapers/) and point the `awww img` line in
-[`autostart.lua`](hyprland/.config/hypr/modules/autostart.lua) at it. Live change:
-`awww img /path/to/image.png --transition-type grow`. The lock screen background is separate —
-`~/.config/hypr/hyprlock.png`.
+```bash
+cd ~/.config/orrery/themes
+cp -r eclipse ember && rm ember/backgrounds/* ember/preview.jpg
+cp ~/Pictures/forest.jpg ember/backgrounds/1-forest.jpg
+$EDITOR ember/colors.toml        # the name, mode = "dark"|"light", and the colours
+orrery-theme set ember
+orrery-theme-preview ember       # a screenshot for the theme picker
+```
 
-**Blur, gaps, opacity, animations** — all in
-[`decorations.lua`](hyprland/.config/hypr/modules/decorations.lua). If blur costs you frames, drop
-`blur.passes` to `2` first.
+</details>
 
-**Colours** — one palette drives everything. Edit
-[`palette.css`](theme/.config/hypr-theme/palette.css) and it changes Waybar, SwayNC and every
-GTK app at once. Two files can't import it and mirror it by hand:
-[`palette.rasi`](theme/.config/hypr-theme/palette.rasi) for rofi and
-[`hypr-mono.conf`](qt/.config/qt6ct/colors/hypr-mono.conf) for Qt. Kitty's ANSI colours are inline
-in `kitty.conf`.
+## Troubleshooting
 
-Apps with their own theme engines — VS Code, Zen, Telegram, OBS, LocalSend, Electron apps — won't
-follow any of this. They each need their own config.
-
----
-
-## Gotchas
-
-Hardcoded to *my* laptop — check these first:
-
-- **Monitor.** [`monitors.lua`](hyprland/.config/hypr/modules/monitors.lua) assumes one `eDP-1` at
-  `2560x1440@165Hz`, scale `1.6`. Run `hyprctl monitors` and fix it. The scale is mirrored in
-  [`env.lua`](hyprland/.config/hypr/modules/env.lua) — change both.
-- **NVIDIA.** `env.lua` sets NVIDIA env vars. Comment them out on AMD/Intel.
-- **Backlight.** Brightness binds target `intel_backlight`. Check `ls /sys/class/backlight/`.
-- **Keyboard backlight.** [`hypridle.conf`](hyprland/.config/hypr/hypridle.conf) dims it after
-  4 minutes — comment that listener out if you don't have one.
-
----
+| Problem | Fix |
+|---|---|
+| Something looks wrong | `orrery-doctor --print` prints a full diagnostics report |
+| Boxes instead of icons | `sudo pacman -S ttf-jetbrains-mono-nerd` |
+| The login screen is black | From a TTY (`Ctrl` `Alt` `F3`): `sudo rm /etc/sddm.conf.d/10-wayland.conf`, then reboot |
+| The bar or dock is missing | `SUPER` `CTRL` `R` restarts the shell; `qs log` shows why it stopped |
+| The Wi-Fi panel is empty | Your network isn't run by NetworkManager; the installer prints how to switch |
+| Headphones work but apps use the laptop mic | `orrery-fix-mic` |
 
 ## Credits
 
-[Hyprland](https://hyprland.org/) and the hypr\* ecosystem · [awww](https://codeberg.org/LGFae/awww)
-by LGFae · [LazyVim](https://www.lazyvim.org/).
+Built on [Hyprland](https://hyprland.org/), [Quickshell](https://quickshell.org/),
+[LazyVim](https://www.lazyvim.org/) and [Catppuccin](https://catppuccin.com/). Icons are
+Google's [Material Symbols](https://fonts.google.com/icons) (Apache 2.0). Plenty of ideas come
+from [Omarchy](https://omarchy.org/).
 
-**Wallpapers aren't mine and aren't covered by the licence.** `montain_main.png` is Mount Ararat
-over Yerevan (B&W), photographer unknown, earliest traceable source
-[wallpaperswide.com](https://wallpaperswide.com/). `creationofadam.png` is Michelangelo's Sistine
-Chapel painting — public domain, but this particular photograph's provenance is unknown. If you
-hold rights to either, open an issue.
+The wallpapers aren't mine and aren't covered by the licence. Eclipse's is Mount Ararat over
+Yerevan (photographer unknown); the others came from wallpaper sites (Cassini's is wallhaven
+7jeozo) without a traceable author. If one is yours, open an issue and it will be credited or
+removed.
 
-## License
-
-Config is [MIT](LICENSE). Bundled wallpapers are excluded — see above.
+The configuration is [MIT](LICENSE).

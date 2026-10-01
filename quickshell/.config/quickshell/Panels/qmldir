@@ -1,0 +1,22 @@
+module Panels
+Panel 1.0 Panel.qml
+PanelHeader 1.0 PanelHeader.qml
+PanelRow 1.0 PanelRow.qml
+PanelButton 1.0 PanelButton.qml
+Slider 1.0 Slider.qml
+Toggle 1.0 Toggle.qml
+AudioPanel 1.0 AudioPanel.qml
+NetworkPanel 1.0 NetworkPanel.qml
+BluetoothPanel 1.0 BluetoothPanel.qml
+PowerPanel 1.0 PowerPanel.qml
+CalendarPanel 1.0 CalendarPanel.qml
+AgentsPanel 1.0 AgentsPanel.qml
+MediaPanel 1.0 MediaPanel.qml
+TrayMenu 1.0 TrayMenu.qml
+PanelSection 1.0 PanelSection.qml
+PanelDivider 1.0 PanelDivider.qml
+IconButton 1.0 IconButton.qml
+Segmented 1.0 Segmented.qml
+EmptyState 1.0 EmptyState.qml
+VolumeLine 1.0 VolumeLine.qml
+DeviceList 1.0 DeviceList.qml

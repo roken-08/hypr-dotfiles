@@ -30,11 +30,29 @@ hl.env("HYPRCURSOR_SIZE", "16")
 hl.env("XCURSOR_SIZE", "24")
 
 -- ─── 5. NVIDIA / GPU ─────────────────────────────────────────────────────────
-hl.env("GBM_BACKEND", "nvidia-drm")
-hl.env("LIBVA_DRIVER_NAME", "nvidia")
-
-
-hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+-- only when the NVIDIA driver is loaded: on an Intel/AMD machine these
+-- stop Hyprland from starting
+local nv = io.open("/proc/driver/nvidia/version")
+if nv then
+    nv:close()
+    hl.env("GBM_BACKEND", "nvidia-drm")
+    hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+    -- Video decoding (VA-API) on the NVIDIA card only when NVIDIA drives the
+    -- screen. On a hybrid laptop whose screen hangs off the Intel/AMD GPU,
+    -- frames decoded on NVIDIA can't be shown by Chromium (video areas went
+    -- see-through) and keep the dGPU awake; unset, libva picks the driver of
+    -- the GPU the app renders on (iHD / radeonsi).
+    local igpu_display = false
+    local ls = io.popen("for c in /sys/class/drm/card*-*/status; do [ \"$(cat \"$c\" 2>/dev/null)\" = connected ] || continue; " ..
+                        "d=${c%/status}; d=${d##*/}; cat \"/sys/class/drm/${d%%-*}/device/vendor\" 2>/dev/null; done")
+    if ls then
+        for vendor in ls:lines() do
+            if vendor ~= "0x10de" then igpu_display = true end
+        end
+        ls:close()
+    end
+    if not igpu_display then hl.env("LIBVA_DRIVER_NAME", "nvidia") end
+end
 
 -- ─── 6. Disabled / optional ────────────────────────────
 
@@ -53,3 +71,7 @@ hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
 -- Software rendering — only useful inside a VM without GPU passthrough.
 -- hl.env("WLR_RENDERER_ALLOW_SOFTWARE", "1")
 -- hl.env("LIBGL_ALWAYS_SOFTWARE", "1")
+
+-- The theme/wallpaper scripts live in ~/.local/bin (stowed from theme/). Make
+-- sure keybinds find them regardless of what the login shell put in PATH.
+hl.env("PATH", os.getenv("HOME") .. "/.local/bin:" .. (os.getenv("PATH") or "/usr/local/bin:/usr/bin"))

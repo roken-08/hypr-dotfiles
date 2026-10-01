@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# orrery-border — corners and border thickness, for the whole desktop.
+#
+#   orrery-border                 print the current corners and border
+#   orrery-border radius <px>     corner radius, 0 (square) – 24; windows and the shell
+#   orrery-border width <px>      window border thickness, 0 (none) – 8
+#   orrery-border reset           back to the rice's defaults (4 px corners, 1 px border)
+#
+# Applies live and survives reloads, restarts and theme switches:
+#   shell     ~/.config/orrery/shell.json  look.radius  (watched; every surface
+#             follows; without it the theme's own radius is used)
+#   Hyprland  ~/.config/hypr/modules/look.local.lua, loaded after
+#             decorations.lua (not part of the repo), and `hyprctl eval` now
+set -u
+RADIUS=4; BORDER=1                               # the rice's defaults
+SHELL_JSON="$HOME/.config/orrery/shell.json"
+LOCAL_LUA="$HOME/.config/hypr/modules/look.local.lua"
+
+get() { jq -r ".look.$1 // empty" "$SHELL_JSON" 2>/dev/null || true; }
+
+# write both values (empty = default) to shell.json and the Lua file, then apply
+apply() {
+    local r="$1" b="$2" tmp
+    mkdir -p "$(dirname "$SHELL_JSON")"
+    [[ -f "$SHELL_JSON" ]] || printf '{}\n' > "$SHELL_JSON"
+    tmp="$(mktemp)"
+    jq --arg r "$r" --arg b "$b" '
+        .look = ((.look // {}) | if $r == "" then del(.radius) else .radius = ($r | tonumber) end
+                               | if $b == "" then del(.border) else .border = ($b | tonumber) end)
+        | if .look == {} then del(.look) else . end' "$SHELL_JSON" > "$tmp" && mv "$tmp" "$SHELL_JSON"
+
+    local lua="hl.config({ decoration = { rounding = ${r:-$RADIUS} }, general = { border_size = ${b:-$BORDER} } })"
+    if [[ -z $r && -z $b ]]; then
+        rm -f "$LOCAL_LUA"
+    else
+        printf -- '-- Written by orrery-border (Menu > Appearance > Corners & borders).\n-- Not part of the repo; `orrery-border reset` removes it.\n%s\n' "$lua" > "$LOCAL_LUA"
+    fi
+    [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] && hyprctl eval "$lua" >/dev/null 2>&1
+    printf 'corners %s px  ·  border %s px\n' "${r:-$RADIUS}" "${b:-$BORDER}"
+}
+
+num() {   # num <value> <max>: a whole number in 0..max, or exit
+    [[ ${1:-} =~ ^[0-9]+$ ]] && (( $1 <= $2 )) || { echo "orrery-border: expected 0–$2 px, got '${1:-}'" >&2; exit 1; }
+}
+
+r="$(get radius)"; b="$(get border)"
+case "${1:-}" in
+    "")
+        printf 'corners: %s px%s\nborder:  %s px%s\n' \
+            "${r:-$RADIUS}" "$([[ -z $r ]] && echo ' (default)')" "${b:-$BORDER}" "$([[ -z $b ]] && echo ' (default)')" ;;
+    radius) num "${2:-}" 24; v=$2; [[ $v == "$RADIUS" ]] && v=""; apply "$v" "$b" ;;
+    width)  num "${2:-}" 8;  v=$2; [[ $v == "$BORDER" ]] && v=""; apply "$r" "$v" ;;
+    reset)  apply "" "" ;;
+    -h|--help) sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//' ;;
+    *) echo "usage: orrery-border [radius <px> | width <px> | reset]" >&2; exit 1 ;;
+esac

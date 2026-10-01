@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# orrery-fix-mic — bring back a wired headset mic that stopped being detected.
+#
+# On some laptops (Realtek codec behind Intel SOF, e.g. Acer Nitro AN515-58)
+# the codec stops sensing the headset mic after suspend: sound still plays in
+# the earphones, but the mic jack reads "unplugged", so apps record from the
+# built-in mic. Restarting PipeWire does not help; re-probing the sound card
+# does. This script rebinds the PCI audio device behind every card that has a
+# headset-mic jack; WirePlumber picks the card up again on its own.
+#
+# It never restarts PipeWire: PipeWire also carries screen capture, and a
+# restart kills every running screencast (OBS, browser screen share) along
+# with xdg-desktop-portal-hyprland's sessions.
+#
+#   orrery-fix-mic            fix it now (asks for sudo once)
+#   orrery-fix-mic status     jack state + whether the after-sleep hook is on
+#   orrery-fix-mic enable     run the fix automatically after every sleep
+#   orrery-fix-mic disable    remove the after-sleep hook
+#   orrery-fix-mic known      exit 0 if this machine is known to need the hook
+#
+# `enable` installs a root-owned copy of this file as a systemd-sleep hook
+# (systemd calls it with "pre"/"post"); nothing in $HOME runs as root.
+set -u
+
+HOOK=/usr/lib/systemd/system-sleep/orrery-headset-mic
+# DMI "vendor product" strings of machines known to lose the headset mic on
+# resume. install.sh enables the hook automatically on these.
+KNOWN=(
+  "Acer Nitro AN515-58"
+)
+
+# PCI addresses of sound cards that expose a "Headset Mic" jack.
+headset_pci() {
+  local n card path
+  for n in /sys/class/sound/card*/input*/name; do
+    [[ -r $n ]] && grep -q 'Headset Mic' "$n" || continue
+    card=${n%/input*}
+    path=$(readlink -f "$card/device")
+    while [[ $path == /sys/devices/* ]]; do
+      [[ -e $path/driver && $(basename "$path") =~ ^[0-9a-f]{4}:[0-9a-f]{2}:[0-9a-f]{2}\.[0-9a-f]$ ]] \
+        && { basename "$path"; break; }
+      path=${path%/*}
+    done
+  done | sort -u
+}
+
+rebind() {  # root only
+  local pci drv found=0
+  for pci in $(headset_pci); do
+    drv=$(readlink -f "/sys/bus/pci/devices/$pci/driver") || continue
+    echo "$pci" > "$drv/unbind"
+    sleep 2
+    echo "$pci" > "$drv/bind"
+    found=1
+  done
+  [[ $found -eq 1 ]] || { echo "No sound card with a headset-mic jack found." >&2; return 1; }
+}
+
+# jack_state "Headset Mic Jack" → on/off; "unknown" without alsa-utils.
+jack_state() {
+  command -v amixer >/dev/null || { echo "unknown"; return; }
+  local c v
+  for c in /proc/asound/card*/id; do
+    v=$(amixer -c "$(<"$c")" cget iface=CARD,name="$1" 2>/dev/null | awk -F= '/: values=/{print $2}')
+    [[ -n $v ]] && { echo "$v"; return; }
+  done
+  echo "unknown"
+}
+
+# After resume: re-probe only when earphones are in but their mic is not seen,
+# so a wake without earphones never touches the sound card.
+needs_fix() {
+  local hp mic
+  hp=$(jack_state 'Headphone Jack'); mic=$(jack_state 'Headset Mic Jack')
+  [[ $hp == unknown || $mic == unknown ]] && return 0
+  [[ $hp == on && $mic == off ]]
+}
+
+known() {
+  local id m
+  id="$(cat /sys/class/dmi/id/sys_vendor /sys/class/dmi/id/product_name 2>/dev/null | tr '\n' ' ')"
+  for m in "${KNOWN[@]}"; do [[ $id == "$m "* ]] && return 0; done
+  return 1
+}
+
+case "${1:-now}" in
+  post)        # systemd-sleep, after resume; let the jacks settle first
+    sleep 2; needs_fix && rebind ;;
+  pre)         ;;
+  rebind)      rebind ;;
+  known)       known ;;
+  status)
+    echo "headset mic jack: $(jack_state 'Headset Mic Jack')"
+    [[ -x $HOOK ]] && echo "after-sleep fix:  on ($HOOK)" || echo "after-sleep fix:  off (orrery-fix-mic enable)"
+    known && echo "this machine:     known to need it" ;;
+  enable)
+    sudo install -o root -g root -m 755 -- "$(readlink -f "$0")" "$HOOK" \
+      && echo "On: the headset mic is re-detected after every sleep." ;;
+  disable)
+    sudo rm -f -- "$HOOK" && echo "Off." ;;
+  now)
+    if [[ $EUID -eq 0 ]]; then rebind; exit; fi
+    sudo "$(readlink -f "$0")" rebind || exit 1
+    sleep 4
+    case "$(jack_state 'Headset Mic Jack')" in
+      on)  echo "Headset mic detected." ;;
+      off) echo "Headset mic still not detected. Unplug the earphones, plug them back in firmly, and check the plug has 3 rings (4 contacts)." ;;
+      *)   echo "Sound card re-probed; replug the earphones if the mic is still missing." ;;
+    esac ;;
+  -h|--help) sed -n '2,22p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) echo "usage: orrery-fix-mic [status|enable|disable|known]" >&2; exit 2 ;;
+esac

@@ -1,0 +1,10 @@
+[SddmGreeterTheme]
+Name=Orrery
+Description=Monochrome login screen matching the Orrery rice (hyprlock look)
+Author=thomasmartinoa
+Type=sddm-theme
+Version=1.0
+QtVersion=6
+ConfigFile=theme.conf
+MainScript=Main.qml
+Screenshot=

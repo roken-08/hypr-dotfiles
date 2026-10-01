@@ -1,0 +1,158 @@
+{
+  // The menu (SUPER+SPACE). Keys are ids; a dot makes a child: "power.lock"
+  // sits under "power". Fields:
+  //   icon, label      the row. icon: a Material Symbols name ("wifi", "palette" —
+//                    fonts.google.com/icons; new names go in quickshell's
+//                    Commons/icons/names.txt + build.py) or any glyph, e.g. a Nerd Font one.
+//                    description: extra words the search matches.
+  //   action           shell command, run detached. Omit → the row opens its children.
+  //   keep             true: the menu stays open after the action (toggles) and re-reads state.
+  //   checked          state key → ✓ when true ("!key" negates). value: state key shown as text.
+  //   when             state key → the row is hidden when false.
+  //   input            the search box becomes an input; Enter runs action with {} replaced.
+  //   provider         rows come from orrery-menu-data: agents, keybindings, packages,
+  //                    reminders, about — or from the shell: widgets.
+  //   close            false: an action row that keeps the menu open without re-reading state.
+  // State keys come from the shell (theme, light, bar.*, caffeine, dnd, laptop, widget.*)
+  // and from orrery-menu-data (nightlight, gaps, opacity, hibernate, terminal, browser, agent).
+  // A file next to this one, menu.local.jsonc, overlays it by id (same fields; new ids
+  // append). Whole-line // comments only.
+
+  "apps": {"icon":"apps","label":"Apps","description":"launcher applications","action":"qs ipc call launcher toggle"},
+  "appearance": {"icon":"palette","label":"Appearance","description":"style look theme wallpaper bar dock font corners border"},
+  "toggle": {"icon":"toggle_on","label":"Quick toggles","description":"switches on off"},
+  "devices": {"icon":"devices","label":"Devices","description":"hardware wifi bluetooth sound monitors"},
+  "settings": {"icon":"settings","label":"Settings","description":"setup config defaults"},
+  "agents": {"icon":"󰚩","label":"Agents","description":"ai claude codex"},
+  "webapps": {"icon":"language","label":"Web apps","description":"website app install pwa chromium"},
+  "remind": {"icon":"alarm","label":"Reminders"},
+  "learn": {"icon":"school","label":"Learn","description":"help docs keys"},
+  "power": {"icon":"power_settings_new","label":"Power","description":"system session lock logout reboot shutdown"},
+
+  // Appearance
+  "appearance.theme": {"icon":"palette","label":"Theme","value":"theme","action":"orrery-theme-menu theme"},
+  "appearance.wallpaper": {"icon":"wallpaper","label":"Wallpaper","value":"wallpaper","action":"orrery-theme-menu wallpaper"},
+  "appearance.bar": {"icon":"toolbar","label":"Bar"},
+  "appearance.bar.style": {"icon":"toolbar","label":"Style","description":"skin legacy floating minimal","value":"bar.style"},
+  "appearance.bar.style.pill": {"icon":"history","label":"Legacy","description":"pill skin classic waybar look","checked":"bar.pill","action":"qs ipc call bar style pill","keep":true},
+  "appearance.bar.style.floating": {"icon":"flip_to_front","label":"Floating","description":"minimal skin inset rounded","checked":"bar.floating","action":"qs ipc call bar style floating","keep":true},
+  "appearance.bar.style.minimal": {"icon":"horizontal_rule","label":"Minimal","description":"flat strip omarchy flush edge","checked":"bar.minimal","action":"qs ipc call bar style minimal","keep":true},
+  "appearance.bar.position": {"icon":"align_vertical_top","label":"Position","description":"edge top bottom left right","value":"bar.position"},
+  "appearance.bar.position.top": {"icon":"align_vertical_top","label":"Top","checked":"bar.top","action":"qs ipc call bar position top","keep":true},
+  "appearance.bar.position.bottom": {"icon":"align_vertical_bottom","label":"Bottom","checked":"bar.bottom","action":"qs ipc call bar position bottom","keep":true},
+  "appearance.bar.position.left": {"icon":"align_horizontal_left","label":"Left","checked":"bar.left","action":"qs ipc call bar position left","keep":true},
+  "appearance.bar.position.right": {"icon":"align_horizontal_right","label":"Right","checked":"bar.right","action":"qs ipc call bar position right","keep":true},
+  "appearance.bar.widgets": {"icon":"widgets","label":"Widgets","description":"enable disable modules","provider":"widgets"},
+  "appearance.bar.transparent": {"icon":"opacity","label":"Transparent","checked":"bar.transparent","action":"qs ipc call bar transparent","keep":true},
+  "appearance.bar.battery": {"icon":"battery_full","label":"Battery percentage","when":"laptop","checked":"bar.battery","action":"qs ipc call bar battery","keep":true},
+  "appearance.bar.reset": {"icon":"restart_alt","label":"Reset widget order","description":"default layout restore","action":"qs ipc call bar reset","keep":true},
+  "appearance.dock": {"icon":"dock_to_bottom","label":"Dock","description":"taskbar launcher pinned apps"},
+  "appearance.dock.show": {"icon":"dock_to_bottom","label":"Show dock","checked":"dock","action":"qs ipc call dock toggle","keep":true},
+  "appearance.dock.behaviour": {"icon":"visibility","label":"Behaviour","description":"mode hide autohide always","value":"dock.modeLabel"},
+  "appearance.dock.behaviour.always": {"icon":"visibility","label":"Always visible","description":"windows keep clear of it","checked":"dock.mode:always","action":"qs ipc call dock mode always","keep":true},
+  "appearance.dock.behaviour.intellihide": {"icon":"select_window","label":"Hide when a window covers it","description":"intellihide","checked":"dock.mode:intellihide","action":"qs ipc call dock mode intellihide","keep":true},
+  "appearance.dock.behaviour.autohide": {"icon":"visibility_off","label":"Auto-hide","description":"touch the screen edge to show","checked":"dock.mode:autohide","action":"qs ipc call dock mode autohide","keep":true},
+  "appearance.dock.position": {"icon":"dock_to_bottom","label":"Position","description":"edge bottom left right top","value":"dock.positionLabel"},
+  "appearance.dock.position.bottom": {"icon":"dock_to_bottom","label":"Bottom","checked":"dock.position:bottom","action":"qs ipc call dock position bottom","keep":true},
+  "appearance.dock.position.left": {"icon":"dock_to_left","label":"Left","checked":"dock.position:left","action":"qs ipc call dock position left","keep":true},
+  "appearance.dock.position.right": {"icon":"dock_to_right","label":"Right","checked":"dock.position:right","action":"qs ipc call dock position right","keep":true},
+  "appearance.dock.position.top": {"icon":"vertical_align_top","label":"Top","checked":"dock.position:top","action":"qs ipc call dock position top","keep":true},
+  "appearance.dock.transparent": {"icon":"opacity","label":"Transparent","checked":"dock.transparent","action":"qs ipc call dock transparent","keep":true},
+  "appearance.dock.pins": {"icon":"push_pin","label":"Pinned apps","description":"add remove apps favourites","provider":"dock.pins"},
+  "appearance.font": {"icon":"font_download","label":"Font","description":"typeface family monospace","value":"font","provider":"fonts"},
+  "appearance.text": {"icon":"format_size","label":"Text size","description":"font size scale bigger smaller","value":"textsize"},
+  "appearance.text.10": {"icon":"format_size","label":"10 px","checked":"textsize:10","action":"orrery-text-size 10","keep":true},
+  "appearance.text.11": {"icon":"format_size","label":"11 px","checked":"textsize:11","action":"orrery-text-size 11","keep":true},
+  "appearance.text.12": {"icon":"format_size","label":"12 px  (default)","checked":"textsize:12","action":"orrery-text-size 12","keep":true},
+  "appearance.text.13": {"icon":"format_size","label":"13 px","checked":"textsize:13","action":"orrery-text-size 13","keep":true},
+  "appearance.text.14": {"icon":"format_size","label":"14 px","checked":"textsize:14","action":"orrery-text-size 14","keep":true},
+  "appearance.text.16": {"icon":"format_size","label":"16 px","checked":"textsize:16","action":"orrery-text-size 16","keep":true},
+  "appearance.text.18": {"icon":"format_size","label":"18 px","checked":"textsize:18","action":"orrery-text-size 18","keep":true},
+  "appearance.scale": {"icon":"fit_screen","label":"Display scale","description":"monitor hidpi zoom resolution","value":"scale"},
+  "appearance.scale.1": {"icon":"fit_screen","label":"1×","checked":"scale:1","action":"orrery-scale 1","keep":true},
+  "appearance.scale.125": {"icon":"fit_screen","label":"1.25×","checked":"scale:1.25","action":"orrery-scale 1.25","keep":true},
+  "appearance.scale.15": {"icon":"fit_screen","label":"1.5×","checked":"scale:1.5","action":"orrery-scale 1.5","keep":true},
+  "appearance.scale.16": {"icon":"fit_screen","label":"1.6×","checked":"scale:1.6","action":"orrery-scale 1.6","keep":true},
+  "appearance.scale.2": {"icon":"fit_screen","label":"2×","checked":"scale:2","action":"orrery-scale 2","keep":true},
+  "appearance.scale.reset": {"icon":"fit_screen","label":"Back to the monitor rules","action":"orrery-scale reset","keep":true,"description":"monitors.local.lua"},
+  "appearance.shape": {"icon":"rounded_corner","label":"Corners & borders","description":"border radius rounded square corners thickness width","value":"shape"},
+  "appearance.shape.corners": {"icon":"rounded_corner","label":"Corners","description":"border radius rounded square windows panels","value":"radiusLabel"},
+  "appearance.shape.corners.0": {"icon":"crop_square","label":"Square","checked":"radius:0","action":"orrery-border radius 0","keep":true},
+  "appearance.shape.corners.4": {"icon":"rounded_corner","label":"4 px  (default)","checked":"radius:4","action":"orrery-border radius 4","keep":true},
+  "appearance.shape.corners.8": {"icon":"rounded_corner","label":"8 px","checked":"radius:8","action":"orrery-border radius 8","keep":true},
+  "appearance.shape.corners.12": {"icon":"rounded_corner","label":"12 px","checked":"radius:12","action":"orrery-border radius 12","keep":true},
+  "appearance.shape.corners.16": {"icon":"rounded_corner","label":"16 px","checked":"radius:16","action":"orrery-border radius 16","keep":true},
+  "appearance.shape.border": {"icon":"line_weight","label":"Border thickness","description":"window border width size","value":"borderLabel"},
+  "appearance.shape.border.0": {"icon":"line_weight","label":"None","checked":"border:0","action":"orrery-border width 0","keep":true},
+  "appearance.shape.border.1": {"icon":"line_weight","label":"1 px  (default)","checked":"border:1","action":"orrery-border width 1","keep":true},
+  "appearance.shape.border.2": {"icon":"line_weight","label":"2 px","checked":"border:2","action":"orrery-border width 2","keep":true},
+  "appearance.shape.border.3": {"icon":"line_weight","label":"3 px","checked":"border:3","action":"orrery-border width 3","keep":true},
+  "appearance.shape.border.4": {"icon":"line_weight","label":"4 px","checked":"border:4","action":"orrery-border width 4","keep":true},
+  "appearance.shape.reset": {"icon":"restart_alt","label":"Reset to default","description":"4 px corners 1 px border","action":"orrery-border reset","keep":true},
+  "appearance.look": {"icon":"tune","label":"Edit look & feel","description":"gaps borders blur rounding shadows animations","action":"orrery-edit ~/.config/hypr/modules/decorations.lua"},
+
+  // Quick toggles (SUPER+CTRL+O opens this page)
+  "toggle.caffeine": {"icon":"coffee","label":"Caffeine","description":"stay awake idle","checked":"caffeine","action":"qs ipc call caffeine toggle","keep":true},
+  "toggle.dnd": {"icon":"do_not_disturb_on","label":"Do not disturb","description":"notifications silence","checked":"dnd","action":"qs ipc call notifications dnd","keep":true},
+  "toggle.nightlight": {"icon":"nightlight","label":"Night light","description":"warm blue light","checked":"nightlight","action":"orrery-nightlight toggle","keep":true},
+  "toggle.bar": {"icon":"toolbar","label":"Bar","checked":"!bar.hidden","action":"qs ipc call bar visible","keep":true},
+  "toggle.gaps": {"icon":"margin","label":"Window gaps","checked":"gaps","action":"orrery-toggle gaps","keep":true},
+  "toggle.opacity": {"icon":"opacity","label":"Window transparency","checked":"opacity","action":"orrery-toggle opacity","keep":true},
+
+  // Devices
+  "devices.wifi": {"icon":"wifi","label":"Wi-Fi","action":"qs ipc call panels open network"},
+  "devices.bluetooth": {"icon":"bluetooth","label":"Bluetooth","action":"qs ipc call panels open bluetooth"},
+  "devices.audio": {"icon":"volume_up","label":"Sound","description":"volume sound output","action":"qs ipc call panels open audio"},
+  "devices.power": {"icon":"bolt","label":"Power profile","action":"qs ipc call panels open power"},
+  "devices.monitors": {"icon":"monitor","label":"Monitors","description":"display resolution refresh scale position","action":"orrery-edit ~/.config/hypr/modules/monitors.local.lua"},
+  "devices.input": {"icon":"mouse","label":"Keyboard & mouse","description":"input layout touchpad mouse sensitivity","action":"orrery-edit ~/.config/hypr/modules/decorations.lua"},
+
+  // Settings — the Lua files open in the editor and are validated on save
+  "settings.defaults": {"icon":"check_circle","label":"Default apps"},
+  "settings.defaults.terminal": {"icon":"terminal","label":"Terminal","value":"terminal"},
+  "settings.defaults.terminal.kitty": {"icon":"terminal","label":"kitty","checked":"terminal:kitty","action":"orrery-default terminal kitty","keep":true},
+  "settings.defaults.terminal.alacritty": {"icon":"terminal","label":"alacritty","checked":"terminal:alacritty","action":"orrery-default terminal alacritty","keep":true},
+  "settings.defaults.browser": {"icon":"language","label":"Browser","value":"browser"},
+  "settings.defaults.browser.zen": {"icon":"language","label":"Zen","checked":"browser:zen-browser","action":"orrery-default browser zen-browser","keep":true},
+  "settings.defaults.browser.firefox": {"icon":"language","label":"Firefox","checked":"browser:firefox","action":"orrery-default browser firefox","keep":true},
+  "settings.defaults.browser.chromium": {"icon":"language","label":"Chromium","checked":"browser:chromium","action":"orrery-default browser chromium","keep":true},
+  "settings.keybindings": {"icon":"keyboard","label":"Keybindings","action":"orrery-edit ~/.config/hypr/modules/binds.lua"},
+  "settings.autostart": {"icon":"rocket_launch","label":"Autostart","action":"orrery-edit ~/.config/hypr/modules/autostart.lua"},
+  "settings.rules": {"icon":"rule","label":"Window rules","action":"orrery-edit ~/.config/hypr/modules/windowrules.lua"},
+  "settings.shell": {"icon":"settings_applications","label":"Shell settings","description":"shell.json bar layout","action":"orrery-edit ~/.config/orrery/shell.json"},
+  "settings.restart": {"icon":"restart_alt","label":"Restart shell","description":"bar reload refresh","action":"~/.config/hypr/scripts/shell.sh restart"},
+  "settings.doctor": {"icon":"stethoscope","label":"Diagnostics","description":"doctor logs health","action":"orrery-float 'orrery-doctor --print | less -R'"},
+
+  // Agents
+  "agents.launch": {"icon":"󱚝","label":"Launch default agent","value":"agent","action":"orrery-agent launch"},
+  "agents.list": {"icon":"󰚩","label":"Launch…","provider":"agents"},
+  "agents.usage": {"icon":"data_usage","label":"Usage & limits","action":"qs ipc call panels open agents"},
+  "agents.default": {"icon":"check_circle","label":"Default agent","value":"agent","provider":"agents.default"},
+  "agents.skills": {"icon":"extension","label":"Link /orrery skill into agents","action":"orrery-float orrery-agent skills install"},
+
+  // Reminders
+  "webapps.add": {"icon":"add_circle","label":"Add a web app","description":"install website firefox chromium"},
+  "webapps.add.firefox": {"icon":"language","label":"In Firefox","description":"bare window, own logins, no link bubble","when":"hasfirefox","input":"web address, or a name then the address","action":"orrery-webapp add --firefox {}"},
+  "webapps.add.chromium": {"icon":"language","label":"In Chromium","description":"app mode, logins shared with the browser","when":"haschromium","input":"web address, or a name then the address","action":"orrery-webapp add --chromium {}"},
+  "webapps.open": {"icon":"language","label":"Open","provider":"webapps"},
+  "webapps.remove": {"icon":"delete","label":"Remove a web app","description":"uninstall delete","provider":"webapps.remove"},
+  "remind.set": {"icon":"alarm_add","label":"Set a reminder","description":"timer notify","input":"minutes message  (e.g. 15 pick up jack)","action":"orrery-remind {}"},
+  "remind.show": {"icon":"schedule","label":"Pending","provider":"reminders"},
+  "remind.clear": {"icon":"delete_sweep","label":"Clear all","action":"orrery-remind clear"},
+
+  // Learn
+  "learn.keys": {"icon":"keyboard","label":"Keybindings","description":"shortcuts keys","provider":"keybindings"},
+  "learn.readme": {"icon":"description","label":"Rice README","action":"orrery-float nvim -R ~/Orrery-dotfiles/README.md"},
+  "learn.about": {"icon":"info","label":"About this rice","description":"version uptime kernel","provider":"about"},
+  "learn.hyprland": {"icon":"menu_book","label":"Hyprland wiki","action":"xdg-open https://wiki.hypr.land/"},
+  "learn.arch": {"icon":"article","label":"Arch wiki","action":"xdg-open https://wiki.archlinux.org/"},
+  "learn.quickshell": {"icon":"code","label":"Quickshell docs","action":"xdg-open https://quickshell.org/docs/v$(qs --version | cut -d' ' -f2)/types/"},
+
+  // Power
+  "power.lock": {"icon":"lock","label":"Lock","action":"~/.config/hypr/scripts/lock.sh"},
+  "power.suspend": {"icon":"bedtime","label":"Sleep","description":"suspend","action":"systemctl suspend"},
+  "power.hibernate": {"icon":"ac_unit","label":"Hibernate","when":"hibernate","action":"systemctl hibernate"},
+  "power.logout": {"icon":"logout","label":"Log out","action":"hyprctl dispatch 'hl.dsp.exit()'"},
+  "power.reboot": {"icon":"restart_alt","label":"Restart","description":"reboot","action":"systemctl reboot"},
+  "power.shutdown": {"icon":"power_settings_new","label":"Shut down","description":"power off","action":"systemctl poweroff"}
+}
