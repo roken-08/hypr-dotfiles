@@ -9,6 +9,9 @@ checked. Say what you found, what you ruled out, and what you could not tell.
 ```bash
 orrery-doctor --print         # everything below in one bundle, no sudo, no prompts
 ```
+When the user wants to post it in a GitHub issue, give them
+`orrery-doctor --share` instead: the same report with their user, host, home
+path, network names and IP/MAC addresses replaced.
 It reports: versions (hyprland, quickshell, kernel, driver), GPU + which one
 renders, monitors/scale, `hyprctl configerrors`, shell log warnings/errors,
 failed systemd units (system + user), journal errors since boot, recent

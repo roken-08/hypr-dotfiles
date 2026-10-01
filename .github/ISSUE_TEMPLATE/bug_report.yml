@@ -1,0 +1,72 @@
+name: Bug report
+description: Something in Orrery is broken or looks wrong.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. For a question rather than a bug, ask in
+        [Q&A](https://github.com/thomasmartinoa/Orrery-dotfiles/discussions/categories/q-a) instead.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where is the problem?
+      options:
+        - Installer (install.sh)
+        - Bar, dock or panels
+        - Menu, launcher or clipboard
+        - Lock screen, power menu or login screen
+        - Themes and colours (an app doesn't follow the theme)
+        - Keybinds or window behaviour
+        - Web apps
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      placeholder: After switching to Zenith, the dock stays dark.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Press SUPER CTRL SHIFT SPACE
+        2. Pick Zenith
+        3. …
+    validations:
+      required: true
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Diagnostics
+      description: |
+        Run `orrery-doctor --share` and paste the output. It replaces your user name,
+        host name, home folder, network names and addresses, so it's safe to post.
+        Still give it a quick look before you submit.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or video
+      description: Drag files here. Check them for anything personal first.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you submit
+      options:
+        - label: I updated first (`cd ~/Orrery-dotfiles && git pull && ./install.sh`) and it still happens.
+          required: true
+        - label: I searched the existing issues.
+          required: true

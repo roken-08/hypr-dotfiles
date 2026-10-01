@@ -1,0 +1,21 @@
+body:
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshots
+      description: Drag images or a short video here. Check them for anything personal first.
+    validations:
+      required: true
+
+  - type: textarea
+    id: about
+    attributes:
+      label: What's in it?
+      description: The theme, the wallpaper (and where it's from), and anything you changed.
+
+  - type: textarea
+    id: colors
+    attributes:
+      label: Your theme's colors.toml (optional)
+      description: Paste `~/.config/orrery/themes/<your-theme>/colors.toml` so others can try it.
+      render: toml

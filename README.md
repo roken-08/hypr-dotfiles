@@ -153,7 +153,7 @@ orrery-theme-preview ember       # a screenshot for the theme picker
 
 | Problem | Fix |
 |---|---|
-| Something looks wrong | `orrery-doctor --print` prints a full diagnostics report |
+| Something looks wrong | `orrery-doctor --share` prints a diagnostics report that's safe to paste into an [issue](https://github.com/thomasmartinoa/Orrery-dotfiles/issues/new/choose) |
 | Boxes instead of icons | `sudo pacman -S ttf-jetbrains-mono-nerd` |
 | The login screen is black | From a TTY (`Ctrl` `Alt` `F3`): `sudo rm /etc/sddm.conf.d/10-wayland.conf`, then reboot |
 | The bar or dock is missing | `SUPER` `CTRL` `R` restarts the shell; `qs log` shows why it stopped |
@@ -172,4 +172,6 @@ Yerevan (photographer unknown); the others came from wallpaper sites (Cassini's 
 7jeozo) without a traceable author. If one is yours, open an issue and it will be credited or
 removed.
 
+Questions, ideas and your own themes are welcome in
+[Discussions](https://github.com/thomasmartinoa/Orrery-dotfiles/discussions).
 The configuration is [MIT](LICENSE).

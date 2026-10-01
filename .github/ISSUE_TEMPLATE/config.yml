@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question
+    url: https://github.com/thomasmartinoa/Orrery-dotfiles/discussions/categories/q-a
+    about: How do I…? Setup help and anything that isn't clearly a bug.
+  - name: Share your setup or theme
+    url: https://github.com/thomasmartinoa/Orrery-dotfiles/discussions/categories/show-and-tell
+    about: Screenshots, themes you made, tweaks worth showing off.
