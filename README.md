@@ -15,7 +15,9 @@ VS Code, Firefox, Spotify and the login screen.
 
 </div>
 
-https://github.com/user-attachments/assets/58c2fadd-e5d2-4d45-b2a2-b829e290feee
+
+https://github.com/user-attachments/assets/a86c8b7f-421c-4d59-ae3d-25050f7ee63c
+
 
 ## Themes
 
