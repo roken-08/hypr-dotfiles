@@ -1,0 +1,29 @@
+name: Feature request
+description: Suggest something Orrery should do.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Not sure yet, or want to talk it through first? Start in
+        [Ideas](https://github.com/thomasmartinoa/Orrery-dotfiles/discussions/categories/ideas).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to do that you can't today?
+      placeholder: I'd like the bar to show my VPN status.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: How do you picture it?
+      description: Where it would live (bar, menu, a panel, a keybind…) and how it would behave. Mockups welcome.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you use instead today
+      description: A script, another rice, a workaround.

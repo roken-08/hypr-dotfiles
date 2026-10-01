@@ -1,0 +1,21 @@
+labels: ["question"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: What are you trying to do?
+      placeholder: How do I put the bar on the left on my second monitor only?
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Diagnostics (optional)
+      description: If something isn't working, paste the output of `orrery-doctor --share`. It's redacted, so it's safe to post.
+      render: text

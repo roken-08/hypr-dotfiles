@@ -89,7 +89,7 @@ Commands you will use (all `--help`/header-documented — read the script if uns
 | `~/.config/hypr/scripts/shell.sh restart` | restart the shell (needed after new files/qmldir changes; hot-reload can serve stale code) |
 | `hyprctl reload && hyprctl configerrors` | after ANY Hyprland change; must print nothing |
 | `orrery-agent list / default / launch / usage / skills install` | coding agents |
-| `orrery-doctor [--print]` | diagnostics bundle (see diagnose.md) |
+| `orrery-doctor [--print\|--share]` | diagnostics bundle (see diagnose.md); `--share` is redacted for a public issue |
 | `orrery-fix-mic [status\|enable\|disable]` | re-detect a wired headset mic that stopped working (after sleep); `enable` = do it on every resume |
 | `orrery-font set <family>` · `orrery-text-size <px>` · `orrery-scale <n>` | desktop font, apparent text size (shell + GTK + terminals) and monitor scale |
 | `orrery-webapp add [--firefox\|--chromium] [name] <url> [icon]` · `remove <name>` · `list` | web apps: a site in a bare Firefox window (own profile) with its own launcher and dock icon (Menu › Web apps) |
