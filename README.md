@@ -11,7 +11,7 @@ VS Code, Firefox, Spotify and the login screen.
 ![Arch Linux](https://img.shields.io/badge/Arch-Linux-0d0d0f?style=flat-square&logo=archlinux&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/license-MIT-0d0d0f?style=flat-square)
 
-[Themes](#themes) · [Features](#features) · [Install](#install) · [Make it yours](#make-it-yours) · [Keybinds](#keybinds) · [Help](#troubleshooting)
+[Install](#install) · [Keybinds](#keybinds) · [Make it yours](#make-it-yours) · [Help](#troubleshooting)
 
 </div>
 
@@ -23,74 +23,34 @@ https://github.com/user-attachments/assets/a86c8b7f-421c-4d59-ae3d-25050f7ee63c
 
 <img src="Screenshots/themes.webp" alt="The four themes in turn: Eclipse, Zenith, Catppuccin Mocha and Cassini" width="100%">
 
-Four themes ship with it. Switch live with **`SUPER` `CTRL` `SHIFT` `SPACE`**, or make your own
-([below](#make-it-yours)). Open one for a closer look:
+Four themes ship with it: **Eclipse** (dark greys), **Zenith** (the same on white),
+**Catppuccin Mocha** and **Cassini** (ice-teal on deep space). Switch live with
+**`SUPER` `CTRL` `SHIFT` `SPACE`**.
 
 <details>
-<summary><b>Eclipse</b> · dark · greys only</summary>
+<summary>Screenshots of each theme</summary>
 <br>
-<img src="Screenshots/eclipse.jpg" alt="Eclipse: the desktop" width="100%">
-<table>
-<tr>
-<td width="50%"><img src="Screenshots/launcher-eclipse.jpg" alt="Eclipse: the launcher"></td>
-<td width="50%"><img src="Screenshots/menu-eclipse.jpg" alt="Eclipse: the menu"></td>
-</tr>
-</table>
-</details>
-<details>
-<summary><b>Zenith</b> · the same design on white</summary>
-<br>
-<img src="Screenshots/zenith.jpg" alt="Zenith: the desktop" width="100%">
-<table>
-<tr>
-<td width="50%"><img src="Screenshots/launcher-zenith.jpg" alt="Zenith: the launcher"></td>
-<td width="50%"><img src="Screenshots/menu-zenith.jpg" alt="Zenith: the menu"></td>
-</tr>
-</table>
-</details>
-<details>
-<summary><b>Catppuccin Mocha</b> · the official Mocha palette</summary>
-<br>
-<img src="Screenshots/catppuccin-mocha.jpg" alt="Catppuccin Mocha: the desktop" width="100%">
-<table>
-<tr>
-<td width="50%"><img src="Screenshots/launcher-catppuccin-mocha.jpg" alt="Catppuccin Mocha: the launcher"></td>
-<td width="50%"><img src="Screenshots/menu-catppuccin-mocha.jpg" alt="Catppuccin Mocha: the menu"></td>
-</tr>
-</table>
-</details>
-<details>
-<summary><b>Cassini</b> · ringed giant · ice-teal on deep space</summary>
-<br>
-<img src="Screenshots/cassini.jpg" alt="Cassini: the desktop" width="100%">
-<table>
-<tr>
-<td width="50%"><img src="Screenshots/launcher-cassini.jpg" alt="Cassini: the launcher"></td>
-<td width="50%"><img src="Screenshots/menu-cassini.jpg" alt="Cassini: the menu"></td>
-</tr>
-</table>
+
+| | |
+|---|---|
+| <img src="Screenshots/eclipse.jpg" alt="Eclipse"> | <img src="Screenshots/zenith.jpg" alt="Zenith"> |
+| <img src="Screenshots/catppuccin-mocha.jpg" alt="Catppuccin Mocha"> | <img src="Screenshots/cassini.jpg" alt="Cassini"> |
+| <img src="Screenshots/launcher-cassini.jpg" alt="The launcher"> | <img src="Screenshots/menu-cassini.jpg" alt="The menu"> |
+
 </details>
 
 ## Features
 
-- **One palette, every app.** A theme colours the shell, kitty, Neovim, btop, GTK and Qt apps,
-  VS Code, Firefox, Spotify and the login screen, dark or light. Most follow a switch instantly.
-- **An AI skill that knows the rice.** Claude Code, Codex, OpenCode and Gemini get an `/orrery`
-  skill: ask for a new theme, a bar widget or a fix in plain words.
-- **A hand-built shell** on [Quickshell](https://quickshell.org/): a bar in three styles on any
-  screen edge, a dock, notifications, lock screen, power menu and on-screen volume and brightness.
-- **One menu for everything.** `SUPER` `SPACE` opens a searchable menu: theme, wallpaper, bar,
-  dock, fonts, Wi-Fi, Bluetooth, keybindings.
-- **Launcher and clipboard.** Fuzzy app search that learns what you use, and clipboard history
-  with image previews.
-- **Web apps.** Turn any site into an app with its own window, icon, launcher entry and dock
-  icon: Menu › Web apps, or `orrery-webapp add https://mail.example.com`.
-- **Panels that grow out of the bar**: sound with per-app volume, Wi-Fi, Bluetooth pairing,
-  power (battery, brightness, profiles), notifications, calendar and media, all in one
-  Material 3 motion.
-- **A power menu** (`SUPER` `M`) with lock, log out, sleep, hibernate, restart and shut down.
-- **A careful installer.** It backs up anything in the way, is safe to run again, and has a
-  `--dry-run`.
+- **One palette, every app**, dark or light. Most apps follow a theme switch instantly.
+- **A shell built on [Quickshell](https://quickshell.org/)**: a bar in three styles on any screen
+  edge, a dock, panels for sound, Wi-Fi, Bluetooth, power, notifications and media, a lock
+  screen and a power menu.
+- **One menu for everything** (`SUPER` `SPACE`): theme, wallpaper, bar, dock, fonts, Wi-Fi,
+  Bluetooth, web apps, keybindings.
+- **Launcher and clipboard history** with image previews.
+- **Web apps**: turn any site into an app with its own window and dock icon.
+- **An `/orrery` skill** for Claude Code, Codex, OpenCode and Gemini: ask for a theme, a widget
+  or a fix in plain words.
 
 ## Install
 
@@ -104,23 +64,15 @@ cd ~/Orrery-dotfiles && ./install.sh
 ```
 
 Reboot, choose **Hyprland** on the login screen, and press **`SUPER` `SPACE`** to find
-everything. To update later: `cd ~/Orrery-dotfiles && git pull && ./install.sh`.
+everything. To update: `cd ~/Orrery-dotfiles && git pull && ./install.sh`.
+
+The installer installs the packages (offering to build `yay` for the three AUR ones), backs up
+any configs in the way after asking, links the configs with GNU Stow and enables
+NetworkManager, Bluetooth, power profiles and SDDM. It's safe to run again and never deletes
+your files.
 
 <details>
-<summary><b>What the installer does</b></summary>
-
-1. Installs every package the desktop needs: the repo ones with pacman, and three from the AUR
-   (it offers to build `yay` if you have no AUR helper).
-2. Moves any existing configs that are in the way into a backup folder under `~/.config/`,
-   after asking you.
-3. Links the configs into your home with GNU Stow, so the repo stays the one source.
-4. Applies the default theme.
-5. Enables NetworkManager, Bluetooth, power profiles and SDDM. It leaves a service alone if you
-   already use something else for it.
-6. Installs the login-screen theme and a small helper, so theme changes also reach the login
-   screen.
-
-It's safe to run again, and it never deletes or overwrites your files.
+<summary>Installer options</summary>
 
 | Flag | |
 |---|---|
@@ -132,34 +84,19 @@ It's safe to run again, and it never deletes or overwrites your files.
 
 </details>
 
+### After installing
+
+- **Keyboard layout** is US. Set yours in `~/.config/hypr/hyprland.local.lua` (updates never
+  touch it), then `hyprctl reload`:
+  ```lua
+  hl.config({ input = { kb_layout = "de" } })
+  ```
+- **Display scale** is automatic. Change it in Menu › Appearance › Display scale.
+- **A browser** isn't installed for you. `SUPER` `B` opens Zen, Firefox, Chromium or Brave,
+  whichever it finds first.
+
 <details>
-<summary><b>Keyboard, browser, monitor, Spotify and Claude Code</b></summary>
-
-**Keyboard layout** is US. Put your own in `~/.config/hypr/hyprland.local.lua` (yours;
-updates never touch it), then `hyprctl reload`:
-
-```lua
-hl.config({ input = { kb_layout = "de" } })
-```
-
-Any other Hyprland setting can go in that file too; it's loaded last, so it wins.
-
-**Web apps** open in Firefox or Chromium, picked for each app when you add it (Menu › Web
-apps › Add a web app › In Firefox / In Chromium, or `orrery-webapp add --firefox|--chromium`).
-Firefox gives each app a bare window with its own logins and no link preview; Chromium uses
-its app mode, with logins shared with the browser (Chrome, Brave, Vivaldi and Edge work too).
-No scrollbars either way.
-
-**A browser** isn't installed for you. `SUPER` `B` opens the first one it finds of Zen, Firefox,
-Chromium and Brave; pick another in Menu › Settings › Default apps.
-
-**Monitor.** Every screen starts at its preferred resolution with an automatic scale. Pick a
-scale in Menu › Appearance › Display scale, or add an exact rule to
-`~/.config/hypr/modules/monitors.local.lua` (yours; updates never touch it):
-
-```lua
-hl.monitor({ output = "eDP-1", mode = "2560x1440@165", position = "auto", scale = 1.6 })
-```
+<summary>Optional: Spotify and Claude Code colours</summary>
 
 **Spotify** follows the theme through [Spicetify](https://spicetify.app/):
 
@@ -169,28 +106,37 @@ spicetify config spotify_path ~/.local/share/spotify-launcher/install/usr/share/
 orrery-theme reload
 ```
 
-After a Spotify update, run `spicetify backup apply` again.
-
-**Claude Code** draws its own colours: run `/theme` in it once and pick **Auto (match
-terminal)**, and it switches with the rice's dark and light themes.
+**Claude Code**: run `/theme` once and pick **Auto (match terminal)**.
 
 </details>
 
+## Keybinds
+
+| Keys | Action |
+|---|---|
+| `SUPER` `SPACE` | The menu |
+| `SUPER` `Return` | Terminal |
+| `SUPER` `D` · `V` | App launcher · clipboard history |
+| `SUPER` `E` · `B` | File manager · browser |
+| `SUPER` `Q` · `T` · `F` | Close · float · fullscreen |
+| `SUPER` `1`–`0` | Go to workspace (add `SHIFT` to move the window there) |
+| `SUPER` `L` · `M` | Lock screen · power menu |
+| `SUPER` `CTRL` `SHIFT` `SPACE` | Theme picker |
+| `SUPER` `CTRL` `R` | Restart the shell |
+| `Print` · `SUPER` `Print` | Screenshot a region · the whole screen |
+
+The full list is under Menu › Learn and in
+[`modules/binds.lua`](hyprland/.config/hypr/modules/binds.lua).
+
 ## Make it yours
 
-### A theme of your own, by asking
+- **Ask your coding agent.** The installer links the `/orrery` skill into Claude Code, Codex,
+  OpenCode and Gemini CLI: *"make a warm dark theme called ember from ~/Pictures/forest.jpg"*.
+- **Bar, dock, fonts, corners and borders:** Menu › Appearance.
+- **Your own keybinds** go in `~/.config/hypr/modules/binds.local.lua`. Updates never touch it.
 
-If you use Claude Code, Codex, OpenCode or Gemini CLI, the installer links the `/orrery` skill
-into it. Describe what you want:
-
-> make a warm dark theme called ember from my wallpaper ~/Pictures/forest.jpg
-
-The agent picks a palette from the image, colours every app, checks that text stays readable
-everywhere, screenshots the result for the theme picker and switches to it. It never commits or
-pushes anything. The same skill takes requests like *"add a CPU temperature widget to the bar"*
-or *"why is my Wi-Fi dropping?"*.
-
-### A theme of your own, by hand
+<details>
+<summary>Make a theme by hand</summary>
 
 ```bash
 cd ~/.config/orrery/themes
@@ -198,93 +144,32 @@ cp -r eclipse ember && rm ember/backgrounds/* ember/preview.jpg
 cp ~/Pictures/forest.jpg ember/backgrounds/1-forest.jpg
 $EDITOR ember/colors.toml        # the name, mode = "dark"|"light", and the colours
 orrery-theme set ember
-orrery-theme-preview ember       # a real screenshot for the theme picker
+orrery-theme-preview ember       # a screenshot for the theme picker
 ```
 
-Set `hued = true` for coloured apps (btop, Neovim, battery and warnings) instead of greys. Themes
-you make stay on your machine: git ignores them.
-
-### Everything else
-
-- **Bar, dock, fonts, text size, display scale:** Menu › Appearance. *Corners & borders* there
-  makes windows and the shell square or rounded and sets the window border thickness
-  (`orrery-border` from a terminal). *Edit look & feel* opens gaps, blur and animations.
-- **Your own keybinds** go in `~/.config/hypr/modules/binds.local.lua`, and **your own menu
-  entries** in `~/.config/orrery/menu.local.jsonc`. Updates never touch either.
-- **Any script can be a bar widget:** add it under `bar.modules` in
-  `~/.config/orrery/shell.json`, then put its id in one of the lists under `bar.layout`:
-
-  ```json
-  "bar": { "modules": { "vpn": { "exec": "~/bin/vpn-status", "interval": 5, "onClick": "nm-connection-editor" } } }
-  ```
-
----
-
-## Keybinds
-
-| Keys | Action |
-|---|---|
-| `SUPER` `Return` | Terminal |
-| `SUPER` `D` · `V` | App launcher · clipboard history |
-| `SUPER` `SPACE` | The menu |
-| `SUPER` `E` · `B` | File manager · browser |
-| `SUPER` `Q` · `T` · `F` | Close · float · fullscreen |
-| `SUPER` `1`–`0` | Go to workspace (add `SHIFT` to move the window there) |
-| `SUPER` `L` · `M` | Lock screen · power menu |
-| `SUPER` `CTRL` `SHIFT` `SPACE` | Theme picker |
-| `Print` | Screenshot a region (Esc or `Print` again cancels) |
-| `SUPER` `SHIFT` `Print` | Screenshot a window: click the one you want |
-
-<details>
-<summary><b>All keybinds</b></summary>
-
-| Keys | Action |
-|---|---|
-| `SUPER` `CTRL` `O` | The menu, opened on Toggle |
-| `SUPER` `CTRL` `R` | Restart the shell |
-| `SUPER` `SHIFT` `B` | Bar style: Legacy → Floating → Minimal |
-| `SUPER` `CTRL` `I` | Caffeine: pause idle lock and suspend |
-| `SUPER` `SHIFT` `W` · `SUPER` `CTRL` `SPACE` | Wallpaper picker · next wallpaper |
-| `SUPER` `A` | Launch the default coding agent |
-| `SUPER` `SHIFT` `F` · `SUPER` `J` | Maximize · toggle split |
-| `SUPER` arrows | Move focus |
-| `SUPER` `SHIFT` arrows | Move the window |
-| `SUPER` `CTRL` arrows | Resize the window (hold to keep going) |
-| `SUPER` + drag with left / right mouse button | Move · resize a window |
-| `SUPER` scroll · 3-finger swipe | Cycle workspaces |
-| `SUPER` `S` · `SHIFT` `S` | Scratchpad · move a window to it |
-| `SUPER` `Print` | Screenshot the whole screen |
-
-Screenshots are saved to `~/Pictures/screenshot/` and copied to the clipboard. Media, volume and brightness keys work too,
-even on the lock screen. The full list is in
-[`modules/binds.lua`](hyprland/.config/hypr/modules/binds.lua) and under Menu › Learn.
-
 </details>
-
----
 
 ## Troubleshooting
 
 | Problem | Fix |
 |---|---|
-| Something looks wrong | `orrery-doctor --print` prints a full, no-sudo diagnostics report |
-| Boxes instead of icons or text | `fc-list \| grep -i "JetBrainsMono Nerd Font Propo"` should print a line; if not, `sudo pacman -S ttf-jetbrains-mono-nerd` |
+| Something looks wrong | `orrery-doctor --print` prints a full diagnostics report |
+| Boxes instead of icons | `sudo pacman -S ttf-jetbrains-mono-nerd` |
 | The login screen is black | From a TTY (`Ctrl` `Alt` `F3`): `sudo rm /etc/sddm.conf.d/10-wayland.conf`, then reboot |
-| The Wi-Fi panel is empty | Your network is run by something other than NetworkManager. The installer prints how to switch |
 | The bar or dock is missing | `SUPER` `CTRL` `R` restarts the shell; `qs log` shows why it stopped |
-| Earphones play sound but apps use the laptop mic (often after sleep) | `orrery-fix-mic` re-detects the headset mic. `orrery-fix-mic enable` runs it after every sleep; the installer does this on laptops known to need it |
-
----
+| The Wi-Fi panel is empty | Your network isn't run by NetworkManager; the installer prints how to switch |
+| Headphones work but apps use the laptop mic | `orrery-fix-mic` |
 
 ## Credits
 
 Built on [Hyprland](https://hyprland.org/), [Quickshell](https://quickshell.org/),
-[LazyVim](https://www.lazyvim.org/) and [Catppuccin](https://catppuccin.com/). Icons are Google's
-[Material Symbols](https://fonts.google.com/icons) (Apache 2.0). Plenty of ideas come from
-[Omarchy](https://omarchy.org/).
+[LazyVim](https://www.lazyvim.org/) and [Catppuccin](https://catppuccin.com/). Icons are
+Google's [Material Symbols](https://fonts.google.com/icons) (Apache 2.0). Plenty of ideas come
+from [Omarchy](https://omarchy.org/).
 
-**Wallpapers** aren't mine and aren't covered by the licence. Eclipse's is Mount Ararat over
-Yerevan (photographer unknown). The light, Catppuccin and Cassini wallpapers came from
-wallpaper sites (Cassini's is wallhaven 7jeozo) without a traceable author. If one is yours, open an issue and it will be credited or removed.
+The wallpapers aren't mine and aren't covered by the licence. Eclipse's is Mount Ararat over
+Yerevan (photographer unknown); the others came from wallpaper sites (Cassini's is wallhaven
+7jeozo) without a traceable author. If one is yours, open an issue and it will be credited or
+removed.
 
 The configuration is [MIT](LICENSE).
