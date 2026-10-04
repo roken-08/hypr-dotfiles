@@ -59,7 +59,7 @@ hl.bind(mainMod .. " + CTRL + O", hl.dsp.exec_cmd("qs ipc call menu open toggle"
 -- Screenshots (scripts/screenshot.sh): saved to ~/Pictures/screenshot and
 -- copied to the clipboard. Esc, or the same shortcut again, cancels a selection.
 local shot = "~/.config/hypr/scripts/screenshot.sh "
-hl.bind("Print", hl.dsp.exec_cmd(shot .. "region")) -- Screenshot a region
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(shot .. "region")) -- Screenshot a region
 hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(shot .. "screen")) -- Screenshot the whole screen
 hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd(shot .. "pick")) -- Screenshot a window (click it)
 

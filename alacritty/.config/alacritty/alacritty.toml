@@ -5,13 +5,15 @@
 # The second import is the font family and size from `orrery-font` /
 # `orrery-text-size` (per machine; the [font] defaults below apply until one of
 # those commands has run once).
-import = ["~/.config/orrery/current/alacritty.toml", "~/.config/orrery/ui/alacritty.toml"]
+import = ["~/.config/orrery/current/alacritty.toml", "~/.config/orrery/ui/alacritty.toml"    "~/.config/alacritty/themes/noctalia.toml",
+]
 
 
 ################
 # Shell
 ################
-[terminal.shell]
+[terminal.shell    "~/.config/alacritty/themes/noctalia.toml",
+]
 program = "/usr/bin/bash"
 
 

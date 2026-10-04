@@ -52,3 +52,5 @@
 .view .cell:selected, iconview .cell:selected, .cell:selected {
   color: @theme_selected_fg_color;
 }
+
+@import url("noctalia.css");

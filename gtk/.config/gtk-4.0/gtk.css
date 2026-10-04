@@ -64,3 +64,5 @@
 @define-color popover_shade_color    rgba(0, 0, 0, 0.36);
 @define-color sidebar_shade_color    rgba(0, 0, 0, 0.36);
 @define-color scrollbar_outline_color @bg3;
+
+@import url("noctalia.css");
