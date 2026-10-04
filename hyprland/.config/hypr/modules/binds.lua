@@ -52,7 +52,8 @@ hl.bind(mainMod .. " + CTRL + I", hl.dsp.exec_cmd("~/.config/hypr/scripts/caffei
 hl.bind(mainMod .. " + CTRL + SHIFT + space", hl.dsp.exec_cmd("orrery-theme-menu theme")) -- Theme picker
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd("orrery-theme-menu wallpaper")) -- Wallpaper picker
 hl.bind(mainMod .. " + CTRL + space", hl.dsp.exec_cmd("orrery-wall next")) -- Next wallpaper
-hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("orrery-agent launch")) -- Default coding agent
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(terminal .. " -e " .. os.getenv("HOME") .. "/.local/bin/ai")) -- ai workflow launcher (CP/UNI/DEV/FORGE)
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("obsidian")) -- Obsidian vault
 hl.bind(mainMod .. " + space", hl.dsp.exec_cmd("qs ipc call menu toggle")) -- The menu
 hl.bind(mainMod .. " + CTRL + O", hl.dsp.exec_cmd("qs ipc call menu open toggle")) -- The menu, opened on Toggle
 
