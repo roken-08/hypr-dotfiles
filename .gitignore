@@ -46,3 +46,6 @@ hyprland/.config/hypr/modules/monitors.local.lua
 hyprland/.config/hypr/modules/binds.local.lua
 hyprland/.config/hypr/modules/look.local.lua
 hyprland/.config/hypr/hyprland.local.lua
+
+# stray local AUR build directory (paru) — build artifacts, not rice config
+/paru/
