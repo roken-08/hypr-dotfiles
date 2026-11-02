@@ -90,16 +90,35 @@ WlSessionLock {
             }
             Connections { target: Lock; function onErrorChanged() { if (Lock.error !== "") { shake.restart(); pw.text = "" } } }
 
-            // dots_size 0.2, dots_spacing 1.0, dots_center
-            Row {
+            // dots_size 0.2, dots_spacing 1.0, dots_center — laid out by hand so the
+            // row slides left as each dot arrives (a Row would jump every keypress).
+            // The Repeater model is the CONSTANT 24 and dots are shown/hidden:
+            // a changing int model tears down and rebuilds every delegate, which
+            // made the row blink on each keystroke.
+            Item {
+                id: dots
                 anchors.centerIn: parent
-                spacing: field.height * 0.2
+                readonly property real dotSize: field.height * 0.2
+                readonly property real step: dotSize * 2          // dot + 1.0x spacing
+                readonly property int count: Math.min(pw.text.length, 24)
                 Repeater {
-                    model: Math.min(pw.text.length, 24)
-                    Rectangle { width: field.height * 0.2; height: width; radius: width / 2
-                                color: Theme.light ? Theme.c.fg : "#c8c8c8" }
+                    model: 24
+                    Rectangle {
+                        readonly property bool shown: index < dots.count
+                        readonly property real slot: -(dots.count - 1) * dots.step / 2 + index * dots.step
+                        x: slot - width / 2
+                        y: -height / 2
+                        width: dots.dotSize; height: width; radius: width / 2
+                        color: Theme.light ? Theme.c.fg : "#c8c8c8"
+                        scale: shown ? 1 : 0.4
+                        opacity: shown ? 1 : 0
+                        Behavior on x { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
+                        Behavior on scale { NumberAnimation { duration: 170; easing.type: Easing.OutBack; easing.overshoot: 2.0 } }
+                        Behavior on opacity { NumberAnimation { duration: 110 } }
+                    }
                 }
             }
+
             TextInput {
                 id: pw
                 anchors.fill: parent; anchors.margins: surf.px(10)

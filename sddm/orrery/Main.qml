@@ -286,17 +286,32 @@ Item {
                 NumberAnimation { target: field; property: "anchors.horizontalCenterOffset"; to:   0;          duration: 50 }
             }
 
-            // dots: size 0.2 x height, spacing = 1.0 x dot
-            Row {
+            // dots: size 0.2 x height, spacing = 1.0 x dot. Laid out by hand so the row
+            // slides left as each dot arrives (a Row would jump on every keypress), and
+            // the Repeater model stays at 24: a changing int model rebuilds every
+            // delegate, which made the row blink on each keystroke.
+            Item {
+                id: dots
                 anchors.centerIn: parent
-                spacing: field.height * 0.2
+                readonly property real dotSize: field.height * 0.2
+                readonly property real step: dotSize * 2          // dot + 1.0x spacing
+                readonly property int count: Math.min(password.text.length, 24)
                 Repeater {
-                    model: Math.min(password.text.length, 24)
+                    model: 24
                     Rectangle {
-                        width: field.height * 0.2
+                        readonly property bool shown: index < dots.count
+                        readonly property real slot: -(dots.count - 1) * dots.step / 2 + index * dots.step
+                        x: slot - width / 2
+                        y: -height / 2
+                        width: dots.dotSize
                         height: width
                         radius: width / 2
                         color: root.light ? root.fg : "#c8c8c8"
+                        scale: shown ? 1 : 0.4
+                        opacity: shown ? 1 : 0
+                        Behavior on x { NumberAnimation { duration: 160; easing.type: Easing.OutCubic } }
+                        Behavior on scale { NumberAnimation { duration: 170; easing.type: Easing.OutBack; easing.overshoot: 2.0 } }
+                        Behavior on opacity { NumberAnimation { duration: 110 } }
                     }
                 }
             }
