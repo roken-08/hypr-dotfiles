@@ -14,6 +14,33 @@ which="${ORRERY_SHELL:-quickshell}"
 # both, and wait until they are gone, or the new one starts beside the old
 # and every screen gets two bars.
 shell_pids() { pgrep -x qs; pgrep -x quickshell; }
+
+# qs cannot draw anything before the compositor socket exists, and
+# hyprland.start can fire a beat early; a failed start used to vanish into
+# /dev/null, leaving no bar and no wallpaper with nothing to read.
+SHELL_LOG="$HOME/.cache/orrery-shell.log"
+wait_for_hyprland() {
+    for _ in $(seq 1 25); do
+        hyprctl version >/dev/null 2>&1 && return 0
+        sleep 0.2
+    done
+}
+# Start qs once and retry if it dies straight away. Qt has segfaulted during
+# QML incubation at start-up on this machine (~/.cache/quickshell/crashes),
+# so one lost race should not cost the whole session its bar.
+start_qs() {
+    [[ -n "$(shell_pids)" ]] && return 0
+    wait_for_hyprland
+    for attempt in 1 2 3; do
+        echo "shell.sh: starting qs (attempt $attempt) $(date '+%F %T')" >>"$SHELL_LOG"
+        setsid -f qs >/dev/null 2>>"$SHELL_LOG"
+        sleep 2
+        [[ -n "$(shell_pids)" ]] && return 0
+        echo "shell.sh: qs exited on attempt $attempt" >>"$SHELL_LOG"
+        sleep 1
+    done
+    return 1
+}
 stop() {
     pkill -x hypridle 2>/dev/null
     pkill -x qs 2>/dev/null
@@ -39,7 +66,7 @@ start() {
         *)
             pkill -x awww-daemon 2>/dev/null
             setsid -f hypridle >/dev/null 2>&1    # logind bridge only (hypridle.conf)
-            [[ -z "$(shell_pids)" ]] && setsid -f qs >/dev/null 2>&1   # never a second one
+            start_qs   # never a second one
             ;;
     esac
 }
