@@ -10,7 +10,7 @@ Singleton {
     id: root
     property bool on: false
     property bool available: true
-    readonly property int temp: 4000
+    readonly property int temp: 5500
 
     function toggle() { run(["toggle"]) }
     function set(want) { run([want ? "on" : "off"]) }
