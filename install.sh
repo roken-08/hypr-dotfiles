@@ -623,11 +623,20 @@ fi
 # `/orrery <request>` works in any coding agent.
 step "Shell"
 if [[ $DRY_RUN -eq 1 ]]; then
-  info "Would mask the swaync user unit and link the /orrery skill (orrery-agent skills install)."
+  info "Would mask the swaync user unit, enable orrery-shell.service and link the /orrery skill (orrery-agent skills install)."
   info "Would point Thunar's \"Open Terminal Here\" at orrery-terminal."
 else
   if command -v swaync >/dev/null 2>&1; then
     systemctl --user mask swaync.service >/dev/null 2>&1 && ok "swaync user unit masked (the shell is the notification daemon)."
+  fi
+  # The shell (bar + wallpaper) is a user unit in the Hyprland session target:
+  # started by systemd at login, restarted if it dies, and logged in the
+  # journal. Enable it here so a fresh install gets a bar on the first login.
+  systemctl --user daemon-reload >/dev/null 2>&1 || true
+  if systemctl --user enable orrery-shell.service >/dev/null 2>&1; then
+    ok "orrery-shell.service enabled (the shell starts with the Hyprland session)."
+  else
+    warn "Could not enable orrery-shell.service — run: systemctl --user enable orrery-shell"
   fi
   "$HOME/.local/bin/orrery-text-size" reset >/dev/null 2>&1 || true   # writes the terminal font family/size overrides
   # Thunar's "Open Terminal Here" runs exo-open, which on Xfce 4.20 needs

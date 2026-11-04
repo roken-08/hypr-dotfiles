@@ -60,7 +60,7 @@ to file it upstream; do not "fix" it by disabling half the rice.
 
 | Symptom | Look at |
 |---|---|
-| bar/launcher/lock missing, widgets blank | `qs log`; `pgrep -x qs`; `shell.sh restart`; a QML error in the last edited file |
+| bar/launcher/lock missing, widgets blank | `systemctl --user status orrery-shell` (systemd owns `qs`, `journalctl --user -u orrery-shell`); `qs log`; `pgrep -x qs`; `shell.sh restart`; a QML error in the last edited file |
 | theme half applied (GTK app dark in light) | GTK3/Qt read theme at start → restart the app; `orrery-theme reload`; root apps need root-sync (`sudo orrery-root-sync`) |
 | icons are boxes | font: `fc-list | grep -i "JetBrainsMono Nerd Font Propo"` |
 | keybind does nothing | `hyprctl configerrors`; `hyprctl binds -j | grep`; the script has `+x` and is on PATH (`~/.local/bin` is added in env.lua) |

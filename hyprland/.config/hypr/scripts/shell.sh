@@ -26,6 +26,16 @@ SHELL_LOG="$HOME/.cache/orrery-shell.log"
 STOP_FLAG="${XDG_RUNTIME_DIR:-/tmp}/orrery-shell.stop"
 SUP_PID="${XDG_RUNTIME_DIR:-/tmp}/orrery-shell.pid"
 sup_pid() { [[ -s "$SUP_PID" ]] && kill -0 "$(<"$SUP_PID")" 2>/dev/null && cat "$SUP_PID"; }
+# Every decision is logged from now on: the last silent start-at-login was
+# invisible (no bar, no wallpaper, empty log), so start_qs() no longer returns
+# quietly.
+say() { echo "shell.sh: $* $(date '+%F %T')" >>"$SHELL_LOG"; }
+
+# systemd owns the shell when this unit is installed (it is, by install.sh):
+# a real Restart=always, `systemctl --user status orrery-shell` for diagnosis,
+# and a start that cannot be lost to Hyprland's exec-at-login race.
+UNIT=orrery-shell.service
+have_unit() { systemctl --user cat "$UNIT" >/dev/null 2>&1; }
 wait_for_hyprland() {
     for _ in $(seq 1 25); do
         hyprctl version >/dev/null 2>&1 && return 0
@@ -57,13 +67,20 @@ supervise() {
     rm -f "$SUP_PID"
 }
 start_qs() {
-    [[ -n "$(shell_pids)" ]] && return 0
-    [[ -n "$(sup_pid)" ]] && return 0
+    local running sup
+    running=$(shell_pids)
+    [[ -n "$running" ]] && { say "qs already running (pid $running), nothing to do"; return 0; }
+    sup=$(sup_pid)
+    [[ -n "$sup" ]] && { say "supervisor already running (pid $sup), nothing to do"; return 0; }
     rm -f "$STOP_FLAG"
-    echo "shell.sh: starting supervisor $(date '+%F %T')" >>"$SHELL_LOG"
+    say "starting supervisor"
     setsid -f "$0" supervise >/dev/null 2>&1
 }
 stop() {
+    if have_unit; then
+        say "stopping $UNIT"
+        systemctl --user stop "$UNIT" >/dev/null 2>&1
+    fi
     touch "$STOP_FLAG"                      # tell the supervisor to stay down
     local sup; sup=$(sup_pid)
     [[ -n "$sup" ]] && kill "$sup" 2>/dev/null
@@ -93,6 +110,13 @@ start() {
         *)
             pkill -x awww-daemon 2>/dev/null
             setsid -f hypridle >/dev/null 2>&1    # logind bridge only (hypridle.conf)
+            if have_unit; then
+                say "starting $UNIT via systemd"
+                systemctl --user reset-failed "$UNIT" >/dev/null 2>&1
+                systemctl --user start "$UNIT" >>"$SHELL_LOG" 2>&1 \
+                    || say "systemctl start $UNIT failed ($?), falling back to the supervisor"
+                systemctl --user is-active --quiet "$UNIT" && { say "shell up (systemd)"; return 0; }
+            fi
             start_qs   # never a second one
             ;;
     esac

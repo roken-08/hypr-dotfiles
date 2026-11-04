@@ -1,0 +1,29 @@
+[Unit]
+Description=Orrery desktop shell (Quickshell: bar, wallpaper, notifications)
+Documentation=https://quickshell.org
+# Owned by the uwsm Hyprland session: starting it starts the shell, logging out
+# stops it. Started by systemd, not by Hyprland's autostart block, so a failed
+# exec at login is logged in the journal instead of vanishing.
+PartOf=wayland-session@hyprland.desktop.target
+After=wayland-session@hyprland.desktop.target
+# No ConditionEnvironment=HYPRLAND_INSTANCE_SIGNATURE on purpose: uwsm imports
+# that variable, but a condition that is evaluated too early would skip the
+# start silently — exactly the failure this unit exists to prevent. The unit is
+# only wanted by the Hyprland session target anyway.
+
+[Service]
+Type=simple
+# hyprland.start can fire a beat before the compositor socket exists, and qs
+# cannot draw a single pixel without it: wait (max 10s), then go anyway so a
+# missing socket still produces a journal line rather than a silent hang.
+ExecStartPre=/bin/sh -c 'for i in $(seq 50); do hyprctl version >/dev/null 2>&1 && exit 0; sleep 0.2; done; echo "orrery-shell: hyprctl never answered, starting anyway"; exit 0'
+ExecStart=/usr/bin/qs
+# The bar + wallpaper ARE qs: if it dies, there is no desktop. Restart it.
+Restart=always
+RestartSec=2
+# Crashes at login used to be invisible: keep the journal useful.
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=wayland-session@hyprland.desktop.target
